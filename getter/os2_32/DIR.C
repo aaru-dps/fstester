@@ -30,14 +30,15 @@ Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
 #define INCL_DOSFILEMGR // File Manager values
-#define INCL_DOSERRORS // DOS error values
+#define INCL_DOSERRORS  // DOS error values
+
+#include "dir.h"
+#include "ea.h"
 
 #include <os2.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include "dir.h"
-#include "ea.h"
+#include <string.h>
 
 int GetAllInDir(PSZ path, ULONG *eaCounter)
 {
@@ -49,44 +50,43 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
     PSZ          pathWithWildcard;
     PSZ          fullPath;
     ULONG        flAttribute; // File attributes
-    int          isDir      = 0;
+    int          isDir = 0;
     APIRET       drc;
 
     // Variables for EA saving
-    char   *eaBuffer;
+    char * eaBuffer;
     size_t eaSize;
     char   eaPath[8 + 1 + 3 + 1];
     HFILE  eaFileHandle; // Address of the handle for the file
-    ULONG  ulAction         = 0; // Address of the variable that receives the value that specifies the action taken by the DosOpen function
+    ULONG  ulAction =
+        0; // Address of the variable that receives the value that specifies the action taken by the DosOpen function
     APIRET earc;
 
     for(isDir = 0; isDir < 2; isDir++)
     {
         hdirFindHandle   = HDIR_CREATE;
         ulResultBufLen   = sizeof(FILEFINDBUF3);
-        ulFindCount      = 1; // Look for 1 file at a time
+        ulFindCount      = 1;        // Look for 1 file at a time
         rc               = NO_ERROR; // Return code
         pathWithWildcard = malloc(strlen(path) + 5);
         strcpy(pathWithWildcard, path);
-        strcat(pathWithWildcard, "\\*.*");    // Adds wildcard to passed path
+        strcat(pathWithWildcard, "\\*.*"); // Adds wildcard to passed path
 
         flAttribute = FILE_ARCHIVED | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY; // All files
-        if(isDir)
-            flAttribute |= MUST_HAVE_DIRECTORY; // Must be a directory
+        if(isDir) flAttribute |= MUST_HAVE_DIRECTORY;                            // Must be a directory
 
         rc = DosFindFirst(pathWithWildcard, // File pattern
-                          &hdirFindHandle, // Directory search handle
-                          flAttribute, // Search attribute
-                          &FindBuffer, // Result buffer
-                          ulResultBufLen, // Result buffer length
-                          &ulFindCount, // Number of entries to find
-                          FIL_STANDARD); // Return Level 1 file info
+                          &hdirFindHandle,  // Directory search handle
+                          flAttribute,      // Search attribute
+                          &FindBuffer,      // Result buffer
+                          ulResultBufLen,   // Result buffer length
+                          &ulFindCount,     // Number of entries to find
+                          FIL_STANDARD);    // Return Level 1 file info
 
         if(rc != NO_ERROR)
         {
             free(pathWithWildcard);
-            if(rc == ERROR_NO_MORE_FILES && !isDir)
-                continue;
+            if(rc == ERROR_NO_MORE_FILES && !isDir) continue;
 
             printf("DosFindFirst error: return code = %u\n", rc);
             return rc;
@@ -96,8 +96,8 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
             if(strcmp(FindBuffer.achName, ".") != 0 && strcmp(FindBuffer.achName, "..") != 0)
             {
                 fullPath = malloc(strlen(path) + 2 + strlen(FindBuffer.achName) + 1);
-                fullPath = strcpy(fullPath, path); // Parent path
-                strcat(fullPath, "\\"); // Adds slashes
+                fullPath = strcpy(fullPath, path);    // Parent path
+                strcat(fullPath, "\\");               // Adds slashes
                 strcat(fullPath, FindBuffer.achName); // Adds filename
                 if(isDir)
                     printf("%s\\\n", fullPath); // Print directory name
@@ -111,16 +111,23 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
                     if(eaSize != 0)
                     {
                         sprintf(&eaPath, "%08d.EA", *eaCounter);
-                        earc = DosOpen(eaPath, &eaFileHandle, &ulAction, 0L, FILE_NORMAL,
+                        earc = DosOpen(eaPath,
+                                       &eaFileHandle,
+                                       &ulAction,
+                                       0L,
+                                       FILE_NORMAL,
                                        OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                                       OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, NULL);
+                                       OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                                       NULL);
 
                         if(earc == NO_ERROR)
                         {
                             earc = DosWrite(eaFileHandle, eaBuffer, eaSize, &ulAction);
                             if(earc == NO_ERROR)
                             {
-                                printf("\tSaved %ld bytes from %ld bytes of EAs saved to %08d.EA\n", ulAction, eaSize,
+                                printf("\tSaved %ld bytes from %ld bytes of EAs saved to %08d.EA\n",
+                                       ulAction,
+                                       eaSize,
                                        *eaCounter);
                                 *eaCounter += 1;
                             }
@@ -150,9 +157,9 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
             ulFindCount = 1; // Reset find count
 
             rc = DosFindNext(hdirFindHandle, // Directory handle
-                             &FindBuffer, // Result buffer
+                             &FindBuffer,    // Result buffer
                              ulResultBufLen, // Result buffer length
-                             &ulFindCount); // Number of entries to find
+                             &ulFindCount);  // Number of entries to find
 
             if(rc != NO_ERROR && rc != ERROR_NO_MORE_FILES)
             {
@@ -162,12 +169,11 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
             }
             else
             {
-                if(strcmp(FindBuffer.achName, ".") == 0 || strcmp(FindBuffer.achName, "..") == 0)
-                    continue;
+                if(strcmp(FindBuffer.achName, ".") == 0 || strcmp(FindBuffer.achName, "..") == 0) continue;
 
                 fullPath = malloc(strlen(path) + 2 + strlen(FindBuffer.achName) + 1);
-                fullPath = strcpy(fullPath, path); // Parent path
-                strcat(fullPath, "\\"); // Adds slashes
+                fullPath = strcpy(fullPath, path);    // Parent path
+                strcat(fullPath, "\\");               // Adds slashes
                 strcat(fullPath, FindBuffer.achName); // Adds filename
                 if(isDir)
                     printf("%s\\\n", fullPath); // Print directory name
@@ -180,16 +186,23 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
                 if(eaSize != 0)
                 {
                     sprintf(&eaPath, "%08d.EA", *eaCounter);
-                    earc = DosOpen(eaPath, &eaFileHandle, &ulAction, 0L, FILE_NORMAL,
+                    earc = DosOpen(eaPath,
+                                   &eaFileHandle,
+                                   &ulAction,
+                                   0L,
+                                   FILE_NORMAL,
                                    OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                                   OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, NULL);
+                                   OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                                   NULL);
 
                     if(earc == NO_ERROR)
                     {
                         earc = DosWrite(eaFileHandle, eaBuffer, eaSize, &ulAction);
                         if(earc == NO_ERROR)
                         {
-                            printf("\tSaved %ld bytes from %ld bytes of EAs saved to %08d.EA\n", ulAction, eaSize,
+                            printf("\tSaved %ld bytes from %ld bytes of EAs saved to %08d.EA\n",
+                                   ulAction,
+                                   eaSize,
                                    *eaCounter);
                             *eaCounter += 1;
                         }
@@ -213,7 +226,7 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
 
                 free(fullPath);
             } /* endif */
-        } /* endwhile */
+        }     /* endwhile */
 
         free(pathWithWildcard);
         rc = DosFindClose(hdirFindHandle); // Close our directory handle
@@ -225,4 +238,3 @@ int GetAllInDir(PSZ path, ULONG *eaCounter)
     }
     return ERROR_NO_MORE_FILES;
 }
-

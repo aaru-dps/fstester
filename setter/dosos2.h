@@ -29,7 +29,7 @@ Contains definitions common to DOS and OS/2
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__OS2__) || defined (__os2__) || defined(__DOS__) || defined (MSDOS)
+#if defined(__OS2__) || defined(__os2__) || defined(__DOS__) || defined(MSDOS)
 
 #ifndef DIC_FSTESTER_SETTER_DOSOS2_H
 #define DIC_FSTESTER_SETTER_DOSOS2_H
@@ -39,7 +39,6 @@ const char *systemAttributeText   = "This file has the system attribute set.\n";
 const char *hiddenAttributeText   = "This file has the hidden attribute set.\n";
 const char *readonlyAttributeText = "This file has the read-only attribute set.\n";
 const char *noAttributeText       = "This file has no attribute set.\n";
-
 
 #endif
 

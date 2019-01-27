@@ -29,11 +29,11 @@ Contains 32-bit and 64-bit Windows code
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#if defined (unix) || defined (UNIX) || defined (__unix) || defined (__unix__) || defined (__UNIX__)
-
-#include <stdio.h>
+#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
 
 #include "defs.h"
+
+#include <stdio.h>
 
 void GetOsInfo()
 {
@@ -50,10 +50,7 @@ void FileAttributes(const char *path)
     // TODO: Implement
 }
 
-void FilePermissions(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
 
 void ExtendedAttributes(const char *path)
 {

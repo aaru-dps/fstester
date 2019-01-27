@@ -29,14 +29,15 @@ Contains global definitions
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#include <stdio.h>
-
 #include "main.h"
+
 #include "defs.h"
 
+#include <stdio.h>
+
 #if defined(macintosh)
-#include <console.h>
 #include <SIOUX.h>
+#include <console.h>
 #endif
 
 int main(int argc, char **argv)
@@ -77,4 +78,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-

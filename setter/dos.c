@@ -29,31 +29,31 @@ Contains DOS code
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined (MSDOS)
+#if defined(__DOS__) || defined(MSDOS)
 
-#include <i86.h>
-#include <direct.h>
-#include <io.h>
-
-#include <stdio.h>
-#include <string.h>
-#include <malloc.h>
-#include <stdlib.h>
-
-#include "defs.h"
 #include "dos.h"
-#include "dosos2.h"
+
 #include "consts.h"
+#include "defs.h"
+#include "dosos2.h"
+
+#include <direct.h>
+#include <i86.h>
+#include <io.h>
+#include <malloc.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void GetOsInfo()
 {
-    union REGS regs;
+    union REGS    regs;
     unsigned char major, minor;
 
     regs.w.ax = 0x3306;
 
     int86(0x21, &regs, &regs);
-    
+
     if(regs.h.al == 0xFF || (regs.w.ax == 0x1 && regs.w.cflag))
     {
         memset(&regs, 0, sizeof(regs));
@@ -70,18 +70,17 @@ void GetOsInfo()
 
     if(major == 10 || major == 20)
     {
-       printf("Will not run under OS/2. Exiting...\n");
-//       exit(1);
+        printf("Will not run under OS/2. Exiting...\n");
+        exit(1);
     }
 
     if(major == 5 && minor == 50)
     {
-       printf("Will not run under Windows NT. Exiting...\n");
-       exit(1);
+        printf("Will not run under Windows NT. Exiting...\n");
+        exit(1);
     }
 
-    if(major == 0)
-       major = 1;
+    if(major == 0) major = 1;
 
     printf("OS information:\n");
     printf("\tRunning under DOS %d.%d\n", major, minor);
@@ -89,17 +88,16 @@ void GetOsInfo()
 
 void GetVolumeInfo(const char *path, size_t *clusterSize)
 {
-    union REGS regs;
-    struct SREGS sregs;
-    char   drivePath[4];
-    char   driveNo = path[0] - '@';
+    union REGS        regs;
+    struct SREGS      sregs;
+    char              drivePath[4];
+    char              driveNo = path[0] - '@';
     struct diskfree_t oldFreeSpace;
-    Fat32FreeSpace *freeSpace = malloc(sizeof(Fat32FreeSpace));
+    Fat32FreeSpace *  freeSpace = malloc(sizeof(Fat32FreeSpace));
 
     memset(freeSpace, 0, sizeof(Fat32FreeSpace));
 
-    if(driveNo > 32)
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
@@ -107,9 +105,9 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     drivePath[3] = 0;
 
     regs.w.ax = 0x7303;
-    sregs.ds = FP_SEG(drivePath);
+    sregs.ds  = FP_SEG(drivePath);
     regs.w.dx = FP_OFF(drivePath);
-    sregs.es = FP_SEG(freeSpace);
+    sregs.es  = FP_SEG(freeSpace);
     regs.w.di = FP_OFF(freeSpace);
     regs.w.cx = sizeof(Fat32FreeSpace);
 
@@ -117,11 +115,11 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
     if(regs.h.al == 0 && !regs.w.cflag)
     {
-       _dos_getdiskfree(driveNo, &oldFreeSpace);
-       freeSpace->sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
-       freeSpace->freeClusters = oldFreeSpace.avail_clusters;
-       freeSpace->bytesPerSector = oldFreeSpace.bytes_per_sector;
-       freeSpace->totalClusters = oldFreeSpace.total_clusters;
+        _dos_getdiskfree(driveNo, &oldFreeSpace);
+        freeSpace->sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
+        freeSpace->freeClusters      = oldFreeSpace.avail_clusters;
+        freeSpace->bytesPerSector    = oldFreeSpace.bytes_per_sector;
+        freeSpace->totalClusters     = oldFreeSpace.total_clusters;
     }
     else if(regs.w.cflag)
     {
@@ -129,16 +127,19 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         free(freeSpace);
         return;
     }
-    
+
     if(!regs.w.cflag)
     {
         printf("\tBytes per sector: %lu\n", freeSpace->bytesPerSector);
-        printf("\tSectors per cluster: %lu (%lu bytes)\n", freeSpace->sectorsPerCluster,
+        printf("\tSectors per cluster: %lu (%lu bytes)\n",
+               freeSpace->sectorsPerCluster,
                freeSpace->sectorsPerCluster * freeSpace->bytesPerSector);
-        printf("\tClusters: %lu (%lu bytes)\n", freeSpace->totalClusters,
+        printf("\tClusters: %lu (%lu bytes)\n",
+               freeSpace->totalClusters,
                freeSpace->sectorsPerCluster * freeSpace->bytesPerSector * freeSpace->totalClusters);
-        printf("\tFree clusters: %lu (%lu bytes)\n", freeSpace->freeClusters,
-               freeSpace->sectorsPerCluster * freeSpace->bytesPerSector *  freeSpace->freeClusters);
+        printf("\tFree clusters: %lu (%lu bytes)\n",
+               freeSpace->freeClusters,
+               freeSpace->sectorsPerCluster * freeSpace->bytesPerSector * freeSpace->freeClusters);
 
         *clusterSize = freeSpace->sectorsPerCluster * freeSpace->bytesPerSector;
     }
@@ -146,12 +147,11 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
 void FileAttributes(const char *path)
 {
-    char   driveNo = path[0] - '@';
+    char     driveNo = path[0] - '@';
     unsigned total, actionTaken;
-    int rc, wRc, cRc, handle;
+    int      rc, wRc, cRc, handle;
 
-    if(driveNo > 32)
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -165,7 +165,7 @@ void FileAttributes(const char *path)
     }
 
     chdir("ATTRS");
-    
+
     printf("Creating attributes files.\n");
 
     rc = _dos_creat("NONE", 0, &handle);
@@ -233,8 +233,11 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("HIDDREAD", _A_HIDDEN | _A_RDONLY);
     }
 
-    printf("\tFile with hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDREAD", rc,
-           wRc, cRc);
+    printf("\tFile with hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "HIDDREAD",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("SYSTREAD", _A_NORMAL, &handle);
 
@@ -246,8 +249,11 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("SYSTREAD", _A_SYSTEM | _A_RDONLY);
     }
 
-    printf("\tFile with system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTREAD", rc,
-           wRc, cRc);
+    printf("\tFile with system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSTREAD",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("SYSTHIDD", _A_NORMAL, &handle);
 
@@ -259,7 +265,10 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("SYSTHIDD", _A_SYSTEM | _A_HIDDEN);
     }
 
-    printf("\tFile with system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTHIDD", rc, wRc,
+    printf("\tFile with system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSTHIDD",
+           rc,
+           wRc,
            cRc);
 
     rc = _dos_creat("SYSRDYHD", _A_NORMAL, &handle);
@@ -273,8 +282,11 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("SYSRDYHD", _A_SYSTEM | _A_RDONLY | _A_HIDDEN);
     }
 
-    printf("\tFile with system, read-only, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSRDYHD",
-           rc, wRc, cRc);
+    printf("\tFile with system, read-only, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSRDYHD",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("ARCHREAD", _A_NORMAL, &handle);
 
@@ -286,8 +298,11 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("ARCHREAD", _A_ARCH | _A_RDONLY);
     }
 
-    printf("\tFile with archived, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHREAD", rc,
-           wRc, cRc);
+    printf("\tFile with archived, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHREAD",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("ARCHHIDD", _A_NORMAL, &handle);
 
@@ -299,7 +314,10 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("ARCHHIDD", _A_ARCH | _A_HIDDEN);
     }
 
-    printf("\tFile with archived, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHHIDD", rc, wRc,
+    printf("\tFile with archived, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHHIDD",
+           rc,
+           wRc,
            cRc);
 
     rc = _dos_creat("ARCHDRDY", _A_NORMAL, &handle);
@@ -314,7 +332,10 @@ void FileAttributes(const char *path)
     }
 
     printf("\tFile with archived, hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARCHDRDY", rc, wRc, cRc);
+           "ARCHDRDY",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("ARCHSYST", _A_NORMAL, &handle);
 
@@ -326,7 +347,10 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("ARCHSYST", _A_ARCH | _A_SYSTEM);
     }
 
-    printf("\tFile with archived, system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHSYST", rc, wRc,
+    printf("\tFile with archived, system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHSYST",
+           rc,
+           wRc,
            cRc);
 
     rc = _dos_creat("ARSYSRDY", _A_NORMAL, &handle);
@@ -341,7 +365,10 @@ void FileAttributes(const char *path)
     }
 
     printf("\tFile with archived, system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARSYSRDY", rc, wRc, cRc);
+           "ARSYSRDY",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("ARCSYSHD", _A_NORMAL, &handle);
 
@@ -354,8 +381,11 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("ARCSYSHD", _A_ARCH | _A_SYSTEM | _A_HIDDEN);
     }
 
-    printf("\tFile with archived, system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCSYSHD",
-           rc, wRc, cRc);
+    printf("\tFile with archived, system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCSYSHD",
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creat("ARSYHDRD", _A_NORMAL, &handle);
 
@@ -369,36 +399,30 @@ void FileAttributes(const char *path)
         rc  = _dos_setfileattr("ARSYHDRD", _A_ARCH | _A_SYSTEM | _A_HIDDEN | _A_RDONLY);
     }
 
-    printf("\tFile with all (archived, system, hidden, read-only) attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARSYHDRD", rc, wRc, cRc);
+    printf("\tFile with all (archived, system, hidden, read-only) attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d\n",
+           "ARSYHDRD",
+           rc,
+           wRc,
+           cRc);
 }
 
-void FilePermissions(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
 
-void ExtendedAttributes(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void ExtendedAttributes(const char *path) { /* Do nothing, not supported by target operating system */ }
 
-void ResourceFork(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void ResourceFork(const char *path) { /* Do nothing, not supported by target operating system */ }
 
 void Filenames(const char *path)
 {
-    char   driveNo = path[0] - '@';
-    int rc          = 0, wRc = 0, cRc = 0;
+    char     driveNo = path[0] - '@';
+    int      rc = 0, wRc = 0, cRc = 0;
     unsigned actionTaken, total;
-    int handle;
-    char   message[300];
-    int    pos         = 0;
+    int      handle;
+    char     message[300];
+    int      pos = 0;
 
-    if(driveNo > 32)
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -435,20 +459,19 @@ void Filenames(const char *path)
 
 void Timestamps(const char *path)
 {
-    char   driveNo = path[0] - '@';
-    int     rc          = 0, wRc = 0, cRc = 0, tRc = 0;
-    unsigned actionTaken, total;
-    int handle;
-    char       message[300];
-    union REGS regs;
+    char           driveNo = path[0] - '@';
+    int            rc = 0, wRc = 0, cRc = 0, tRc = 0;
+    unsigned       actionTaken, total;
+    int            handle;
+    char           message[300];
+    union REGS     regs;
     unsigned short maxtime = 0xBF7D;
     unsigned short maxdate = 0xFF9F;
     unsigned short y1kdate = 0x2621;
     unsigned short y2kdate = 0x2821;
     unsigned short mindate = 0x0021;
 
-    if(driveNo > 32)                        
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -470,8 +493,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(maxdate), MONTH(maxdate), DAY(maxdate),
-                HOUR(maxtime), MINUTE(maxtime), SECOND(maxtime), "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(maxdate),
+                MONTH(maxdate),
+                DAY(maxdate),
+                HOUR(maxtime),
+                MINUTE(maxtime),
+                SECOND(maxtime),
+                "creation");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -480,7 +510,7 @@ void Timestamps(const char *path)
         regs.w.dx = maxdate;
         regs.w.ax = 0x5707;
         int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;                       
+        tRc = regs.w.ax;
         cRc = _dos_close(handle);
     }
 
@@ -491,8 +521,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(mindate), MONTH(mindate), DAY(mindate),
-                HOUR(0), MINUTE(0), SECOND(0), "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(mindate),
+                MONTH(mindate),
+                DAY(mindate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "creation");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -512,8 +549,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y1kdate), MONTH(y1kdate), DAY(y1kdate),
-                HOUR(maxtime), MINUTE(maxtime), SECOND(maxtime), "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y1kdate),
+                MONTH(y1kdate),
+                DAY(y1kdate),
+                HOUR(maxtime),
+                MINUTE(maxtime),
+                SECOND(maxtime),
+                "creation");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -533,8 +577,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y2kdate), MONTH(y2kdate), DAY(y2kdate),
-                HOUR(0), MINUTE(0), SECOND(0), "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y2kdate),
+                MONTH(y2kdate),
+                DAY(y2kdate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "creation");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -554,8 +605,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(maxdate), MONTH(maxdate), DAY(maxdate),
-                HOUR(maxtime), MINUTE(maxtime), SECOND(maxtime), "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(maxdate),
+                MONTH(maxdate),
+                DAY(maxdate),
+                HOUR(maxtime),
+                MINUTE(maxtime),
+                SECOND(maxtime),
+                "last written");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -575,8 +633,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(mindate), MONTH(mindate), DAY(mindate),
-                HOUR(0), MINUTE(0), SECOND(0), "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(mindate),
+                MONTH(mindate),
+                DAY(mindate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last written");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -596,8 +661,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y1kdate), MONTH(y1kdate), DAY(y1kdate),
-                HOUR(maxtime), MINUTE(maxtime), SECOND(maxtime), "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y1kdate),
+                MONTH(y1kdate),
+                DAY(y1kdate),
+                HOUR(maxtime),
+                MINUTE(maxtime),
+                SECOND(maxtime),
+                "last written");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -617,8 +689,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y2kdate), MONTH(y2kdate), DAY(y2kdate),
-                HOUR(0), MINUTE(0), SECOND(0), "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y2kdate),
+                MONTH(y2kdate),
+                DAY(y2kdate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last written");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -638,8 +717,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(maxdate), MONTH(maxdate), DAY(maxdate),
-                HOUR(0), MINUTE(0), SECOND(0), "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(maxdate),
+                MONTH(maxdate),
+                DAY(maxdate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last access");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -659,8 +745,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(mindate), MONTH(mindate), DAY(mindate),
-                HOUR(0), MINUTE(0), SECOND(0), "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(mindate),
+                MONTH(mindate),
+                DAY(mindate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last access");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -680,8 +773,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y1kdate), MONTH(y1kdate), DAY(y1kdate),
-                HOUR(0), MINUTE(0), SECOND(0), "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y1kdate),
+                MONTH(y1kdate),
+                DAY(y1kdate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last access");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -701,8 +801,15 @@ void Timestamps(const char *path)
     if(!rc)
     {
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, YEAR(y2kdate), MONTH(y2kdate), DAY(y2kdate),
-                HOUR(0), MINUTE(0), SECOND(0), "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                YEAR(y2kdate),
+                MONTH(y2kdate),
+                DAY(y2kdate),
+                HOUR(0),
+                MINUTE(0),
+                SECOND(0),
+                "last access");
 
         wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
         memset(&regs, 0, sizeof(regs));
@@ -720,14 +827,13 @@ void Timestamps(const char *path)
 
 void DirectoryDepth(const char *path)
 {
-    char   driveNo = path[0] - '@';
-    int rc  = 0;
+    char     driveNo = path[0] - '@';
+    int      rc      = 0;
     unsigned total;
-    char   filename[9];
-    long   pos = 2;
+    char     filename[9];
+    long     pos = 2;
 
-    if(driveNo > 32)                        
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -750,8 +856,7 @@ void DirectoryDepth(const char *path)
         sprintf(&filename, "%08d", pos);
         rc = mkdir(filename);
 
-        if(!rc)
-            rc = chdir(filename);
+        if(!rc) rc = chdir(filename);
 
         pos++;
     }
@@ -761,20 +866,19 @@ void DirectoryDepth(const char *path)
 
 void Fragmentation(const char *path, size_t clusterSize)
 {
-    size_t        halfCluster             = clusterSize / 2;
-    size_t        quarterCluster          = clusterSize / 4;
-    size_t        twoCluster              = clusterSize * 2;
-    size_t        threeQuartersCluster    = halfCluster + quarterCluster;
-    size_t        twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+    size_t         halfCluster             = clusterSize / 2;
+    size_t         quarterCluster          = clusterSize / 4;
+    size_t         twoCluster              = clusterSize * 2;
+    size_t         threeQuartersCluster    = halfCluster + quarterCluster;
+    size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char *buffer;
-    char   driveNo = path[0] - '@';
-    int        rc                      = 0, wRc = 0, cRc = 0;
-    unsigned total, actionTaken             = 0;
-    int         handle;
-    long          i;
+    char           driveNo = path[0] - '@';
+    int            rc = 0, wRc = 0, cRc = 0;
+    unsigned       total, actionTaken = 0;
+    int            handle;
+    long           i;
 
-    if(driveNo > 32)                        
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -795,8 +899,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(halfCluster);
         memset(buffer, 0, halfCluster);
 
-        for(i = 0; i < halfCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < halfCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, halfCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -811,8 +914,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(quarterCluster);
         memset(buffer, 0, quarterCluster);
 
-        for(i = 0; i < quarterCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < quarterCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, quarterCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -827,8 +929,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -843,15 +944,18 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
-        for(i = 0; i < threeQuartersCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, threeQuartersCluster, &actionTaken);
         cRc = _dos_close(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TRQTCLST", threeQuartersCluster, rc, wRc,
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "TRQTCLST",
+           threeQuartersCluster,
+           rc,
+           wRc,
            cRc);
 
     rc = _dos_creatnew("TWTQCLST", _A_NORMAL, &handle);
@@ -860,16 +964,19 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
-        for(i = 0; i < twoAndThreeQuartCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoAndThreeQuartCluster, &actionTaken);
         cRc = _dos_close(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWTQCLST", twoAndThreeQuartCluster, rc,
-           wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "TWTQCLST",
+           twoAndThreeQuartCluster,
+           rc,
+           wRc,
+           cRc);
 
     rc = _dos_creatnew("TWO1", _A_NORMAL, &handle);
     if(!rc)
@@ -877,8 +984,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -893,8 +999,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -909,8 +1014,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -918,7 +1022,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO2\".\n");
-    rc = unlink("TWO2");         
+    rc = unlink("TWO2");
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
@@ -928,8 +1032,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
-        for(i = 0; i < threeQuartersCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, threeQuartersCluster, &actionTaken);
         cRc = _dos_close(handle);
@@ -941,7 +1044,11 @@ void Fragmentation(const char *path, size_t clusterSize)
     printf("\tDeleting \"TWO3\".\n");
     rc = unlink("TWO3");
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "FRAGTHRQ", threeQuartersCluster, rc, wRc,
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "FRAGTHRQ",
+           threeQuartersCluster,
+           rc,
+           wRc,
            cRc);
 
     rc = _dos_creatnew("FRAGSIXQ", _A_NORMAL, &handle);
@@ -950,39 +1057,35 @@ void Fragmentation(const char *path, size_t clusterSize)
         buffer = malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
-        for(i = 0; i < twoAndThreeQuartCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = _dos_write(handle, buffer, twoAndThreeQuartCluster, &actionTaken);
         cRc = _dos_close(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "FRAGSIXQ", twoAndThreeQuartCluster, rc,
-           wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "FRAGSIXQ",
+           twoAndThreeQuartCluster,
+           rc,
+           wRc,
+           cRc);
 }
 
-void Sparse(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void Sparse(const char *path) { /* Do nothing, not supported by target operating system */ }
 
-void Links(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
-}
+void Links(const char *path) { /* Do nothing, not supported by target operating system */ }
 
 void MillionFiles(const char *path)
 {
-    char   driveNo = path[0] - '@';
-    int             rc          = 0;
+    char               driveNo = path[0] - '@';
+    int                rc      = 0;
     char               filename[9];
-    unsigned long long pos         = 0;
-    int              handle;
-    unsigned total;
+    unsigned long long pos = 0;
+    int                handle;
+    unsigned           total;
 
-    if(driveNo > 32)                        
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -1004,8 +1107,7 @@ void MillionFiles(const char *path)
         memset(&filename, 0, 9);
         sprintf(&filename, "%08llu", pos);
         rc = _dos_creatnew(&filename, _A_NORMAL, &handle);
-        if(rc)
-            break;
+        if(rc) break;
 
         _dos_close(handle);
     }
@@ -1015,15 +1117,14 @@ void MillionFiles(const char *path)
 
 void DeleteFiles(const char *path)
 {
-    char   driveNo = path[0] - '@';
-    int rc          = 0;
-    char   filename[9];
-    short  pos         = 0;
+    char     driveNo = path[0] - '@';
+    int      rc      = 0;
+    char     filename[9];
+    short    pos = 0;
     unsigned total;
-    int handle;
+    int      handle;
 
-    if(driveNo > 32)                        
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     _dos_setdrive(driveNo, &total);
     chdir("\\");
@@ -1045,8 +1146,7 @@ void DeleteFiles(const char *path)
         memset(&filename, 0, 9);
         sprintf(&filename, "%X", pos);
         rc = _dos_creatnew(&filename, _A_NORMAL, &handle);
-        if(rc)
-            break;
+        if(rc) break;
 
         _dos_close(handle);
         unlink(&filename);

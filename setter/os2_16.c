@@ -29,7 +29,8 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#if (defined(__I86__) || defined (__i86__) || defined (_M_I86)) && (defined(__OS2__) || defined (__os2__)) && !defined (__DOS__)
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) && (defined(__OS2__) || defined(__os2__)) &&              \
+    !defined(__DOS__)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,12 +39,12 @@ Copyright (C) 2011-2018 Natalia Portillo
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
-#include <os2.h>
-
-#include "defs.h"
 #include "consts.h"
-#include "os2_16.h"
+#include "defs.h"
 #include "dosos2.h"
+#include "os2_16.h"
+
+#include <os2.h>
 
 void GetOsInfo()
 {
@@ -82,27 +83,23 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 {
     USHORT      rc;
     BYTE        bData[64];
-    USHORT      cbData  = sizeof(bData);
+    USHORT      cbData = sizeof(bData);
     PFSALLOCATE pfsAllocateBuffer;
     USHORT      driveNo = path[0] - '@';
-    char        *fsdName;
+    char *      fsdName;
     PFSINFO     pfsInfo;
 
-    if(driveNo > 32)
-       driveNo-=32;
+    if(driveNo > 32) driveNo -= 32;
 
     *clusterSize = 0;
 
-    rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID) & bData, &cbData, 0);
+    rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData, 0);
 
     printf("Volume information:\n");
     printf("\tPath: %s\n", path);
     printf("\tDrive number: %d\n", driveNo - 1);
 
-    if(rc)
-    {
-        printf("Error %d requesting volume information.\n", rc);
-    }
+    if(rc) { printf("Error %d requesting volume information.\n", rc); }
     else
     {
         fsdName = &bData[4 + (USHORT)bData[2] + 1 + 2];
@@ -112,18 +109,18 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     pfsAllocateBuffer = (PFSALLOCATE)malloc(sizeof(FSALLOCATE));
     rc                = DosQFSInfo(driveNo, 1, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
 
-    if(rc)
-    {
-        printf("Error %d requesting volume information.\n", rc);
-    }
+    if(rc) { printf("Error %d requesting volume information.\n", rc); }
     else
     {
         printf("\tBytes per sector: %u\n", pfsAllocateBuffer->cbSector);
-        printf("\tSectors per cluster: %lu (%lu bytes)\n", pfsAllocateBuffer->cSectorUnit,
+        printf("\tSectors per cluster: %lu (%lu bytes)\n",
+               pfsAllocateBuffer->cSectorUnit,
                pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector);
-        printf("\tClusters: %lu (%lu bytes)\n", pfsAllocateBuffer->cUnit,
+        printf("\tClusters: %lu (%lu bytes)\n",
+               pfsAllocateBuffer->cUnit,
                pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnit);
-        printf("\tFree clusters: %lu (%lu bytes)\n", pfsAllocateBuffer->cUnitAvail,
+        printf("\tFree clusters: %lu (%lu bytes)\n",
+               pfsAllocateBuffer->cUnitAvail,
                pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnitAvail);
 
         *clusterSize = pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector;
@@ -134,16 +131,17 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     pfsInfo = (PFSINFO)malloc(sizeof(FSINFO));
     rc      = DosQFSInfo(driveNo, 2, (PBYTE)pfsInfo, sizeof(FSINFO));
 
-    if(rc)
-    {
-        printf("Error %d requesting volume information.\n", rc);
-    }
+    if(rc) { printf("Error %d requesting volume information.\n", rc); }
     else
     {
         printf("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
-        printf("\tVolume created on %d/%02d/%02d %02d:%02d:%02d\n", pfsInfo->fdateCreation.year + 1980,
-               pfsInfo->fdateCreation.month - 1, pfsInfo->fdateCreation.day, pfsInfo->ftimeCreation.hours,
-               pfsInfo->ftimeCreation.minutes, pfsInfo->ftimeCreation.twosecs * 2);
+        printf("\tVolume created on %d/%02d/%02d %02d:%02d:%02d\n",
+               pfsInfo->fdateCreation.year + 1980,
+               pfsInfo->fdateCreation.month - 1,
+               pfsInfo->fdateCreation.day,
+               pfsInfo->ftimeCreation.hours,
+               pfsInfo->ftimeCreation.minutes,
+               pfsInfo->ftimeCreation.twosecs * 2);
     }
 
     free(pfsInfo);
@@ -152,7 +150,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 void FileAttributes(const char *path)
 {
     char   drivePath[4];
-    USHORT rc          = 0, wRc = 0, cRc = 0;
+    USHORT rc = 0, wRc = 0, cRc = 0;
     USHORT actionTaken = 0;
     HFILE  handle;
 
@@ -181,9 +179,14 @@ void FileAttributes(const char *path)
 
     printf("Creating attributes files.\n");
 
-    rc = DosOpen("NONE", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("NONE",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -194,9 +197,14 @@ void FileAttributes(const char *path)
 
     printf("\tFile with no attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "NONE", rc, wRc, cRc);
 
-    rc = DosOpen("ARCHIVE", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCHIVE",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -207,9 +215,14 @@ void FileAttributes(const char *path)
 
     printf("\tFile with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHIVE", rc, wRc, cRc);
 
-    rc = DosOpen("SYSTEM", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("SYSTEM",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -220,9 +233,14 @@ void FileAttributes(const char *path)
 
     printf("\tFile with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTEM", rc, wRc, cRc);
 
-    rc = DosOpen("HIDDEN", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("HIDDEN",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -233,9 +251,14 @@ void FileAttributes(const char *path)
 
     printf("\tFile with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDEN", rc, wRc, cRc);
 
-    rc = DosOpen("READONLY", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("READONLY",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -246,9 +269,14 @@ void FileAttributes(const char *path)
 
     printf("\tFile with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "READONLY", rc, wRc, cRc);
 
-    rc = DosOpen("HIDDREAD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("HIDDREAD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -258,12 +286,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("HIDDREAD", FILE_HIDDEN | FILE_READONLY, 0);
     }
 
-    printf("\tFile with hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDREAD", rc,
-           wRc, cRc);
+    printf("\tFile with hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "HIDDREAD",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("SYSTREAD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("SYSTREAD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -273,12 +309,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("SYSTREAD", FILE_SYSTEM | FILE_READONLY, 0);
     }
 
-    printf("\tFile with system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTREAD", rc,
-           wRc, cRc);
+    printf("\tFile with system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSTREAD",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("SYSTHIDD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("SYSTHIDD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -288,12 +332,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("SYSTHIDD", FILE_SYSTEM | FILE_HIDDEN, 0);
     }
 
-    printf("\tFile with system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTHIDD", rc, wRc,
+    printf("\tFile with system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSTHIDD",
+           rc,
+           wRc,
            cRc);
 
-    rc = DosOpen("SYSRDYHD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("SYSRDYHD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -304,12 +356,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("SYSRDYHD", FILE_SYSTEM | FILE_READONLY | FILE_HIDDEN, 0);
     }
 
-    printf("\tFile with system, read-only, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSRDYHD",
-           rc, wRc, cRc);
+    printf("\tFile with system, read-only, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "SYSRDYHD",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("ARCHREAD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCHREAD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -319,12 +379,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("ARCHREAD", FILE_ARCHIVED | FILE_READONLY, 0);
     }
 
-    printf("\tFile with archived, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHREAD", rc,
-           wRc, cRc);
+    printf("\tFile with archived, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHREAD",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("ARCHHIDD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCHHIDD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -334,12 +402,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("ARCHHIDD", FILE_ARCHIVED | FILE_HIDDEN, 0);
     }
 
-    printf("\tFile with archived, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHHIDD", rc, wRc,
+    printf("\tFile with archived, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHHIDD",
+           rc,
+           wRc,
            cRc);
 
-    rc = DosOpen("ARCHDRDY", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCHDRDY",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -351,11 +427,19 @@ void FileAttributes(const char *path)
     }
 
     printf("\tFile with archived, hidden, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARCHDRDY", rc, wRc, cRc);
+           "ARCHDRDY",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("ARCHSYST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCHSYST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -365,12 +449,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("ARCHSYST", FILE_ARCHIVED | FILE_SYSTEM, 0);
     }
 
-    printf("\tFile with archived, system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHSYST", rc, wRc,
+    printf("\tFile with archived, system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCHSYST",
+           rc,
+           wRc,
            cRc);
 
-    rc = DosOpen("ARSYSRDY", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARSYSRDY",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -382,11 +474,19 @@ void FileAttributes(const char *path)
     }
 
     printf("\tFile with archived, system, read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARSYSRDY", rc, wRc, cRc);
+           "ARSYSRDY",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("ARCSYSHD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARCSYSHD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -397,12 +497,20 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("ARCSYSHD", FILE_ARCHIVED | FILE_SYSTEM | FILE_HIDDEN, 0);
     }
 
-    printf("\tFile with archived, system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCSYSHD",
-           rc, wRc, cRc);
+    printf("\tFile with archived, system, hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+           "ARCSYSHD",
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen("ARSYHDRD", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ARSYHDRD",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -414,19 +522,22 @@ void FileAttributes(const char *path)
         rc  = DosSetFileMode("ARSYHDRD", FILE_ARCHIVED | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY, 0);
     }
 
-    printf("\tFile with all (archived, system, hidden, read-only) attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "ARSYHDRD", rc, wRc, cRc);
+    printf("\tFile with all (archived, system, hidden, read-only) attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d\n",
+           "ARSYHDRD",
+           rc,
+           wRc,
+           cRc);
 }
 
 void FilePermissions(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
+{ /* Do nothing, not supported by target operating system */
 }
 
 void ExtendedAttributes(const char *path)
 {
     char   drivePath[4];
-    USHORT rc          = 0, wRc = 0, cRc = 0;
+    USHORT rc = 0, wRc = 0, cRc = 0;
     USHORT actionTaken = 0;
     HFILE  handle;
     char   message[300];
@@ -457,55 +568,70 @@ void ExtendedAttributes(const char *path)
 
     printf("Creating files with extended attributes.\n");
 
-    rc = DosOpen("COMMENTS", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("COMMENTS",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
         eap.fpGEAList = NULL;
-        eap.fpFEAList = (PFEALIST) & CommentsEA;
+        eap.fpFEAList = (PFEALIST)&CommentsEA;
         eap.oError    = 0;
         memset(&message, 0, 300);
         sprintf(&message, "This files has an optional .COMMENTS EA\n");
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        rc  = DosSetFileInfo(handle, 2, (PBYTE) & eap, sizeof(EAOP));
+        rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }
 
     printf("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS", rc, wRc, cRc);
 
-    rc = DosOpen("COMMENTS.CRT", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("COMMENTS.CRT",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
         eap.fpGEAList = NULL;
-        eap.fpFEAList = (PFEALIST) & CommentsEACritical;
+        eap.fpFEAList = (PFEALIST)&CommentsEACritical;
         eap.oError    = 0;
         memset(&message, 0, 300);
         sprintf(&message, "This files has a critical .COMMENTS EA\n");
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        rc  = DosSetFileInfo(handle, 2, (PBYTE) & eap, sizeof(EAOP));
+        rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }
 
     printf("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS.CRT", rc, wRc, cRc);
 
-    rc = DosOpen("ICON", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen("ICON",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_REPLACE_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
         eap.fpGEAList = NULL;
-        eap.fpFEAList = (PFEALIST) & IconEA;
+        eap.fpFEAList = (PFEALIST)&IconEA;
         eap.oError    = 0;
         memset(&message, 0, 300);
         sprintf(&message, "This files has an optional .ICON EA\n");
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        rc  = DosSetFileInfo(handle, 2, (PBYTE) & eap, sizeof(EAOP));
+        rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }
 
@@ -513,18 +639,17 @@ void ExtendedAttributes(const char *path)
 }
 
 void ResourceFork(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
+{ /* Do nothing, not supported by target operating system */
 }
 
 void Filenames(const char *path)
 {
     char   drivePath[4];
-    USHORT rc          = 0, wRc = 0, cRc = 0;
+    USHORT rc = 0, wRc = 0, cRc = 0;
     USHORT actionTaken = 0;
     HFILE  handle;
     char   message[300];
-    int    pos         = 0;
+    int    pos = 0;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
@@ -553,9 +678,14 @@ void Filenames(const char *path)
 
     for(pos = 0; filenames[pos]; pos++)
     {
-        rc = DosOpen((PSZ)filenames[pos], &handle, &actionTaken, 0, FILE_NORMAL,
+        rc = DosOpen((PSZ)filenames[pos],
+                     &handle,
+                     &actionTaken,
+                     0,
+                     FILE_NORMAL,
                      OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                     OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                     OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                     0);
 
         if(!rc)
         {
@@ -574,7 +704,7 @@ void Filenames(const char *path)
 void Timestamps(const char *path)
 {
     char       drivePath[4];
-    USHORT     rc          = 0, wRc = 0, cRc = 0, tRc = 0;
+    USHORT     rc = 0, wRc = 0, cRc = 0, tRc = 0;
     USHORT     actionTaken = 0;
     HFILE      handle;
     char       message[300];
@@ -605,9 +735,14 @@ void Timestamps(const char *path)
 
     printf("Creating timestamped files.\n");
 
-    rc = DosOpen((PSZ)"MAXCTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MAXCTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -619,20 +754,31 @@ void Timestamps(const char *path)
         status.ftimeCreation.minutes = 59;
         status.ftimeCreation.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MINCTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MINCTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -644,20 +790,31 @@ void Timestamps(const char *path)
         status.ftimeCreation.minutes = 0;
         status.ftimeCreation.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y19CTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y19CTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -669,20 +826,31 @@ void Timestamps(const char *path)
         status.ftimeCreation.minutes = 59;
         status.ftimeCreation.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y2KCTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y2KCTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -694,20 +862,31 @@ void Timestamps(const char *path)
         status.ftimeCreation.minutes = 0;
         status.ftimeCreation.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "creation");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MAXWTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MAXWTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -719,20 +898,31 @@ void Timestamps(const char *path)
         status.ftimeLastWrite.minutes = 59;
         status.ftimeLastWrite.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastWrite.year + 1980, status.fdateLastWrite.month,
-                status.fdateLastWrite.day, status.ftimeLastWrite.hours, status.ftimeLastWrite.minutes,
-                status.ftimeLastWrite.twosecs * 2, "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastWrite.year + 1980,
+                status.fdateLastWrite.month,
+                status.fdateLastWrite.day,
+                status.ftimeLastWrite.hours,
+                status.ftimeLastWrite.minutes,
+                status.ftimeLastWrite.twosecs * 2,
+                "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXWTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MINWTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MINWTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -744,20 +934,31 @@ void Timestamps(const char *path)
         status.ftimeLastWrite.minutes = 0;
         status.ftimeLastWrite.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastWrite.year + 1980, status.fdateLastWrite.month,
-                status.fdateLastWrite.day, status.ftimeLastWrite.hours, status.ftimeLastWrite.minutes,
-                status.ftimeLastWrite.twosecs * 2, "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastWrite.year + 1980,
+                status.fdateLastWrite.month,
+                status.fdateLastWrite.day,
+                status.ftimeLastWrite.hours,
+                status.ftimeLastWrite.minutes,
+                status.ftimeLastWrite.twosecs * 2,
+                "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINWTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y19WTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y19WTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -769,20 +970,31 @@ void Timestamps(const char *path)
         status.ftimeLastWrite.minutes = 59;
         status.ftimeLastWrite.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastWrite.year + 1980, status.fdateLastWrite.month,
-                status.fdateLastWrite.day, status.ftimeLastWrite.hours, status.ftimeLastWrite.minutes,
-                status.ftimeLastWrite.twosecs * 2, "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastWrite.year + 1980,
+                status.fdateLastWrite.month,
+                status.fdateLastWrite.day,
+                status.ftimeLastWrite.hours,
+                status.ftimeLastWrite.minutes,
+                status.ftimeLastWrite.twosecs * 2,
+                "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19WTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y2KWTIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y2KWTIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -794,20 +1006,31 @@ void Timestamps(const char *path)
         status.ftimeLastWrite.minutes = 0;
         status.ftimeLastWrite.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastWrite.year + 1980, status.fdateLastWrite.month,
-                status.fdateLastWrite.day, status.ftimeLastWrite.hours, status.ftimeLastWrite.minutes,
-                status.ftimeLastWrite.twosecs * 2, "last written");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastWrite.year + 1980,
+                status.fdateLastWrite.month,
+                status.fdateLastWrite.day,
+                status.ftimeLastWrite.hours,
+                status.ftimeLastWrite.minutes,
+                status.ftimeLastWrite.twosecs * 2,
+                "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KWTIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MAXATIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MAXATIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -819,20 +1042,31 @@ void Timestamps(const char *path)
         status.ftimeLastAccess.minutes = 59;
         status.ftimeLastAccess.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastAccess.year + 1980, status.fdateLastAccess.month,
-                status.fdateLastAccess.day, status.ftimeLastAccess.hours, status.ftimeLastAccess.minutes,
-                status.ftimeLastAccess.twosecs * 2, "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastAccess.year + 1980,
+                status.fdateLastAccess.month,
+                status.fdateLastAccess.day,
+                status.ftimeLastAccess.hours,
+                status.ftimeLastAccess.minutes,
+                status.ftimeLastAccess.twosecs * 2,
+                "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MINATIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MINATIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -844,20 +1078,31 @@ void Timestamps(const char *path)
         status.ftimeLastAccess.minutes = 0;
         status.ftimeLastAccess.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastAccess.year + 1980, status.fdateLastAccess.month,
-                status.fdateLastAccess.day, status.ftimeLastAccess.hours, status.ftimeLastAccess.minutes,
-                status.ftimeLastAccess.twosecs * 2, "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastAccess.year + 1980,
+                status.fdateLastAccess.month,
+                status.fdateLastAccess.day,
+                status.ftimeLastAccess.hours,
+                status.ftimeLastAccess.minutes,
+                status.ftimeLastAccess.twosecs * 2,
+                "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y19ATIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y19ATIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -869,20 +1114,31 @@ void Timestamps(const char *path)
         status.ftimeLastAccess.minutes = 59;
         status.ftimeLastAccess.twosecs = 29;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastAccess.year + 1980, status.fdateLastAccess.month,
-                status.fdateLastAccess.day, status.ftimeLastAccess.hours, status.ftimeLastAccess.minutes,
-                status.ftimeLastAccess.twosecs * 2, "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastAccess.year + 1980,
+                status.fdateLastAccess.month,
+                status.fdateLastAccess.day,
+                status.ftimeLastAccess.hours,
+                status.ftimeLastAccess.minutes,
+                status.ftimeLastAccess.twosecs * 2,
+                "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19ATIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y2KATIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y2KATIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -894,20 +1150,31 @@ void Timestamps(const char *path)
         status.ftimeLastAccess.minutes = 0;
         status.ftimeLastAccess.twosecs = 0;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateLastAccess.year + 1980, status.fdateLastAccess.month,
-                status.fdateLastAccess.day, status.ftimeLastAccess.hours, status.ftimeLastAccess.minutes,
-                status.ftimeLastAccess.twosecs * 2, "last access");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateLastAccess.year + 1980,
+                status.fdateLastAccess.month,
+                status.fdateLastAccess.day,
+                status.ftimeLastAccess.hours,
+                status.ftimeLastAccess.minutes,
+                status.ftimeLastAccess.twosecs * 2,
+                "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MAX_TIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MAX_TIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -923,20 +1190,31 @@ void Timestamps(const char *path)
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "all");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAX_TIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"MIN_TIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "MIN_TIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -952,20 +1230,31 @@ void Timestamps(const char *path)
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "all");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MIN_TIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y19_TIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y19_TIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -981,20 +1270,31 @@ void Timestamps(const char *path)
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "all");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19_TIME", rc, wRc, cRc, tRc);
 
-    rc = DosOpen((PSZ)"Y2K_TIME", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "Y2K_TIME",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
 
     if(!rc)
     {
@@ -1010,12 +1310,18 @@ void Timestamps(const char *path)
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
         memset(&message, 0, 300);
-        sprintf(&message, DATETIME_FORMAT, status.fdateCreation.year + 1980, status.fdateCreation.month,
-                status.fdateCreation.day, status.ftimeCreation.hours, status.ftimeCreation.minutes,
-                status.ftimeCreation.twosecs * 2, "all");
+        sprintf(&message,
+                DATETIME_FORMAT,
+                status.fdateCreation.year + 1980,
+                status.fdateCreation.month,
+                status.fdateCreation.day,
+                status.ftimeCreation.hours,
+                status.ftimeCreation.minutes,
+                status.ftimeCreation.twosecs * 2,
+                "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE) & status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
         cRc = DosClose(handle);
     }
 
@@ -1025,7 +1331,7 @@ void Timestamps(const char *path)
 void DirectoryDepth(const char *path)
 {
     char   drivePath[4];
-    USHORT rc  = 0;
+    USHORT rc = 0;
     char   filename[9];
     long   pos = 2;
 
@@ -1060,8 +1366,7 @@ void DirectoryDepth(const char *path)
         sprintf(&filename, "%08d", pos);
         rc = DosMkDir(filename, 0);
 
-        if(!rc)
-            rc = DosChDir(filename, 0);
+        if(!rc) rc = DosChDir(filename, 0);
 
         pos++;
     }
@@ -1071,17 +1376,17 @@ void DirectoryDepth(const char *path)
 
 void Fragmentation(const char *path, size_t clusterSize)
 {
-    size_t        halfCluster             = clusterSize / 2;
-    size_t        quarterCluster          = clusterSize / 4;
-    size_t        twoCluster              = clusterSize * 2;
-    size_t        threeQuartersCluster    = halfCluster + quarterCluster;
-    size_t        twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+    size_t         halfCluster             = clusterSize / 2;
+    size_t         quarterCluster          = clusterSize / 4;
+    size_t         twoCluster              = clusterSize * 2;
+    size_t         threeQuartersCluster    = halfCluster + quarterCluster;
+    size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char *buffer;
-    char          drivePath[4];
-    USHORT        rc                      = 0, wRc = 0, cRc = 0;
-    USHORT        actionTaken             = 0;
-    HFILE         handle;
-    long          i;
+    char           drivePath[4];
+    USHORT         rc = 0, wRc = 0, cRc = 0;
+    USHORT         actionTaken = 0;
+    HFILE          handle;
+    long           i;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
@@ -1106,16 +1411,20 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     rc = DosChDir("FRAGS", 0);
 
-    rc = DosOpen((PSZ)"HALFCLST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "HALFCLST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(halfCluster);
         memset(buffer, 0, halfCluster);
 
-        for(i = 0; i < halfCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < halfCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, halfCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1124,16 +1433,20 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"QUARCLST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "QUARCLST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(quarterCluster);
         memset(buffer, 0, quarterCluster);
 
-        for(i = 0; i < quarterCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < quarterCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, quarterCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1142,16 +1455,20 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"TWOCLST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TWOCLST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1160,54 +1477,74 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"TRQTCLST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TRQTCLST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
-        for(i = 0; i < threeQuartersCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, threeQuartersCluster, &actionTaken);
         cRc = DosClose(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TRQTCLST", threeQuartersCluster, rc, wRc,
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "TRQTCLST",
+           threeQuartersCluster,
+           rc,
+           wRc,
            cRc);
 
-    rc = DosOpen((PSZ)"TWTQCLST", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TWTQCLST",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
-        for(i = 0; i < twoAndThreeQuartCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoAndThreeQuartCluster, &actionTaken);
         cRc = DosClose(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWTQCLST", twoAndThreeQuartCluster, rc,
-           wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "TWTQCLST",
+           twoAndThreeQuartCluster,
+           rc,
+           wRc,
+           cRc);
 
-    rc = DosOpen((PSZ)"TWO1", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TWO1",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1216,16 +1553,20 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"TWO2", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TWO2",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1234,16 +1575,20 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"TWO3", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "TWO3",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
-        for(i = 0; i < twoCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1251,20 +1596,24 @@ void Fragmentation(const char *path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO2\".\n");
-    rc = DosDelete((PSZ)"TWO2", 0);
+    rc = DosDelete((PSZ) "TWO2", 0);
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
-    rc = DosOpen((PSZ)"FRAGTHRQ", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "FRAGTHRQ",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
-        for(i = 0; i < threeQuartersCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, threeQuartersCluster, &actionTaken);
         cRc = DosClose(handle);
@@ -1272,47 +1621,57 @@ void Fragmentation(const char *path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO1\".\n");
-    rc = DosDelete((PSZ)"TWO1", 0);
+    rc = DosDelete((PSZ) "TWO1", 0);
     printf("\tDeleting \"TWO3\".\n");
-    rc = DosDelete((PSZ)"TWO3", 0);
+    rc = DosDelete((PSZ) "TWO3", 0);
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "FRAGTHRQ", threeQuartersCluster, rc, wRc,
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "FRAGTHRQ",
+           threeQuartersCluster,
+           rc,
+           wRc,
            cRc);
 
-    rc = DosOpen((PSZ)"FRAGSIXQ", &handle, &actionTaken, 0, FILE_NORMAL,
+    rc = DosOpen((PSZ) "FRAGSIXQ",
+                 &handle,
+                 &actionTaken,
+                 0,
+                 FILE_NORMAL,
                  OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
+                 OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                 0);
     if(!rc)
     {
         buffer = malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
-        for(i = 0; i < twoAndThreeQuartCluster; i++)
-            buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
+        for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         wRc = DosWrite(handle, buffer, twoAndThreeQuartCluster, &actionTaken);
         cRc = DosClose(handle);
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "FRAGSIXQ", twoAndThreeQuartCluster, rc,
-           wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+           "FRAGSIXQ",
+           twoAndThreeQuartCluster,
+           rc,
+           wRc,
+           cRc);
 }
 
 void Links(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
+{ /* Do nothing, not supported by target operating system */
 }
 
 void Sparse(const char *path)
-{
-    /* Do nothing, not supported by target operating system */
+{ /* Do nothing, not supported by target operating system */
 }
 
 void MillionFiles(const char *path)
 {
     char               drivePath[4];
-    USHORT             rc          = 0;
+    USHORT             rc = 0;
     char               filename[9];
     unsigned long long pos         = 0;
     USHORT             actionTaken = 0;
@@ -1347,11 +1706,15 @@ void MillionFiles(const char *path)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08llu", pos);
-        rc = DosOpen(&filename, &handle, &actionTaken, 0, FILE_NORMAL,
+        rc = DosOpen(&filename,
+                     &handle,
+                     &actionTaken,
+                     0,
+                     FILE_NORMAL,
                      OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                     OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
-        if(rc)
-            break;
+                     OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                     0);
+        if(rc) break;
 
         DosClose(handle);
     }
@@ -1362,7 +1725,7 @@ void MillionFiles(const char *path)
 void DeleteFiles(const char *path)
 {
     char   drivePath[4];
-    USHORT rc          = 0;
+    USHORT rc = 0;
     char   filename[9];
     short  pos         = 0;
     USHORT actionTaken = 0;
@@ -1397,11 +1760,15 @@ void DeleteFiles(const char *path)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%X", pos);
-        rc = DosOpen(&filename, &handle, &actionTaken, 0, FILE_NORMAL,
+        rc = DosOpen(&filename,
+                     &handle,
+                     &actionTaken,
+                     0,
+                     FILE_NORMAL,
                      OPEN_ACTION_CREATE_IF_NEW | OPEN_ACTION_FAIL_IF_EXISTS,
-                     OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE, 0);
-        if(rc)
-            break;
+                     OPEN_FLAGS_NOINHERIT | OPEN_FLAGS_NO_CACHE | OPEN_SHARE_DENYNONE | OPEN_ACCESS_READWRITE,
+                     0);
+        if(rc) break;
 
         DosClose(handle);
         DosDelete(&filename, 0);
@@ -1409,4 +1776,3 @@ void DeleteFiles(const char *path)
 }
 
 #endif
-

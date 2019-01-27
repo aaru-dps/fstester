@@ -11,9 +11,9 @@
 #define INCL_DOSNLS
 #define INCL_DOSERRORS
 
-#include <os2.h>
-
 #include "ea.h"
+
+#include <os2.h>
 
 void GetEAs(char *path, char **bufptr, size_t *size)
 {
@@ -27,13 +27,11 @@ void GetEAs(char *path, char **bufptr, size_t *size)
     ULONG       nLength;
     ULONG       nBlock;
 
-    if(DosQueryPathInfo(path, FIL_QUERYEASIZE, (PBYTE) & fs, sizeof(fs)))
-        return;
+    if(DosQueryPathInfo(path, FIL_QUERYEASIZE, (PBYTE)&fs, sizeof(fs))) return;
 
     nBlock = max(fs.cbList, 65535);
 
-    if((pDENA = malloc((size_t)nBlock)) == NULL)
-        return;
+    if((pDENA = malloc((size_t)nBlock)) == NULL) return;
 
     ulAttributes = -1;
 
@@ -57,7 +55,7 @@ void GetEAs(char *path, char **bufptr, size_t *size)
         nLength = ((nLength - 1) / sizeof(ULONG) + 1) * sizeof(ULONG);
 
         pGEA->oNextEntryOffset = ulAttributes ? nLength : 0;
-        pGEA = (PGEA2)((PCH)pGEA + nLength);
+        pGEA                   = (PGEA2)((PCH)pGEA + nLength);
 
         pFound = (PDENA2)((PCH)pFound + pFound->oNextEntryOffset);
     }
@@ -71,14 +69,14 @@ void GetEAs(char *path, char **bufptr, size_t *size)
 
     pGEAlist->cbList = (PCH)pGEA - (PCH)pGEAlist;
 
-    pFEAlist = (PVOID)pDENA; // reuse buffer
+    pFEAlist         = (PVOID)pDENA; // reuse buffer
     pFEAlist->cbList = nBlock;
 
     eaop.fpGEA2List = pGEAlist;
     eaop.fpFEA2List = pFEAlist;
     eaop.oError     = 0;
 
-    if(DosQueryPathInfo(path, FIL_QUERYEASFROMLIST, (PBYTE) & eaop, sizeof(eaop)))
+    if(DosQueryPathInfo(path, FIL_QUERYEASFROMLIST, (PBYTE)&eaop, sizeof(eaop)))
     {
         free(pDENA);
         free(pGEAlist);

@@ -29,7 +29,7 @@ Contains 32-bit OS/2 declarations
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#if (defined(__OS2__) || defined (__os2__)) && (defined(__I386__) || defined (__i386__) || defined (__THW_INTEL) || defined (_M_IX86))
-
+#if(defined(__OS2__) || defined(__os2__)) &&                                                                           \
+    (defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_IX86))
 
 #endif

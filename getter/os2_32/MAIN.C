@@ -29,12 +29,11 @@ Contains global definitions
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#include <stdio.h>
+#include "dir.h"
+#include "main.h"
 
 #include <os2.h>
-
-#include "main.h"
-#include "dir.h"
+#include <stdio.h>
 
 int main()
 {
