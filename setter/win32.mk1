@@ -1,21 +1,55 @@
 !define BLANK ""
-C:\dic\main.obj : C:\dic\main.c .AUTODEPEND
- @C:
- cd C:\dic
- *wcc386 main.c -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -3r -bt&
-=nt -fo=.obj -mf
+c:\setter\dos.obj : c:\setter\dos.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 dos.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt=nt&
+ -mf
 
-C:\dic\win32.obj : C:\dic\win32.c .AUTODEPEND
- @C:
- cd C:\dic
- *wcc386 win32.c -i="C:\WATCOM/h;C:\WATCOM/h/nt" -w4 -e25 -zq -od -d2 -3r -b&
-t=nt -fo=.obj -mf
+c:\setter\macos.obj : c:\setter\macos.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 macos.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt=&
+nt -mf
 
-C:\dic\win32.exe : C:\dic\main.obj C:\dic\win32.obj C:\dic\consts.h C:\dic\d&
-efs.h C:\dic\main.h .AUTODEPEND
- @C:
- cd C:\dic
- @%write win32.lk1 FIL main.obj,win32.obj
+c:\setter\main.obj : c:\setter\main.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 main.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt=n&
+t -mf
+
+c:\setter\os2_16.obj : c:\setter\os2_16.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 os2_16.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt&
+=nt -mf
+
+c:\setter\os2_32.obj : c:\setter\os2_32.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 os2_32.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt&
+=nt -mf
+
+c:\setter\unix.obj : c:\setter\unix.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 unix.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt=n&
+t -mf
+
+c:\setter\win32.obj : c:\setter\win32.c .AUTODEPEND
+ @c:
+ cd c:\setter
+ *wcc386 win32.c -i=C:\WATCOM\h;C:\WATCOM\h\nt -w4 -e25 -zq -od -d2 -5r -bt=&
+nt -mf
+
+c:\setter\win32.exe : c:\setter\dos.obj c:\setter\macos.obj c:\setter\main.o&
+bj c:\setter\os2_16.obj c:\setter\os2_32.obj c:\setter\unix.obj c:\setter\wi&
+n32.obj c:\setter\consts.h c:\setter\defs.h c:\setter\dos.h c:\setter\dosos2&
+.h c:\setter\macos.h c:\setter\main.h c:\setter\os2_16.h c:\setter\os2_32.h &
+c:\setter\win32.h .AUTODEPEND
+ @c:
+ cd c:\setter
+ @%write win32.lk1 FIL dos.obj,macos.obj,main.obj,os2_16.obj,os2_32.obj,unix&
+.obj,win32.obj
  @%append win32.lk1 
 !ifneq BLANK ""
  *wlib -q -n -b win32.imp 
@@ -24,5 +58,6 @@ efs.h C:\dic\main.h .AUTODEPEND
 !ifneq BLANK ""
  @%append win32.lk1 op resource=
 !endif
- *wlink name win32 d all SYS nt op m op maxe=25 op q op symf @win32.lk1
+ *wlink name win32 d all op inc SYS nt op m op maxe=25 op q op symf @win32.l&
+k1
 

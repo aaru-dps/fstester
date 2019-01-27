@@ -1,3 +1,3 @@
-project : C:\dic\win32.exe .SYMBOLIC
+project : c:\setter\win32.exe .SYMBOLIC
 
-!include C:\dic\win32.mk1
+!include c:\setter\win32.mk1
