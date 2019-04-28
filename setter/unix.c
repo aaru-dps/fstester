@@ -908,9 +908,9 @@ void MillionFiles(const char *path)
     for(pos = 0; pos < 100000; pos++)
     {
         memset(&filename, 0, 9);
-        sprintf(&filename, "%08ld", pos);
+        sprintf(filename, "%08ld", pos);
 
-        h = fopen(&filename, "w+");
+        h = fopen(filename, "w+");
         if(h == NULL) { break; }
 
         fclose(h);
@@ -921,7 +921,47 @@ void MillionFiles(const char *path)
 
 void DeleteFiles(const char *path)
 {
-    // TODO: Implement
+    char  filename[9];
+    long  pos = 0;
+    FILE *h;
+    int   ret;
+
+    ret = chdir(path);
+
+    if(ret)
+    {
+        printf("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = mkdir("DELETED", 0755);
+
+    if(ret)
+    {
+        printf("Error %d creating working directory.\n", errno);
+        return;
+    }
+
+    ret = chdir("DELETED");
+
+    if(ret)
+    {
+        printf("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    printf("Creating and deleting files.\n");
+
+    for(pos = 0; pos < 64; pos++)
+    {
+        memset(&filename, 0, 9);
+        sprintf(filename, "%lX", pos);
+        h = fopen(filename, "w+");
+        if(h == NULL) { break; }
+
+        fclose(h);
+        unlink(filename);
+    }
 }
 
 #endif
