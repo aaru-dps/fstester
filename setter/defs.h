@@ -32,6 +32,8 @@ Copyright (C) 2011-2018 Natalia Portillo
 #ifndef DIC_FSTESTER_SETTER_DEFS_H
 #define DIC_FSTESTER_SETTER_DEFS_H
 
+#include <stddef.h>
+
 void GetOsInfo();
 
 void GetVolumeInfo(const char *path, size_t *clusterSize);

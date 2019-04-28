@@ -29,10 +29,11 @@ Contains global definitions
 Copyright (C) 2011-2018 Natalia Portillo
 *****************************************************************************/
 
-#include "main.h"
 
+#include "main.h"
 #include "defs.h"
 
+#include <stddef.h>
 #include <stdio.h>
 
 #if defined(macintosh)
