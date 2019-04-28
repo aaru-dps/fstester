@@ -614,7 +614,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -637,7 +636,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -660,7 +658,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -683,7 +680,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -711,7 +707,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -739,7 +734,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -762,7 +756,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -785,7 +778,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -812,7 +804,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -847,7 +838,6 @@ void Fragmentation(const char *path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -884,7 +874,49 @@ void Links(const char *path)
 
 void MillionFiles(const char *path)
 {
-    // TODO: Implement
+    char  filename[9];
+    long  pos = 0;
+    FILE *h;
+    int   ret;
+
+    ret = chdir(path);
+
+    if(ret)
+    {
+        printf("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = mkdir("MILLION", 0755);
+
+    if(ret)
+    {
+        printf("Error %d creating working directory.\n", errno);
+        return;
+    }
+
+    ret = chdir("MILLION");
+
+    if(ret)
+    {
+        printf("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    printf("Creating lots of files.\n");
+
+    for(pos = 0; pos < 100000; pos++)
+    {
+        memset(&filename, 0, 9);
+        sprintf(&filename, "%08ld", pos);
+
+        h = fopen(&filename, "w+");
+        if(h == NULL) { break; }
+
+        fclose(h);
+    }
+
+    printf("\tCreated %ld files\n", pos);
 }
 
 void DeleteFiles(const char *path)
