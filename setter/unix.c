@@ -35,6 +35,7 @@ Copyright (C) 2011-2018 Natalia Portillo
 
 #include "consts.h"
 #include "defs.h"
+#include "linux.h"
 
 #include <errno.h>
 #include <inttypes.h>
@@ -452,7 +453,9 @@ void FilePermissions(const char *path)
 
 void ExtendedAttributes(const char *path)
 {
-    // TODO: Implement with OS dependent calls
+#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+    LinuxExtendedAttributes(path);
+#endif
 }
 
 void ResourceFork(const char *path)
