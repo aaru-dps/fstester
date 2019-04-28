@@ -40,33 +40,22 @@ Copyright (C) 2011-2018 Natalia Portillo
 
 void GetOsInfo()
 {
-    struct utsname *uname_buf;
-    int             ret;
+    struct utsname buf;
+    int            ret;
 
-    uname_buf = malloc(sizeof(struct utsname));
-
-    if(!uname_buf)
-    {
-        printf("Error %d allocating memory.\n", errno);
-        return;
-    }
-
-    ret = uname(uname_buf);
+    ret = uname(&buf);
 
     if(ret)
     {
-        free(uname_buf);
         printf("Error %d retrieving OS information.\n", errno);
         return;
     }
 
     printf("OS information:\n");
-    printf("\tOS name: %s\n", uname_buf->sysname);
-    printf("\tRelease: %s\n", uname_buf->release);
-    printf("\tVersion: %s\n", uname_buf->version);
-    printf("\tMachine: %s\n", uname_buf->machine);
-
-    free(uname_buf);
+    printf("\tOS name: %s\n", buf.sysname);
+    printf("\tRelease: %s\n", buf.release);
+    printf("\tVersion: %s\n", buf.version);
+    printf("\tMachine: %s\n", buf.machine);
 }
 
 void GetVolumeInfo(const char *path, size_t *clusterSize)
