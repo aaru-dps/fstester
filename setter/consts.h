@@ -32,7 +32,7 @@ Copyright (C) 2011-2018 Natalia Portillo
 #ifndef DIC_FSTESTER_SETTER_CONSTS_H
 #define DIC_FSTESTER_SETTER_CONSTS_H
 
-extern const char *filenames[] = {
+static const char *filenames[] = {
     "FILNAM",
     "FILNAM.EXT",
     "FILENAME",
@@ -105,6 +105,6 @@ extern const char *filenames[] = {
     0};
 
 #define CLAUNIA_SIZE 7
-extern const unsigned char clauniaBytes[] = {0x43, 0x4C, 0x41, 0x55, 0x4E, 0x49, 0x41};
+static const unsigned char clauniaBytes[] = {0x43, 0x4C, 0x41, 0x55, 0x4E, 0x49, 0x41};
 
 #endif

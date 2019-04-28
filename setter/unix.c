@@ -1140,7 +1140,9 @@ void Fragmentation(const char *path, size_t clusterSize)
 
 void Sparse(const char *path)
 {
-    // Needs OS specific implementations
+#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+    LinuxSparse(path);
+#endif
 }
 
 void Links(const char *path)
