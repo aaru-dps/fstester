@@ -864,12 +864,59 @@ void Fragmentation(const char *path, size_t clusterSize)
 
 void Sparse(const char *path)
 {
-    // TODO: Implement
+    // Needs OS specific implementations
 }
 
 void Links(const char *path)
 {
-    // TODO: Implement
+    FILE *h;
+    int   ret;
+
+    ret = chdir(path);
+
+    if(ret)
+    {
+        printf("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = mkdir("LINKS", 0755);
+
+    if(ret)
+    {
+        printf("Error %d creating working directory.\n", errno);
+        return;
+    }
+
+    ret = chdir("LINKS");
+
+    if(ret)
+    {
+        printf("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    printf("Creating links.\n");
+
+    h = fopen("TARGET", "w+");
+
+    if(h == NULL)
+    {
+        printf("Error %d creating target file.\n", errno);
+        return;
+    }
+
+    fprintf(h, "This is the target for the links.\n");
+
+    fclose(h);
+
+    ret = link("TARGET", "HARD");
+
+    if(ret) { printf("Error %d creating hard link.\n", errno); }
+
+    ret = symlink("TARGET", "SYMBOLIC");
+
+    if(ret) { printf("Error %d creating symbolic link.\n", errno); }
 }
 
 void MillionFiles(const char *path)
