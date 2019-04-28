@@ -258,7 +258,9 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
 void FileAttributes(const char *path)
 {
-    // Operating system dependent
+#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+    LinuxFileAttributes(path);
+#endif
 }
 
 void FilePermissions(const char *path)
