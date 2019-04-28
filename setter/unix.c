@@ -524,7 +524,51 @@ void Timestamps(const char *path)
 
 void DirectoryDepth(const char *path)
 {
-    // TODO: Implement
+    int  ret;
+    char filename[9];
+    long pos = 2;
+
+    ret = chdir(path);
+
+    if(ret)
+    {
+        printf("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = mkdir("DEPTH", 0755);
+
+    if(ret)
+    {
+        printf("Error %d creating working directory.\n", errno);
+        return;
+    }
+
+    ret = chdir("DEPTH");
+
+    if(ret)
+    {
+        printf("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    printf("Creating deepest directory tree.\n");
+
+    while(!ret)
+    {
+        memset(&filename, 0, 9);
+        sprintf(&filename, "%08ld", pos);
+        ret = mkdir(filename, 0755);
+
+        if(!ret) ret = chdir(filename);
+
+        pos++;
+
+        // This can continue until the disk fills, the kernel crashes, or some other nasty success
+        if(pos >= 1000) return;
+    }
+
+    printf("\tCreated %ld levels of directory hierarchy\n", pos);
 }
 
 void Fragmentation(const char *path, size_t clusterSize)
