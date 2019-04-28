@@ -33,6 +33,7 @@ Copyright (C) 2011-2018 Natalia Portillo
 
 #include "unix.h"
 
+#include "consts.h"
 #include "defs.h"
 
 #include <errno.h>
@@ -450,17 +451,70 @@ void FilePermissions(const char *path)
 
 void ExtendedAttributes(const char *path)
 {
-    // TODO: Implement
+    // TODO: Implement with OS dependent calls
 }
 
 void ResourceFork(const char *path)
 {
-    // TODO: Implement with ADS
+    // Not supported
 }
 
 void Filenames(const char *path)
 {
-    // TODO: Implement
+    int   ret;
+    FILE *h;
+    int   rc, wRc, cRc;
+    char  message[300];
+    int   pos = 0;
+
+    ret = chdir(path);
+
+    if(ret)
+    {
+        printf("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = mkdir("FILENAME", 0755);
+
+    if(ret)
+    {
+        printf("Error %d creating working directory.\n", errno);
+        return;
+    }
+
+    ret = chdir("FILENAME");
+
+    if(ret)
+    {
+        printf("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    printf("Creating files with different filenames.\n");
+
+    for(pos = 0; filenames[pos]; pos++)
+    {
+        h   = fopen(filenames[pos], "w+");
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+
+        if(!h) { rc = errno; }
+        else
+        {
+            memset(&message, 0, 300);
+            sprintf((char *)&message, FILENAME_FORMAT, filenames[pos]);
+
+            ret = fprintf(h, (const char *)&message);
+            if(ret < 0) { wRc = errno; }
+
+            ret = fclose(h);
+            if(ret) { cRc = errno; }
+        }
+
+        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+    }
 }
 
 void Timestamps(const char *path)
