@@ -33,11 +33,40 @@ Copyright (C) 2011-2018 Natalia Portillo
 
 #include "defs.h"
 
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/utsname.h>
 
 void GetOsInfo()
 {
-    // TODO: Implement
+    struct utsname *uname_buf;
+    int             ret;
+
+    uname_buf = malloc(sizeof(struct utsname));
+
+    if(!uname_buf)
+    {
+        printf("Error %d allocating memory.\n", errno);
+        return;
+    }
+
+    ret = uname(uname_buf);
+
+    if(ret)
+    {
+        free(uname_buf);
+        printf("Error %d retrieving OS information.\n", errno);
+        return;
+    }
+
+    printf("OS information:\n");
+    printf("\tOS name: %s\n", uname_buf->sysname);
+    printf("\tRelease: %s\n", uname_buf->release);
+    printf("\tVersion: %s\n", uname_buf->version);
+    printf("\tMachine: %s\n", uname_buf->machine);
+
+    free(uname_buf);
 }
 
 void GetVolumeInfo(const char *path, size_t *clusterSize)
@@ -50,7 +79,9 @@ void FileAttributes(const char *path)
     // TODO: Implement
 }
 
-void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
+void FilePermissions(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 void ExtendedAttributes(const char *path)
 {
