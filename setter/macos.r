@@ -26,17 +26,17 @@ Contains Mac OS resources
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2018 Natalia Portillo
+Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
 #include 	"Types.r"
 
 	resource 'vers' (1) {
-		0x00, 
-		0x01, 
-		development, 
+		0x00,
+		0x01,
+		development,
 		0x00,
 		verUS,
 		"0.1",
-		"0.1, © 2011-2018 Natalia Portillo"
+		"0.1, ï¿½ 2011-2020 Natalia Portillo"
 	};

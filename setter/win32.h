@@ -26,7 +26,7 @@ Contains 32-bit and 64-bit Windows declarations
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2018 Natalia Portillo
+Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
 #if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \

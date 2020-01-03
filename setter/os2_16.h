@@ -26,7 +26,7 @@ Contains 16-bit OS/2 definitions
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2018 Natalia Portillo
+Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
 #if(defined(__OS2__) || defined(__os2__)) && (defined(__I86__) || defined(__i86__) || defined(_M_I86))

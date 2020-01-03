@@ -26,14 +26,14 @@ Contains global definitions
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2018 Natalia Portillo
+Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
 #ifndef DIC_FSTESTER_GETTER_MAIN_H
 #define DIC_FSTESTER_GETTER_MAIN_H
 
 #define DIC_FSTESTER_VERSION "4.5.99.1663"
-#define DIC_COPYRIGHT "Copyright (C) 2011-2018 Natalia Portillo"
+#define DIC_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
 
 #if defined(__alpha__) || defined(_M_ALPHA)
 #define OS_ARCH "axp"
