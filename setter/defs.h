@@ -29,8 +29,8 @@ Contains common definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_SETTER_DEFS_H
-#define DIC_FSTESTER_SETTER_DEFS_H
+#ifndef AARU_FSTESTER_SETTER_DEFS_H
+#define AARU_FSTESTER_SETTER_DEFS_H
 
 #include <stddef.h>
 

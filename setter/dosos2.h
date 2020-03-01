@@ -31,8 +31,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #if defined(__OS2__) || defined(__os2__) || defined(__DOS__) || defined(MSDOS)
 
-#ifndef DIC_FSTESTER_SETTER_DOSOS2_H
-#define DIC_FSTESTER_SETTER_DOSOS2_H
+#ifndef AARU_FSTESTER_SETTER_DOSOS2_H
+#define AARU_FSTESTER_SETTER_DOSOS2_H
 
 const char *archivedAttributeText = "This file has the archived attribute set.\n";
 const char *systemAttributeText   = "This file has the system attribute set.\n";

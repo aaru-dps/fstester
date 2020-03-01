@@ -30,8 +30,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
 #if(defined(__OS2__) || defined(__os2__)) && (defined(__I86__) || defined(__i86__) || defined(_M_I86))
-#ifndef DIC_FSTESTER_SETTER_OS2_16_H
-#define DIC_FSTESTER_SETTER_OS2_16_H
+#ifndef AARU_FSTESTER_SETTER_OS2_16_H
+#define AARU_FSTESTER_SETTER_OS2_16_H
 
 /* Information level types (defins method of query) */
 #define FSAIL_QUERYNAME 1 /* Return data for a Drive or Device */

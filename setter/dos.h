@@ -31,8 +31,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #if defined(__DOS__) || defined (MSDOS)
 
-#ifndef DIC_FSTESTER_SETTER_DOS_H
-#define DIC_FSTESTER_SETTER_DOS_H
+#ifndef AARU_FSTESTER_SETTER_DOS_H
+#define AARU_FSTESTER_SETTER_DOS_H
 
 #pragma pack(__push, 1)
 

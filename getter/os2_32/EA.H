@@ -29,8 +29,8 @@ Contains extended attribute definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_GETTER_OS2_EA_H
-#define DIC_FSTESTER_GETTER_OS2_EA_H
+#ifndef AARU_FSTESTER_GETTER_OS2_EA_H
+#define AARU_FSTESTER_GETTER_OS2_EA_H
 
 #ifndef max
 #define max(a, b) ((a) < (b) ? (b) : (a))

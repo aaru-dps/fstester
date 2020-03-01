@@ -38,8 +38,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 int main()
 {
     ULONG eaCounter = 0;
-    printf("Aaru Filesystem Tester (Getter) for OS/2 %s\n", DIC_FSTESTER_VERSION);
-    printf("%s\n", DIC_COPYRIGHT);
+    printf("Aaru Filesystem Tester (Getter) for OS/2 %s\n", AARU_FSTESTER_VERSION);
+    printf("%s\n", AARU_COPYRIGHT);
 
     return GetAllInDir("C:", &eaCounter);
 }

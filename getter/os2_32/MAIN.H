@@ -29,10 +29,10 @@ Contains global definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_GETTER_OS2_MAIN_H
-#define DIC_FSTESTER_GETTER_OS2_MAIN_H
+#ifndef AARU_FSTESTER_GETTER_OS2_MAIN_H
+#define AARU_FSTESTER_GETTER_OS2_MAIN_H
 
-#define DIC_FSTESTER_VERSION "0.1"
-#define DIC_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
+#define AARU_FSTESTER_VERSION "0.1"
+#define AARU_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
 
 #endif

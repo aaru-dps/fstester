@@ -49,8 +49,8 @@ int main(int argc, char **argv)
     argc = ccommand(&argv);
 #endif
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", DIC_FSTESTER_VERSION);
-    printf("%s\n", DIC_COPYRIGHT);
+    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
+    printf("%s\n", AARU_COPYRIGHT);
 
     printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
     printf("\n");

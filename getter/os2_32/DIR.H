@@ -29,8 +29,8 @@ Contains directory definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_GETTER_OS2_DIR_H
-#define DIC_FSTESTER_GETTER_OS2_DIR_H
+#ifndef AARU_FSTESTER_GETTER_OS2_DIR_H
+#define AARU_FSTESTER_GETTER_OS2_DIR_H
 
 int GetAllInDir();
 

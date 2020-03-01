@@ -32,8 +32,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 #if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \
     defined(__NT__)
 
-#ifndef DIC_FSTESTER_SETTER_WIN32_H
-#define DIC_FSTESTER_SETTER_WIN32_H
+#ifndef AARU_FSTESTER_SETTER_WIN32_H
+#define AARU_FSTESTER_SETTER_WIN32_H
 
 #ifndef VER_PLATFORM_WIN32s
 #define VER_PLATFORM_WIN32s 0

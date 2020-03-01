@@ -29,8 +29,8 @@ Constants
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_SETTER_CONSTS_H
-#define DIC_FSTESTER_SETTER_CONSTS_H
+#ifndef AARU_FSTESTER_SETTER_CONSTS_H
+#define AARU_FSTESTER_SETTER_CONSTS_H
 
 static const char *filenames[] = {
     "FILNAM",

@@ -29,11 +29,11 @@ Contains global definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#ifndef DIC_FSTESTER_GETTER_MAIN_H
-#define DIC_FSTESTER_GETTER_MAIN_H
+#ifndef AARU_FSTESTER_GETTER_MAIN_H
+#define AARU_FSTESTER_GETTER_MAIN_H
 
-#define DIC_FSTESTER_VERSION "4.5.99.1663"
-#define DIC_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
+#define AARU_FSTESTER_VERSION "4.5.99.1663"
+#define AARU_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
 
 #if defined(__alpha__) || defined(_M_ALPHA)
 #define OS_ARCH "axp"

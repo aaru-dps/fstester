@@ -31,8 +31,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #if defined(macintosh)
 
-#ifndef DIC_FSTESTER_SETTER_MACINTOSH_H
-#define DIC_FSTESTER_SETTER_MACINTOSH_H
+#ifndef AARU_FSTESTER_SETTER_MACINTOSH_H
+#define AARU_FSTESTER_SETTER_MACINTOSH_H
 
 #include <MacTypes.h>
 
