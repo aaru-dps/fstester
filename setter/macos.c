@@ -605,21 +605,21 @@ void FileAttributes(const char *path)
     printf("\tFile with creator SimpleText: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SIMPLE", rc, wRc, cRc);
 
     memset(&finderInfo, 0, sizeof(FInfo));
-    rc = HCreate(refNum, dirId, "\pDIC", ostUnknown, ftGenericDocumentPC);
+    rc = HCreate(refNum, dirId, "\pAARU", ostUnknown, ftGenericDocumentPC);
     if(!rc)
     {
-        rc = HOpenDF(refNum, dirId, "\pDIC", 0, &refFile);
+        rc = HOpenDF(refNum, dirId, "\pAARU", 0, &refFile);
         if(!rc)
         {
-            count                = strlen(dicText);
-            wRc                  = FSWrite(refFile, &count, dicText);
+            count                = strlen(aaruText);
+            wRc                  = FSWrite(refFile, &count, aaruText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftGenericDocumentPC;
             finderInfo.fdCreator = ostAaru;
-            rc                   = HSetFInfo(refNum, dirId, "\pDIC", &finderInfo);
+            rc                   = HSetFInfo(refNum, dirId, "\pAARU", &finderInfo);
         }
     }
-    printf("\tFile with creator 'dic ': name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "DIC", rc, wRc, cRc);
+    printf("\tFile with creator 'aaru': name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "AARU", rc, wRc, cRc);
 
     memset(&finderInfo, 0, sizeof(FInfo));
     rc = HCreate(refNum, dirId, "\pPOS_M32_M32", ostUnknown, ftGenericDocumentPC);

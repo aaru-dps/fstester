@@ -1,3 +1,3 @@
-project : C:\dic\dos.exe .SYMBOLIC
+project : C:\aaru\dos.exe .SYMBOLIC
 
-!include C:\dic\dos.mk1
+!include C:\aaru\dos.mk1

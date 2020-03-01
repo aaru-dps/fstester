@@ -1,20 +1,20 @@
 !define BLANK ""
-C:\dic\main.obj : C:\dic\main.c .AUTODEPEND
+C:\aaru\main.obj : C:\aaru\main.c .AUTODEPEND
  @C:
- cd C:\dic
+ cd C:\aaru
  *wcc386 main.c -i="C:\WATCOM/h;C:\WATCOM/h/os2" -w4 -e25 -zq -od -d2 -3r -b&
 t=os2 -fo=.obj -mf
 
-C:\dic\os2_32.obj : C:\dic\os2_32.c .AUTODEPEND
+C:\aaru\os2_32.obj : C:\aaru\os2_32.c .AUTODEPEND
  @C:
- cd C:\dic
+ cd C:\aaru
  *wcc386 os2_32.c -i="C:\WATCOM/h;C:\WATCOM/h/os2" -w4 -e25 -zq -od -d2 -3r &
 -bt=os2 -fo=.obj -mf
 
-C:\dic\os2_32.exe : C:\dic\main.obj C:\dic\os2_32.obj C:\dic\consts.h C:\dic&
-\defs.h C:\dic\dosos2.h C:\dic\main.h C:\dic\os2_32.h .AUTODEPEND
+C:\aaru\os2_32.exe : C:\aaru\main.obj C:\aaru\os2_32.obj C:\aaru\consts.h C:\aaru&
+\defs.h C:\aaru\dosos2.h C:\aaru\main.h C:\aaru\os2_32.h .AUTODEPEND
  @C:
- cd C:\dic
+ cd C:\aaru
  @%write os2_32.lk1 FIL main.obj,os2_32.obj
  @%append os2_32.lk1 
 !ifneq BLANK ""

@@ -57,7 +57,7 @@ const char *bundleText        = "This file has a BNDL resource.\r";
 const char *invisibleText     = "This file is invisible.\r";
 const char *aliasText         = "This file is an alias to nowhere.\r";
 const char *simpletextText    = "This file has creator 'ttxt'.\r";
-const char *dicText           = "This file has creator 'dic '.\r";
+const char *aaruText           = "This file has creator 'aaru'.\r";
 const char *pos_m32_m32       = "This file position is -32k,-32k.\r";
 const char *pos_32_32         = "This file position is 32k,32k.\r";
 const char *pos_m1_m1         = "This file position is -1k,-1k.\r";
@@ -78,7 +78,7 @@ const char *rsrcText          = "This file has a custom icon, a version, and a p
 enum
 {
     gestaltMacOSCompatibilityBoxAttr = FOUR_CHAR_CODE('bbox'),
-    ostAaru                          = FOUR_CHAR_CODE('dic '),
+    ostAaru                          = FOUR_CHAR_CODE('aaru'),
     ostSimpleText                    = FOUR_CHAR_CODE('ttxt'),
     ostUnknown                       = FOUR_CHAR_CODE('????'),
     rtIcons                          = FOUR_CHAR_CODE('icns'),

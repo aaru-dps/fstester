@@ -54,11 +54,11 @@ STACK                  STACK          DGROUP         0002:00000820   00010000
 Address        Symbol
 =======        ======
 
-Module: dir.obj(C:\dic\os2\dir.c)
+Module: dir.obj(C:\aaru\os2\dir.c)
 0001:00000130  GetAllInDir
-Module: ea.obj(C:\dic\os2\ea.c)
+Module: ea.obj(C:\aaru\os2\ea.c)
 0001:00000710  GetEAs
-Module: main.obj(C:\dic\os2\main.c)
+Module: main.obj(C:\aaru\os2\main.c)
 0001:0000092d  main
 Module: C:\WATCOM/lib386/os2\clib3s.lib(stk)
 0001:000009a1* __STK

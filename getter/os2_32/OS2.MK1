@@ -1,26 +1,26 @@
 !define BLANK ""
-C:\dic\os2\dir.obj : C:\dic\os2\dir.c .AUTODEPEND
+C:\aaru\os2\dir.obj : C:\aaru\os2\dir.c .AUTODEPEND
  @C:
- cd C:\dic\os2
+ cd C:\aaru\os2
  *wcc386 dir.c -i="C:\WATCOM/h;C:\WATCOM/h/os2" -w4 -e25 -zq -od -d2 -3s -bt&
 =os2 -fo=.obj -mf
 
-C:\dic\os2\ea.obj : C:\dic\os2\ea.c .AUTODEPEND
+C:\aaru\os2\ea.obj : C:\aaru\os2\ea.c .AUTODEPEND
  @C:
- cd C:\dic\os2
+ cd C:\aaru\os2
  *wcc386 ea.c -i="C:\WATCOM/h;C:\WATCOM/h/os2" -w4 -e25 -zq -od -d2 -3s -bt=&
 os2 -fo=.obj -mf
 
-C:\dic\os2\main.obj : C:\dic\os2\main.c .AUTODEPEND
+C:\aaru\os2\main.obj : C:\aaru\os2\main.c .AUTODEPEND
  @C:
- cd C:\dic\os2
+ cd C:\aaru\os2
  *wcc386 main.c -i="C:\WATCOM/h;C:\WATCOM/h/os2" -w4 -e25 -zq -od -d2 -3s -b&
 t=os2 -fo=.obj -mf
 
-C:\dic\os2\os2.exe : C:\dic\os2\dir.obj C:\dic\os2\ea.obj C:\dic\os2\main.ob&
-j C:\dic\os2\dir.h C:\dic\os2\ea.h C:\dic\os2\main.h .AUTODEPEND
+C:\aaru\os2\os2.exe : C:\aaru\os2\dir.obj C:\aaru\os2\ea.obj C:\aaru\os2\main.ob&
+j C:\aaru\os2\dir.h C:\aaru\os2\ea.h C:\aaru\os2\main.h .AUTODEPEND
  @C:
- cd C:\dic\os2
+ cd C:\aaru\os2
  @%write os2.lk1 FIL dir.obj,ea.obj,main.obj
  @%append os2.lk1 
 !ifneq BLANK ""
