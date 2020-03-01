@@ -38,7 +38,7 @@ Copyright (C) 2011-2020 Natalia Portillo
 int main()
 {
     ULONG eaCounter = 0;
-    printf("The Disc Image Chef Filesystem Tester (Getter) for OS/2 %s\n", DIC_FSTESTER_VERSION);
+    printf("Aaru Filesystem Tester (Getter) for OS/2 %s\n", DIC_FSTESTER_VERSION);
     printf("%s\n", DIC_COPYRIGHT);
 
     return GetAllInDir("C:", &eaCounter);

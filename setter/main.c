@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     argc = ccommand(&argv);
 #endif
 
-    printf("The Disc Image Chef Filesystem Tester (Setter) %s\n", DIC_FSTESTER_VERSION);
+    printf("Aaru Filesystem Tester (Setter) %s\n", DIC_FSTESTER_VERSION);
     printf("%s\n", DIC_COPYRIGHT);
 
     printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
