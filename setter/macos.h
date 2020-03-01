@@ -78,7 +78,7 @@ const char *rsrcText          = "This file has a custom icon, a version, and a p
 enum
 {
     gestaltMacOSCompatibilityBoxAttr = FOUR_CHAR_CODE('bbox'),
-    ostDiscImageChef                 = FOUR_CHAR_CODE('dic '),
+    ostAaru                          = FOUR_CHAR_CODE('dic '),
     ostSimpleText                    = FOUR_CHAR_CODE('ttxt'),
     ostUnknown                       = FOUR_CHAR_CODE('????'),
     rtIcons                          = FOUR_CHAR_CODE('icns'),

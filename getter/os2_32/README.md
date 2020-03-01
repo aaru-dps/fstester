@@ -1,4 +1,4 @@
-DiscImageChef 32-bit OS/2 Filesystem Getter
+Aaru 32-bit OS/2 Filesystem Getter
 ===========================================
 This snippet is designed to retrieve all Extended Attributes from all files in the `C:`
 volume, saving them as a set of COUNTER.EA files in executing directory.

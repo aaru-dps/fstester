@@ -615,7 +615,7 @@ void FileAttributes(const char *path)
             wRc                  = FSWrite(refFile, &count, dicText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftGenericDocumentPC;
-            finderInfo.fdCreator = ostDiscImageChef;
+            finderInfo.fdCreator = ostAaru;
             rc                   = HSetFInfo(refNum, dirId, "\pDIC", &finderInfo);
         }
     }
@@ -931,7 +931,7 @@ void ResourceFork(const char *path)
             wRc                  = FSWrite(refFile, &count, rsrcText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftGenericDocumentPC;
-            finderInfo.fdCreator = ostDiscImageChef;
+            finderInfo.fdCreator = ostAaru;
             finderInfo.fdFlags   = kHasCustomIcon;
             rc                   = HSetFInfo(refNum, dirId, "\pICON", &finderInfo);
         }
@@ -962,7 +962,7 @@ void ResourceFork(const char *path)
             wRc                  = FSWrite(refFile, &count, rsrcText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftPICTFile;
-            finderInfo.fdCreator = ostDiscImageChef;
+            finderInfo.fdCreator = ostAaru;
             rc                   = HSetFInfo(refNum, dirId, "\pPICT", &finderInfo);
         }
     }
@@ -992,7 +992,7 @@ void ResourceFork(const char *path)
             wRc                  = FSWrite(refFile, &count, rsrcText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftGenericDocumentPC;
-            finderInfo.fdCreator = ostDiscImageChef;
+            finderInfo.fdCreator = ostAaru;
             rc                   = HSetFInfo(refNum, dirId, "\pVERSION", &finderInfo);
         }
     }
@@ -1038,7 +1038,7 @@ void ResourceFork(const char *path)
             wRc                  = FSWrite(refFile, &count, rsrcText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftPICTFile;
-            finderInfo.fdCreator = ostDiscImageChef;
+            finderInfo.fdCreator = ostAaru;
             finderInfo.fdFlags   = kHasCustomIcon;
             rc                   = HSetFInfo(refNum, dirId, "\pALL", &finderInfo);
         }
@@ -1956,7 +1956,7 @@ static pascal OSErr
 
     aliasRefnum = FSpOpenResFile(aliasFile, fsRdWrPerm);
 
-    AddResource((Handle)alias, rAliasType, 0, "\pDiscImageChef alias");
+    AddResource((Handle)alias, rAliasType, 0, "\pAaru alias");
     err = ResError();
 
     CloseResFile(aliasRefnum);

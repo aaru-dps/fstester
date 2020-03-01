@@ -1,4 +1,4 @@
-DiscImageChef Filesystem Testers: Getters
+Aaru Filesystem Testers: Getters
 =========================================
 
 This folder contains snippets designed to retrieve special features from files on a volume
