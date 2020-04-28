@@ -39,10 +39,10 @@ Copyright (C) 2011-2020 Natalia Portillo
 #include "consts.h"
 #include "defs.h"
 
+#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 
 void GetOsInfo()
 {
