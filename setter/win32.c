@@ -29,6 +29,8 @@ Contains 32-bit and 64-bit Windows code
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
+// ReSharper disable CppJoinDeclarationAndAssignment
+// ReSharper disable CppDeprecatedEntity
 #if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \
     defined(__NT__)
 
@@ -61,7 +63,7 @@ void GetOsInfo()
     printf("OS information:\n");
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32s)
-    { printf("\tRunning under Windows %d.%d using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion); }
+        printf("\tRunning under Windows %d.%d using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
     {
         if(verInfo.dwMinorVersion == 10)
@@ -89,7 +91,7 @@ void GetOsInfo()
         {
             if(strlen(verInfo.szCSDVersion) > 0)
             {
-                printf(" version %d.%02d.%d %s.\n",
+                printf(" version %d.%02d.%d %ls.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
@@ -104,7 +106,7 @@ void GetOsInfo()
         {
             if(strlen(verInfo.szCSDVersion) > 0)
             {
-                printf(" version %d.%02d %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
+                printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             }
             else
             {
@@ -145,7 +147,7 @@ void GetOsInfo()
         {
             if(strlen(verInfo.szCSDVersion) > 0)
             {
-                printf(" version %d.%02d.%d %s.\n",
+                printf(" version %d.%02d.%d %ls.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
@@ -160,7 +162,7 @@ void GetOsInfo()
         {
             if(strlen(verInfo.szCSDVersion) > 0)
             {
-                printf(" version %d.%02d %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
+                printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             }
             else
             {
@@ -3297,21 +3299,21 @@ void Fragmentation(const char *path, size_t clusterSize)
 
 void Sparse(const char *path)
 {
-    BOOL                       ret;
-    DWORD                      error;
-    LPTSTR                     lpVolumeNameBuffer;
-    DWORD                      dwMaximumComponentLength;
-    DWORD                      dwFileSystemFlags;
-    DWORD                      dwMaxNameSize = MAX_PATH + 1;
-    LPTSTR                     lpFileSystemNameBuffer;
-    LPTSTR                     lpRootPathName;
-    size_t                     pathSize = strlen(path);
-    DWORD                      rc, wRc, cRc, sRc, zRc;
-    FILE_ZERO_DATA_INFORMATION zeroData;
-    HANDLE                     h;
-    unsigned char *            buffer;
-    int                        i;
-    DWORD                      dwNumberOfBytesWritten;
+    BOOL                             ret;
+    DWORD                            error;
+    LPTSTR                           lpVolumeNameBuffer;
+    DWORD                            dwMaximumComponentLength;
+    DWORD                            dwFileSystemFlags;
+    DWORD                            dwMaxNameSize = MAX_PATH + 1;
+    LPTSTR                           lpFileSystemNameBuffer;
+    LPTSTR                           lpRootPathName;
+    size_t                           pathSize = strlen(path);
+    DWORD                            rc, wRc, cRc, sRc, zRc;
+    WINNT_FILE_ZERO_DATA_INFORMATION zeroData;
+    HANDLE                           h;
+    unsigned char *                  buffer;
+    int                              i;
+    DWORD                            dwNumberOfBytesWritten;
 
     lpVolumeNameBuffer = malloc(dwMaxNameSize);
 
@@ -3428,7 +3430,7 @@ void Sparse(const char *path)
             if(sRc == 1)
             {
                 sRc = 0;
-                ret = DeviceIoControl(h, FSCTL_SET_SPARSE_OLD, NULL, 0, NULL, 0, &dwNumberOfBytesWritten, NULL);
+                ret = DeviceIoControl(h, FSCTL_SET_SPARSE, NULL, 0, NULL, 0, &dwNumberOfBytesWritten, NULL);
                 if(!ret) { sRc = GetLastError(); }
             }
         }
@@ -3441,7 +3443,7 @@ void Sparse(const char *path)
             ret = DeviceIoControl(h,
                                   FSCTL_SET_ZERO_DATA,
                                   &zeroData,
-                                  sizeof(FILE_ZERO_DATA_INFORMATION),
+                                  sizeof(WINNT_FILE_ZERO_DATA_INFORMATION),
                                   NULL,
                                   0,
                                   &dwNumberOfBytesWritten,
@@ -3453,9 +3455,9 @@ void Sparse(const char *path)
                 {
                     zRc = 0;
                     ret = DeviceIoControl(h,
-                                          FSCTL_SET_ZERO_DATA_OLD,
+                                          FSCTL_SET_ZERO_DATA,
                                           &zeroData,
-                                          sizeof(FILE_ZERO_DATA_INFORMATION),
+                                          sizeof(WINNT_FILE_ZERO_DATA_INFORMATION),
                                           NULL,
                                           0,
                                           &dwNumberOfBytesWritten,
@@ -3516,7 +3518,7 @@ void Sparse(const char *path)
             ret = DeviceIoControl(h,
                                   FSCTL_SET_ZERO_DATA,
                                   &zeroData,
-                                  sizeof(FILE_ZERO_DATA_INFORMATION),
+                                  sizeof(WINNT_FILE_ZERO_DATA_INFORMATION),
                                   NULL,
                                   0,
                                   &dwNumberOfBytesWritten,
@@ -3530,7 +3532,7 @@ void Sparse(const char *path)
                     ret = DeviceIoControl(h,
                                           FSCTL_SET_ZERO_DATA_OLD,
                                           &zeroData,
-                                          sizeof(FILE_ZERO_DATA_INFORMATION),
+                                          sizeof(WINNT_FILE_ZERO_DATA_INFORMATION),
                                           NULL,
                                           0,
                                           &dwNumberOfBytesWritten,
