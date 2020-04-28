@@ -37,9 +37,9 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #if defined(__alpha__) || defined(_M_ALPHA)
 #define OS_ARCH "axp"
-#elif defined(__aarch64__)
+#elif defined(__aarch64__) || defined(_M_ARM64)
 #define OS_ARCH "aarch64"
-#elif defined(__arm__)
+#elif defined(__arm__) || defined(_M_ARM)
 #define OS_ARCH "arm"
 #elif defined(__I86__) || defined(__i86__) || defined(_M_I86)
 #define OS_ARCH "x86"
@@ -63,7 +63,7 @@ Copyright (C) 2011-2020 Natalia Portillo
 #define OS_ARCH "sparc"
 #elif defined(vax)
 #define OS_ARCH "vax"
-#elif defined(__x86_64__) || defined(__amd64)
+#elif defined(__x86_64__) || defined(__amd64) || defined(_M_AMD64) || defined(_M_X64)
 #define OS_ARCH "x86_64"
 #else
 #define OS_ARCH "unknown"
