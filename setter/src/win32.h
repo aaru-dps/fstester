@@ -35,6 +35,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_WIN32_H
 #define AARU_FSTESTER_SETTER_WIN32_H
 
+#include <windows.h>
+
 #ifndef VER_PLATFORM_WIN32s
 #define VER_PLATFORM_WIN32s 0
 #endif

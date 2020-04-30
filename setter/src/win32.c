@@ -176,12 +176,12 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 {
     BOOL           ret;
     DWORD          error;
-    LPTSTR         lpVolumeNameBuffer;
+    LPSTR          lpVolumeNameBuffer;
     DWORD          dwMaximumComponentLength;
     DWORD          dwFileSystemFlags;
     DWORD          dwMaxNameSize = MAX_PATH + 1;
-    LPTSTR         lpFileSystemNameBuffer;
-    LPTSTR         lpRootPathName;
+    LPSTR          lpFileSystemNameBuffer;
+    LPSTR          lpRootPathName;
     size_t         pathSize = strlen(path);
     DWORD          dwSectorsPerCluster;
     DWORD          dwBytesPerSector;
@@ -224,19 +224,22 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         return;
     }
 
+#ifdef UNICODE
+#endif
+
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = GetVolumeInformation(lpRootPathName,
-                               lpVolumeNameBuffer,
-                               dwMaxNameSize,
-                               NULL,
-                               &dwMaximumComponentLength,
-                               &dwFileSystemFlags,
-                               lpFileSystemNameBuffer,
-                               dwMaxNameSize);
+    ret = GetVolumeInformationA(lpRootPathName,
+                                lpVolumeNameBuffer,
+                                dwMaxNameSize,
+                                NULL,
+                                &dwMaximumComponentLength,
+                                &dwFileSystemFlags,
+                                lpFileSystemNameBuffer,
+                                dwMaxNameSize);
 
     if(!ret)
     {
@@ -382,7 +385,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     free(lpVolumeNameBuffer);
     free(lpFileSystemNameBuffer);
 
-    ret = GetDiskFreeSpace(
+    ret = GetDiskFreeSpaceA(
         lpRootPathName, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters);
 
     if(!ret)
@@ -411,7 +414,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     if((verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && verInfo.dwBuildNumber >= 1000) ||
        verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
-        ret = GetDiskFreeSpaceEx(
+        ret = GetDiskFreeSpaceExA(
             lpRootPathName, &qwFreeBytesAvailableToCaller, &qwTotalNumberOfBytes, &qwTotalNumberOfFreeBytes);
 
         if(!ret)
@@ -422,8 +425,8 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
             return;
         }
 
-        printf("\tVolume size: %Lu bytes\n", qwTotalNumberOfBytes);
-        printf("\tVolume free: %Lu bytes\n", qwTotalNumberOfFreeBytes);
+        printf("\tVolume size: %lld bytes\n", qwTotalNumberOfBytes.QuadPart);
+        printf("\tVolume free: %lld bytes\n", qwTotalNumberOfFreeBytes.QuadPart);
     }
     else
     {
@@ -432,8 +435,8 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         qwTotalNumberOfBytes.QuadPart *= *clusterSize;
         qwTotalNumberOfFreeBytes.QuadPart *= *clusterSize;
 
-        printf("\tClusters: %lu (%Lu bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes);
-        printf("\tFree clusters: %lu (%Lu bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes);
+        printf("\tClusters: %lu (%lld bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes.QuadPart);
+        printf("\tFree clusters: %lu (%lld bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes.QuadPart);
     }
 
     free(lpRootPathName);
@@ -443,7 +446,7 @@ void FileAttributes(const char *path)
 {
     BOOL          ret;
     DWORD         error;
-    LPTSTR        lpRootPathName;
+    LPSTR         lpRootPathName;
     DWORD         dwMaxNameSize = MAX_PATH + 1;
     size_t        pathSize      = strlen(path);
     HANDLE        h;
@@ -465,7 +468,7 @@ void FileAttributes(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -474,7 +477,7 @@ void FileAttributes(const char *path)
         return;
     }
 
-    ret = CreateDirectory("ATTRS", NULL);
+    ret = CreateDirectoryA("ATTRS", NULL);
 
     if(!ret)
     {
@@ -483,7 +486,7 @@ void FileAttributes(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("ATTRS");
+    ret = SetCurrentDirectoryA("ATTRS");
 
     if(!ret)
     {
@@ -505,7 +508,7 @@ void FileAttributes(const char *path)
 
     printf("Creating attributes files.\n");
 
-    h   = CreateFile("NONE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("NONE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -520,7 +523,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with no attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "NONE", rc, wRc, cRc);
 
-    h   = CreateFile("ARCHIVE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, NULL);
+    h   = CreateFileA("ARCHIVE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -536,7 +539,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHIVE", rc, wRc, cRc);
 
-    h   = CreateFile("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ENCRYPTED, NULL);
+    h   = CreateFileA("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ENCRYPTED, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -552,7 +555,7 @@ void FileAttributes(const char *path)
     }
     printf("\tEncrypted file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ENCRYPT", rc, wRc, cRc);
 
-    h   = CreateFile("HIDDEN", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
+    h   = CreateFileA("HIDDEN", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -567,7 +570,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDEN", rc, wRc, cRc);
 
-    h   = CreateFile("OFFLINE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE, NULL);
+    h   = CreateFileA("OFFLINE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -582,7 +585,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OFFLINE", rc, wRc, cRc);
 
-    h   = CreateFile("READONLY", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY, NULL);
+    h   = CreateFileA("READONLY", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -598,7 +601,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "READONLY", rc, wRc, cRc);
 
-    h   = CreateFile("SYSTEM", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM, NULL);
+    h   = CreateFileA("SYSTEM", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -613,7 +616,7 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTEM", rc, wRc, cRc);
 
-    h   = CreateFile("TEMPORAR", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
+    h   = CreateFileA("TEMPORAR", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -629,13 +632,13 @@ void FileAttributes(const char *path)
     }
     printf("\tTemporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TEMPORAR", rc, wRc, cRc);
 
-    h   = CreateFile("EA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("EA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -655,13 +658,13 @@ void FileAttributes(const char *path)
     printf(
         "\tEncrypted file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "EA", rc, wRc, cRc);
 
-    h   = CreateFile("HA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("HA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -680,13 +683,13 @@ void FileAttributes(const char *path)
     printf(
         "\tFile with hidden and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HA", rc, wRc, cRc);
 
-    h   = CreateFile("OA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("OA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -708,13 +711,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("RA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -737,13 +740,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("SA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("SA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -762,13 +765,13 @@ void FileAttributes(const char *path)
     printf(
         "\tFile with system and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SA", rc, wRc, cRc);
 
-    h   = CreateFile("TA",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE,
-                   NULL);
+    h   = CreateFileA("TA",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -788,13 +791,13 @@ void FileAttributes(const char *path)
     printf(
         "\tTemporary file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TA", rc, wRc, cRc);
 
-    h   = CreateFile("HE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("HE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -812,13 +815,13 @@ void FileAttributes(const char *path)
     }
     printf("\tEncrypted file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HE", rc, wRc, cRc);
 
-    h   = CreateFile("OE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("OE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -836,13 +839,13 @@ void FileAttributes(const char *path)
     }
     printf("\tEncrypted file is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OE", rc, wRc, cRc);
 
-    h   = CreateFile("RE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("RE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -865,13 +868,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("TE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -890,13 +893,13 @@ void FileAttributes(const char *path)
     }
     printf("\tEncrypted temporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TE", rc, wRc, cRc);
 
-    h   = CreateFile("OH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("OH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -917,13 +920,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("RH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -945,13 +948,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("SH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("SH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -969,13 +972,13 @@ void FileAttributes(const char *path)
     printf(
         "\tFile with system and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SH", rc, wRc, cRc);
 
-    h   = CreateFile("TH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("TH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -993,13 +996,13 @@ void FileAttributes(const char *path)
     }
     printf("\tTemporary file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TH", rc, wRc, cRc);
 
-    h   = CreateFile("RO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("RO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1021,13 +1024,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("SO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("SO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1048,13 +1051,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("TO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1073,13 +1076,13 @@ void FileAttributes(const char *path)
     printf(
         "\tTemporary file that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TO", rc, wRc, cRc);
 
-    h   = CreateFile("SR",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("SR",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1101,13 +1104,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TR",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("TR",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1127,13 +1130,13 @@ void FileAttributes(const char *path)
     printf(
         "\tTemporary file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TR", rc, wRc, cRc);
 
-    h   = CreateFile("ST",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY,
-                   NULL);
+    h   = CreateFileA("ST",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1151,13 +1154,13 @@ void FileAttributes(const char *path)
     }
     printf("\tTemporary file with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ST", rc, wRc, cRc);
 
-    h   = CreateFile("HAE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("HAE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1182,13 +1185,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("OAE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("OAE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1214,13 +1217,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RAE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("RAE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1246,13 +1249,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAE",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                   NULL);
+    h   = CreateFileA("TAE",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1279,13 +1282,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("OAH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("OAH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1310,13 +1313,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RAH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("RAH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1341,13 +1344,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("SAH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("SAH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1371,13 +1374,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("TAH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1402,13 +1405,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("EAO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("EAO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1433,13 +1436,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RAO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("RAO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1465,13 +1468,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("SAO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("SAO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1496,13 +1499,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("TAO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1528,13 +1531,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("EAR",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("EAR",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1560,13 +1563,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("OAR",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("OAR",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1592,13 +1595,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAR",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("TAR",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1624,13 +1627,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAS",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_SYSTEM,
-                   NULL);
+    h   = CreateFileA("TAS",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_SYSTEM,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1655,13 +1658,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("OAEH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("OAEH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1689,13 +1692,13 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RAEH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("RAEH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1724,13 +1727,14 @@ void FileAttributes(const char *path)
         wRc,
         cRc);
 
-    h   = CreateFile("TAEH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
-                   NULL);
+    h   = CreateFileA("TAEH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_HIDDEN,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1759,13 +1763,14 @@ void FileAttributes(const char *path)
         wRc,
         cRc);
 
-    h   = CreateFile("RAEO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("RAEO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1794,14 +1799,14 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAEO",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                       FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("TAEO",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1830,14 +1835,14 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("TAER",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                       FILE_ATTRIBUTE_READONLY,
-                   NULL);
+    h   = CreateFileA("TAER",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_READONLY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1867,14 +1872,14 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFile("RAEH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN |
-                       FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("RAEH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1905,14 +1910,14 @@ void FileAttributes(const char *path)
         wRc,
         cRc);
 
-    h   = CreateFile("TAEH",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                       FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE,
-                   NULL);
+    h   = CreateFileA("TAEH",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
+                        FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1943,14 +1948,14 @@ void FileAttributes(const char *path)
         wRc,
         cRc);
 
-    h   = CreateFile("AHORST",
-                   GENERIC_READ | GENERIC_WRITE,
-                   0,
-                   NULL,
-                   CREATE_ALWAYS,
-                   FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_READONLY |
-                       FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY,
-                   NULL);
+    h   = CreateFileA("AHORST",
+                    GENERIC_READ | GENERIC_WRITE,
+                    0,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_READONLY |
+                        FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY,
+                    NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1980,8 +1985,8 @@ void FileAttributes(const char *path)
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
-        h   = CreateFile("COMPRESS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        rc  = 0;
+        h  = CreateFileA("COMPRESS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        rc = 0;
         wRc = 0;
         cRc = 0;
         if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
@@ -2019,7 +2024,7 @@ void ExtendedAttributes(const char *path)
         char   message[300];
         IO_STATUS_BLOCK eaStatus;
         HANDLE h;
-        LPTSTR lpRootPathName;
+        LPSTR lpRootPathName;
         DWORD dwMaxNameSize = MAX_PATH + 1;
         size_t pathSize = strlen(path);
         PVOID eaData;
@@ -2056,7 +2061,7 @@ void ExtendedAttributes(const char *path)
             lpRootPathName[pathSize] = '\\';
         }
 
-        ret = SetCurrentDirectory(lpRootPathName);
+        ret = SetCurrentDirectoryA(lpRootPathName);
 
         if(!ret)
         {
@@ -2065,7 +2070,7 @@ void ExtendedAttributes(const char *path)
             return;
         }
 
-        ret = CreateDirectory("XATTRS", NULL);
+        ret = CreateDirectoryA("XATTRS", NULL);
 
         if(!ret)
         {
@@ -2074,7 +2079,7 @@ void ExtendedAttributes(const char *path)
             return;
         }
 
-        ret = SetCurrentDirectory("XATTRS");
+        ret = SetCurrentDirectoryA("XATTRS");
 
         if(!ret)
         {
@@ -2105,7 +2110,7 @@ void ExtendedAttributes(const char *path)
 
         printf("Creating files with extended attributes.\n");
 
-        h = CreateFile("COMMENTS", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
+        h = CreateFileA("COMMENTS", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
        FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
         {
             rc = GetLastError();
@@ -2134,7 +2139,7 @@ void ExtendedAttributes(const char *path)
 
         printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d\n", "COMMENTS", rc, wRc, cRc);
 
-        h = CreateFile("COMMENTS.CRT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
+        h = CreateFileA("COMMENTS.CRT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
        CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
         {
             rc = GetLastError();
@@ -2163,7 +2168,7 @@ void ExtendedAttributes(const char *path)
 
         printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d\n", "COMMENTS.CRT", rc, wRc, cRc);
 
-            h = CreateFile("ICON", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
+            h = CreateFileA("ICON", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
        FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
         {
             rc = GetLastError();
@@ -2200,7 +2205,7 @@ void ResourceFork(const char *path)
 {
     BOOL          ret;
     DWORD         error;
-    LPTSTR        lpRootPathName;
+    LPSTR         lpRootPathName;
     DWORD         dwMaxNameSize = MAX_PATH + 1;
     size_t        pathSize      = strlen(path);
     HANDLE        h;
@@ -2238,7 +2243,7 @@ void ResourceFork(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -2247,7 +2252,7 @@ void ResourceFork(const char *path)
         return;
     }
 
-    ret = CreateDirectory("ADS", NULL);
+    ret = CreateDirectoryA("ADS", NULL);
 
     if(!ret)
     {
@@ -2256,7 +2261,7 @@ void ResourceFork(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("ADS");
+    ret = SetCurrentDirectoryA("ADS");
 
     if(!ret)
     {
@@ -2267,7 +2272,7 @@ void ResourceFork(const char *path)
 
     printf("Creating alternate data streams.\n");
 
-    h   = CreateFile("TINY:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TINY:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2287,7 +2292,7 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
-    h   = CreateFile("SMALL:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("SMALL:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2317,7 +2322,7 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
-    h   = CreateFile("MEDIUM:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MEDIUM:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2348,7 +2353,7 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
-    h       = CreateFile("BIG:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h       = CreateFileA("BIG:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
@@ -2374,8 +2379,8 @@ void ResourceFork(const char *path)
     printf(
         "\tFile with big alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "BIG:ADS", rc, wRc, cRc);
 
-    h   = CreateFile("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
+    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc = 0;
     wRc = 0;
     cRc = 0;
     if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
@@ -2394,8 +2399,8 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
-    h   = CreateFile("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
+    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc = 0;
     wRc = 0;
     cRc = 0;
     if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
@@ -2424,8 +2429,8 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
-    h   = CreateFile("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
+    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc = 0;
     wRc = 0;
     cRc = 0;
     if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
@@ -2455,8 +2460,8 @@ void ResourceFork(const char *path)
            cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
-    h   = CreateFile("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
+    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc = 0;
     wRc = 0;
     cRc = 0;
     if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
@@ -2489,7 +2494,7 @@ void Filenames(const char *path)
 {
     BOOL   ret;
     DWORD  error;
-    LPTSTR lpRootPathName;
+    LPSTR  lpRootPathName;
     DWORD  dwMaxNameSize = MAX_PATH + 1;
     size_t pathSize      = strlen(path);
     HANDLE h;
@@ -2511,7 +2516,7 @@ void Filenames(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -2520,7 +2525,7 @@ void Filenames(const char *path)
         return;
     }
 
-    ret = CreateDirectory("FILENAME", NULL);
+    ret = CreateDirectoryA("FILENAME", NULL);
 
     if(!ret)
     {
@@ -2529,7 +2534,7 @@ void Filenames(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("FILENAME");
+    ret = SetCurrentDirectoryA("FILENAME");
 
     if(!ret)
     {
@@ -2542,7 +2547,7 @@ void Filenames(const char *path)
 
     for(pos = 0; filenames[pos]; pos++)
     {
-        h = CreateFile(
+        h = CreateFileA(
             filenames[pos], GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         rc  = 0;
         wRc = 0;
@@ -2570,7 +2575,7 @@ void Timestamps(const char *path)
     char     message[300];
     BOOL     ret;
     DWORD    error;
-    LPTSTR   lpRootPathName;
+    LPSTR    lpRootPathName;
     DWORD    dwMaxNameSize = MAX_PATH + 1;
     size_t   pathSize      = strlen(path);
     FILETIME ftCreationTime;
@@ -2593,7 +2598,7 @@ void Timestamps(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -2602,7 +2607,7 @@ void Timestamps(const char *path)
         return;
     }
 
-    ret = CreateDirectory("TIMES", NULL);
+    ret = CreateDirectoryA("TIMES", NULL);
 
     if(!ret)
     {
@@ -2611,7 +2616,7 @@ void Timestamps(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("TIMES");
+    ret = SetCurrentDirectoryA("TIMES");
 
     if(!ret)
     {
@@ -2622,7 +2627,7 @@ void Timestamps(const char *path)
 
     printf("Creating timestamped files.\n");
 
-    h   = CreateFile("MAXCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2646,7 +2651,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("MAXATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2670,7 +2675,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("MAXMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2694,7 +2699,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("MINCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2718,7 +2723,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("MINATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2742,7 +2747,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("MINMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2766,7 +2771,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y1KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2790,7 +2795,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y1KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2814,7 +2819,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y1KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2838,7 +2843,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y2KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2862,7 +2867,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y2KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2886,7 +2891,7 @@ void Timestamps(const char *path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFile("Y2KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2915,7 +2920,7 @@ void DirectoryDepth(const char *path)
 {
     BOOL   ret;
     DWORD  error;
-    LPTSTR lpRootPathName;
+    LPSTR  lpRootPathName;
     DWORD  dwMaxNameSize = MAX_PATH + 1;
     size_t pathSize      = strlen(path);
     char   filename[9];
@@ -2934,7 +2939,7 @@ void DirectoryDepth(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -2943,7 +2948,7 @@ void DirectoryDepth(const char *path)
         return;
     }
 
-    ret = CreateDirectory("DEPTH", NULL);
+    ret = CreateDirectoryA("DEPTH", NULL);
 
     if(!ret)
     {
@@ -2952,7 +2957,7 @@ void DirectoryDepth(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("DEPTH");
+    ret = SetCurrentDirectoryA("DEPTH");
 
     if(!ret)
     {
@@ -2967,9 +2972,9 @@ void DirectoryDepth(const char *path)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08d", pos);
-        ret = CreateDirectory(filename, NULL);
+        ret = CreateDirectoryA(filename, NULL);
 
-        if(ret) ret = SetCurrentDirectory(filename);
+        if(ret) ret = SetCurrentDirectoryA(filename);
 
         pos++;
     }
@@ -2988,7 +2993,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     long           i;
     BOOL           ret;
     DWORD          error;
-    LPTSTR         lpRootPathName;
+    LPSTR          lpRootPathName;
     DWORD          dwMaxNameSize = MAX_PATH + 1;
     size_t         pathSize      = strlen(path);
     HANDLE         h;
@@ -3008,7 +3013,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -3017,7 +3022,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         return;
     }
 
-    ret = CreateDirectory("FRAGS", NULL);
+    ret = CreateDirectoryA("FRAGS", NULL);
 
     if(!ret)
     {
@@ -3026,7 +3031,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         return;
     }
 
-    ret = SetCurrentDirectory("FRAGS");
+    ret = SetCurrentDirectoryA("FRAGS");
 
     if(!ret)
     {
@@ -3035,7 +3040,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         return;
     }
 
-    h   = CreateFile("HALFCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("HALFCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3058,7 +3063,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
-    h   = CreateFile("QUARCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("QUARCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3081,7 +3086,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
-    h   = CreateFile("TWOCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWOCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3104,7 +3109,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFile("TRQTCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TRQTCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3132,7 +3137,7 @@ void Fragmentation(const char *path, size_t clusterSize)
            wRc,
            cRc);
 
-    h   = CreateFile("TWTQCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWTQCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3160,7 +3165,7 @@ void Fragmentation(const char *path, size_t clusterSize)
            wRc,
            cRc);
 
-    h   = CreateFile("TWO1", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO1", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3183,7 +3188,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFile("TWO2", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO2", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3206,7 +3211,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFile("TWO3", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO3", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3233,7 +3238,7 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFile("FRAGTHRQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("FRAGTHRQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3268,7 +3273,7 @@ void Fragmentation(const char *path, size_t clusterSize)
            wRc,
            cRc);
 
-    h   = CreateFile("FRAGSIXQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("FRAGSIXQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3301,12 +3306,12 @@ void Sparse(const char *path)
 {
     BOOL                             ret;
     DWORD                            error;
-    LPTSTR                           lpVolumeNameBuffer;
+    LPSTR                            lpVolumeNameBuffer;
     DWORD                            dwMaximumComponentLength;
     DWORD                            dwFileSystemFlags;
     DWORD                            dwMaxNameSize = MAX_PATH + 1;
-    LPTSTR                           lpFileSystemNameBuffer;
-    LPTSTR                           lpRootPathName;
+    LPSTR                            lpFileSystemNameBuffer;
+    LPSTR                            lpRootPathName;
     size_t                           pathSize = strlen(path);
     DWORD                            rc, wRc, cRc, sRc, zRc;
     WINNT_FILE_ZERO_DATA_INFORMATION zeroData;
@@ -3347,14 +3352,14 @@ void Sparse(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = GetVolumeInformation(lpRootPathName,
-                               lpVolumeNameBuffer,
-                               dwMaxNameSize,
-                               NULL,
-                               &dwMaximumComponentLength,
-                               &dwFileSystemFlags,
-                               lpFileSystemNameBuffer,
-                               dwMaxNameSize);
+    ret = GetVolumeInformationA(lpRootPathName,
+                                lpVolumeNameBuffer,
+                                dwMaxNameSize,
+                                NULL,
+                                &dwMaximumComponentLength,
+                                &dwFileSystemFlags,
+                                lpFileSystemNameBuffer,
+                                dwMaxNameSize);
 
     if(!ret)
     {
@@ -3375,7 +3380,7 @@ void Sparse(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -3384,7 +3389,7 @@ void Sparse(const char *path)
         return;
     }
 
-    ret = CreateDirectory("SPARSE", NULL);
+    ret = CreateDirectoryA("SPARSE", NULL);
 
     if(!ret)
     {
@@ -3393,7 +3398,7 @@ void Sparse(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("SPARSE");
+    ret = SetCurrentDirectoryA("SPARSE");
 
     if(!ret)
     {
@@ -3406,7 +3411,7 @@ void Sparse(const char *path)
 
     printf("Creating sparse files.\n");
 
-    h   = CreateFile("SMALL", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("SMALL", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3472,7 +3477,7 @@ void Sparse(const char *path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc = %d\n",
            "SMALL",
            4096 * 3,
            rc,
@@ -3481,7 +3486,7 @@ void Sparse(const char *path)
            sRc,
            zRc);
 
-    h   = CreateFile("BIG", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("BIG", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3547,7 +3552,7 @@ void Sparse(const char *path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc = %d\n",
            "BIG",
            4096 * 30,
            rc,
@@ -3569,7 +3574,7 @@ void Links(const char *path)
         DWORD rc, wRc, cRc, lRc;
         char   message[300];
         HANDLE h;
-        LPTSTR lpRootPathName;
+        LPSTR lpRootPathName;
         DWORD dwMaxNameSize = MAX_PATH + 1;
         size_t pathSize = strlen(path);
 
@@ -3605,7 +3610,7 @@ void Links(const char *path)
             lpRootPathName[pathSize] = '\\';
         }
 
-        ret = SetCurrentDirectory(lpRootPathName);
+        ret = SetCurrentDirectoryA(lpRootPathName);
 
         if(!ret)
         {
@@ -3614,7 +3619,7 @@ void Links(const char *path)
             return;
         }
 
-        ret = CreateDirectory("LINKS", NULL);
+        ret = CreateDirectoryA("LINKS", NULL);
 
         if(!ret)
         {
@@ -3623,7 +3628,7 @@ void Links(const char *path)
             return;
         }
 
-        ret = SetCurrentDirectory("LINKS");
+        ret = SetCurrentDirectoryA("LINKS");
 
         if(!ret)
         {
@@ -3653,7 +3658,7 @@ void Links(const char *path)
             CreateSymbolicLinkA = func;
             printf("Creating symbolic links.\n");
 
-            h = CreateFile("TARGET", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
+            h = CreateFileA("TARGET", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
        CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; lRc = 0; if(h == INVALID_HANDLE_VALUE)
             {
                 rc = GetLastError();
@@ -3696,7 +3701,7 @@ void Links(const char *path)
             CreateSymbolicLinkA = func;
             printf("Creating hard links.\n");
 
-            h = CreateFile("HARDTRGT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
+            h = CreateFileA("HARDTRGT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
        CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; lRc = 0; if(h == INVALID_HANDLE_VALUE)
             {
                 rc = GetLastError();
@@ -3738,7 +3743,7 @@ void MillionFiles(const char *path)
     HANDLE h;
     BOOL   ret;
     DWORD  error;
-    LPTSTR lpRootPathName;
+    LPSTR  lpRootPathName;
     DWORD  dwMaxNameSize = MAX_PATH + 1;
     size_t pathSize      = strlen(path);
 
@@ -3755,7 +3760,7 @@ void MillionFiles(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -3764,7 +3769,7 @@ void MillionFiles(const char *path)
         return;
     }
 
-    ret = CreateDirectory("MILLION", NULL);
+    ret = CreateDirectoryA("MILLION", NULL);
 
     if(!ret)
     {
@@ -3773,7 +3778,7 @@ void MillionFiles(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("MILLION");
+    ret = SetCurrentDirectoryA("MILLION");
 
     if(!ret)
     {
@@ -3786,16 +3791,16 @@ void MillionFiles(const char *path)
 
     for(pos = 0; pos < 100000; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%08Lu", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "%08lu", pos);
 
-        h = CreateFile(&filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        h = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(h == INVALID_HANDLE_VALUE) { break; }
 
         CloseHandle(h);
     }
 
-    printf("\tCreated %Lu files\n", pos);
+    printf("\tCreated %lu files\n", pos);
 }
 
 void DeleteFiles(const char *path)
@@ -3805,7 +3810,7 @@ void DeleteFiles(const char *path)
     HANDLE h;
     BOOL   ret;
     DWORD  error;
-    LPTSTR lpRootPathName;
+    LPSTR  lpRootPathName;
     DWORD  dwMaxNameSize = MAX_PATH + 1;
     size_t pathSize      = strlen(path);
 
@@ -3822,7 +3827,7 @@ void DeleteFiles(const char *path)
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-    ret = SetCurrentDirectory(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
     if(!ret)
     {
@@ -3831,7 +3836,7 @@ void DeleteFiles(const char *path)
         return;
     }
 
-    ret = CreateDirectory("DELETED", NULL);
+    ret = CreateDirectoryA("DELETED", NULL);
 
     if(!ret)
     {
@@ -3840,7 +3845,7 @@ void DeleteFiles(const char *path)
         return;
     }
 
-    ret = SetCurrentDirectory("DELETED");
+    ret = SetCurrentDirectoryA("DELETED");
 
     if(!ret)
     {
@@ -3855,7 +3860,7 @@ void DeleteFiles(const char *path)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%X", pos);
-        h = CreateFile(&filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        h = CreateFileA(&filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(h == INVALID_HANDLE_VALUE) { break; }
 
         CloseHandle(h);
