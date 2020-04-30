@@ -44,6 +44,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
+static DWORD dwMaxNameSize = MAX_PATH + 1;
+
 void GetOsInfo()
 {
     OSVERSIONINFO verInfo;
@@ -68,50 +70,35 @@ void GetOsInfo()
     {
         if(verInfo.dwMinorVersion == 10)
         {
-            if(verInfo.dwBuildNumber == 2222) { printf("\tRunning under Windows 98 SE"); }
+            if(verInfo.dwBuildNumber == 2222)
+                printf("\tRunning under Windows 98 SE");
             else
-            {
                 printf("\tRunning under Windows 98");
-            }
         }
         else if(verInfo.dwMinorVersion == 90)
-        {
             printf("\tRunning under Windows Me");
-        }
         else if(verInfo.dwMinorVersion < 10)
-        {
             printf("\tRunning under Windows 95");
-        }
         else
-        {
             printf("\tRunning under Windows");
-        }
 
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-            {
                 printf(" version %d.%02d.%d %ls.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
                        verInfo.szCSDVersion);
-            }
             else
-            {
                 printf(" version %d.%02d.%d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
-            }
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-            {
                 printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
-            }
             else
-            {
                 printf(" version %d.%02d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
-            }
         }
     }
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
@@ -141,33 +128,25 @@ void GetOsInfo()
             default: printf("\tRunning under Windows NT"); break;
         }
 
-        if(verInfo.dwMinorVersion < 10) { verInfo.dwMinorVersion = verInfo.dwMinorVersion * 10; }
+        if(verInfo.dwMinorVersion < 10) verInfo.dwMinorVersion = verInfo.dwMinorVersion * 10;
 
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-            {
                 printf(" version %d.%02d.%d %ls.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
                        verInfo.szCSDVersion);
-            }
             else
-            {
                 printf(" version %d.%02d.%d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
-            }
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-            {
                 printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
-            }
             else
-            {
                 printf(" version %d.%02d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
-            }
         }
     }
 }
@@ -179,10 +158,9 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     LPSTR          lpVolumeNameBuffer;
     DWORD          dwMaximumComponentLength;
     DWORD          dwFileSystemFlags;
-    DWORD          dwMaxNameSize = MAX_PATH + 1;
     LPSTR          lpFileSystemNameBuffer;
     LPSTR          lpRootPathName;
-    size_t         pathSize = strlen(path);
+    const size_t   pathSize = strlen(path);
     DWORD          dwSectorsPerCluster;
     DWORD          dwBytesPerSector;
     DWORD          dwNumberOfFreeClusters;
@@ -224,13 +202,10 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         return;
     }
 
-#ifdef UNICODE
-#endif
-
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = GetVolumeInformationA(lpRootPathName,
                                 lpVolumeNameBuffer,
@@ -379,7 +354,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
             dwFileSystemFlags -= FILE_VOLUME_QUOTAS;
         }
 
-        if(dwFileSystemFlags > 0) { printf("Unknown flags: 0x%08x.\n", dwFileSystemFlags); }
+        if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08x.\n", dwFileSystemFlags);
     }
 
     free(lpVolumeNameBuffer);
@@ -411,7 +386,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         return;
     }
 
-    if((verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && verInfo.dwBuildNumber >= 1000) ||
+    if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && verInfo.dwBuildNumber >= 1000 ||
        verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
         ret = GetDiskFreeSpaceExA(
@@ -447,7 +422,6 @@ void FileAttributes(const char *path)
     BOOL          ret;
     DWORD         error;
     LPSTR         lpRootPathName;
-    DWORD         dwMaxNameSize = MAX_PATH + 1;
     size_t        pathSize      = strlen(path);
     HANDLE        h;
     DWORD         dwNumberOfBytesWritten;
@@ -466,7 +440,7 @@ void FileAttributes(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -512,14 +486,15 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)noAttributeText, strlen(noAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with no attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "NONE", rc, wRc, cRc);
 
@@ -527,15 +502,16 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHIVE", rc, wRc, cRc);
 
@@ -543,15 +519,16 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ENCRYPT", rc, wRc, cRc);
 
@@ -559,14 +536,15 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDEN", rc, wRc, cRc);
 
@@ -574,14 +552,15 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OFFLINE", rc, wRc, cRc);
 
@@ -589,15 +568,16 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "READONLY", rc, wRc, cRc);
 
@@ -605,14 +585,15 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTEM", rc, wRc, cRc);
 
@@ -620,15 +601,16 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TEMPORAR", rc, wRc, cRc);
 
@@ -642,18 +624,19 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tEncrypted file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "EA", rc, wRc, cRc);
@@ -668,17 +651,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tFile with hidden and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HA", rc, wRc, cRc);
@@ -693,17 +677,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with archived attribute is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "OA",
@@ -721,18 +706,19 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "RA",
@@ -750,17 +736,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tFile with system and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SA", rc, wRc, cRc);
@@ -775,18 +762,19 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tTemporary file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TA", rc, wRc, cRc);
@@ -801,17 +789,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HE", rc, wRc, cRc);
 
@@ -825,17 +814,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OE", rc, wRc, cRc);
 
@@ -849,24 +839,22 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
-    printf("\tEncrypted file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "REREADONLY",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tEncrypted file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "RE", rc, wRc, cRc);
 
     h   = CreateFileA("TE",
                     GENERIC_READ | GENERIC_WRITE,
@@ -878,18 +866,19 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted temporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TE", rc, wRc, cRc);
 
@@ -903,16 +892,17 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with hidden attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "OH",
@@ -930,17 +920,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "RH",
@@ -958,16 +949,17 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tFile with system and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SH", rc, wRc, cRc);
@@ -982,17 +974,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TH", rc, wRc, cRc);
 
@@ -1006,17 +999,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "RO",
@@ -1034,16 +1028,17 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "SO",
@@ -1061,17 +1056,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tTemporary file that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TO", rc, wRc, cRc);
@@ -1086,17 +1082,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "SR",
@@ -1114,18 +1111,19 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tTemporary file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TR", rc, wRc, cRc);
@@ -1140,17 +1138,18 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ST", rc, wRc, cRc);
 
@@ -1164,22 +1163,23 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
-    printf("\tEncrypted file with hiden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tEncrypted file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "HAE",
            rc,
            wRc,
@@ -1195,20 +1195,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
@@ -1227,21 +1228,22 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "RAE",
@@ -1259,21 +1261,22 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
@@ -1292,19 +1295,20 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc "
            "= %d\n",
@@ -1323,20 +1327,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only, hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "RAH",
@@ -1354,19 +1359,20 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "SAH",
@@ -1384,20 +1390,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "TAH",
@@ -1415,19 +1422,20 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)encryptedAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
@@ -1446,20 +1454,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, "
            "cRc = %d\n",
@@ -1478,19 +1487,20 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with system and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc "
            "= %d\n",
@@ -1509,20 +1519,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
@@ -1541,21 +1552,22 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "EAR",
@@ -1573,20 +1585,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, "
            "cRc = %d\n",
@@ -1605,21 +1618,22 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "TAR",
@@ -1637,20 +1651,21 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file with archive and system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "TAS",
@@ -1668,22 +1683,23 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc "
            "= %d, cRc = %d\n",
@@ -1702,23 +1718,24 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
@@ -1738,23 +1755,24 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tEncrypted temporary file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
@@ -1774,23 +1792,24 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted file with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, "
            "wRc = %d, cRc = %d\n",
@@ -1810,23 +1829,24 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted temporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = "
            "%d, cRc = %d\n",
@@ -1846,24 +1866,25 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tEncrypted temporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
@@ -1883,25 +1904,26 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
@@ -1921,25 +1943,26 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tEncrypted temporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
@@ -1959,27 +1982,28 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret =
             WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret =
             WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
         ret = WriteFile(
             h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with all attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "AHORST", rc, wRc, cRc);
 
@@ -1989,12 +2013,13 @@ void FileAttributes(const char *path)
         rc = 0;
         wRc = 0;
         cRc = 0;
-        if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+        if(h == INVALID_HANDLE_VALUE)
+            rc = GetLastError();
         else
         {
             ret = WriteFile(
                 h, (LPCVOID)compressedAttributeText, strlen(compressedAttributeText), &dwNumberOfBytesWritten, NULL);
-            if(!ret) { wRc = GetLastError(); }
+            if(!ret) wRc = GetLastError();
 
             ret = DeviceIoControl(
                 h, FSCTL_SET_COMPRESSION, &defaultCompression, sizeof(DWORD), NULL, 0, &dwNumberOfBytesWritten, NULL);
@@ -2002,7 +2027,7 @@ void FileAttributes(const char *path)
             if(!ret) { rc = GetLastError(); }
 
             ret = CloseHandle(h);
-            if(!ret) { cRc = GetLastError(); }
+            if(!ret) cRc = GetLastError();
         }
         printf("\tFile is compressed: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMPRESS", rc, wRc, cRc);
     }
@@ -2117,9 +2142,9 @@ void ExtendedAttributes(const char *path)
         }
         else
         {
-            memset(&message, 0, 300);
+            memset(message, 0, 300);
             sprintf(&message, "This files has an optional .COMMENTS EA\n");
-            ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2146,9 +2171,9 @@ void ExtendedAttributes(const char *path)
         }
         else
         {
-            memset(&message, 0, 300);
+            memset(message, 0, 300);
             sprintf(&message, "This files has a critical .COMMENTS EA\n");
-            ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2175,9 +2200,9 @@ void ExtendedAttributes(const char *path)
         }
         else
         {
-            memset(&message, 0, 300);
+            memset(message, 0, 300);
             sprintf(&message, "This files has an optional .ICON EA\n");
-            ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2206,7 +2231,6 @@ void ResourceFork(const char *path)
     BOOL          ret;
     DWORD         error;
     LPSTR         lpRootPathName;
-    DWORD         dwMaxNameSize = MAX_PATH + 1;
     size_t        pathSize      = strlen(path);
     HANDLE        h;
     DWORD         dwNumberOfBytesWritten;
@@ -2241,7 +2265,7 @@ void ResourceFork(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -2276,14 +2300,15 @@ void ResourceFork(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)tinyAdsText, strlen(tinyAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "TINY:ADS",
@@ -2296,11 +2321,12 @@ void ResourceFork(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)smallAdsText, strlen(smallAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
@@ -2313,7 +2339,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with small alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "SMALL:ADS",
@@ -2326,11 +2352,12 @@ void ResourceFork(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)mediumAdsText, strlen(mediumAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
@@ -2344,7 +2371,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "MEDIUM:ADS",
@@ -2357,11 +2384,12 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)bigAdsText, strlen(bigAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
@@ -2374,7 +2402,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf(
         "\tFile with big alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "BIG:ADS", rc, wRc, cRc);
@@ -2383,14 +2411,15 @@ void ResourceFork(const char *path)
     rc = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)tinyAdsText, strlen(tinyAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "MULTIPLE:ADS",
@@ -2403,15 +2432,17 @@ void ResourceFork(const char *path)
     rc = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)smallAdsText, strlen(smallAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
             ret = WriteFile(h, (LPCVOID)smallAdsRepeatText, strlen(smallAdsRepeatText), &dwNumberOfBytesWritten, NULL);
+
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2420,7 +2451,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with small alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "MULTIPLE:ADS",
@@ -2433,16 +2464,18 @@ void ResourceFork(const char *path)
     rc = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)mediumAdsText, strlen(mediumAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
             ret =
                 WriteFile(h, (LPCVOID)mediumAdsRepeatText, strlen(mediumAdsRepeatText), &dwNumberOfBytesWritten, NULL);
+
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2451,7 +2484,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "MULTIPLE:ADS",
@@ -2464,15 +2497,17 @@ void ResourceFork(const char *path)
     rc = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)bigAdsText, strlen(bigAdsText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         for(i = 0; i < maxLoop; i++)
         {
             ret = WriteFile(h, (LPCVOID)bigAdsRepeatText, strlen(bigAdsRepeatText), &dwNumberOfBytesWritten, NULL);
+
             if(!ret)
             {
                 wRc = GetLastError();
@@ -2481,7 +2516,7 @@ void ResourceFork(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
            "MULTIPLE:ADS",
@@ -2494,10 +2529,9 @@ void Filenames(const char *path)
 {
     BOOL   ret;
     DWORD  error;
-    LPSTR  lpRootPathName;
-    DWORD  dwMaxNameSize = MAX_PATH + 1;
-    size_t pathSize      = strlen(path);
-    HANDLE h;
+    LPSTR        lpRootPathName;
+    const size_t pathSize = strlen(path);
+    HANDLE       h;
     DWORD  dwNumberOfBytesWritten;
     DWORD  rc, wRc, cRc;
     char   message[300];
@@ -2514,7 +2548,7 @@ void Filenames(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -2553,17 +2587,18 @@ void Filenames(const char *path)
         wRc = 0;
         cRc = 0;
 
-        if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+        if(h == INVALID_HANDLE_VALUE)
+            rc = GetLastError();
         else
         {
-            memset(&message, 0, 300);
-            sprintf(&message, FILENAME_FORMAT, filenames[pos]);
+            memset(message, 0, 300);
+            sprintf(message, FILENAME_FORMAT, filenames[pos]);
 
-            ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-            if(!ret) { wRc = GetLastError(); }
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            if(!ret) wRc = GetLastError();
 
             ret = CloseHandle(h);
-            if(!ret) { cRc = GetLastError(); }
+            if(!ret) cRc = GetLastError();
         }
 
         printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
@@ -2576,7 +2611,6 @@ void Timestamps(const char *path)
     BOOL     ret;
     DWORD    error;
     LPSTR    lpRootPathName;
-    DWORD    dwMaxNameSize = MAX_PATH + 1;
     size_t   pathSize      = strlen(path);
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
@@ -2596,7 +2630,7 @@ void Timestamps(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -2632,22 +2666,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "creation");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "creation");
         ftCreationTime.dwHighDateTime = MAXTIMESTAMP;
         ftCreationTime.dwLowDateTime  = MAXTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
 
@@ -2656,22 +2691,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "access");
         ftLastAccessTime.dwHighDateTime = MAXTIMESTAMP;
         ftLastAccessTime.dwLowDateTime  = MAXTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
 
@@ -2680,22 +2716,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "modification");
         ftLastWriteTime.dwHighDateTime = MAXTIMESTAMP;
         ftLastWriteTime.dwLowDateTime  = MAXTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
 
@@ -2704,22 +2741,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "creation");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MINDATETIME, "creation");
         ftCreationTime.dwHighDateTime = MINTIMESTAMP;
         ftCreationTime.dwLowDateTime  = MINTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
 
@@ -2728,22 +2766,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MINDATETIME, "access");
         ftLastAccessTime.dwHighDateTime = MINTIMESTAMP;
         ftLastAccessTime.dwLowDateTime  = MINTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
 
@@ -2752,22 +2791,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MINDATETIME, "modification");
         ftLastWriteTime.dwHighDateTime = MINTIMESTAMP;
         ftLastWriteTime.dwLowDateTime  = MINTIMESTAMP;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
 
@@ -2776,22 +2816,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "creation");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "creation");
         ftCreationTime.dwHighDateTime = TIMESTAMP_HI;
         ftCreationTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KCTIME", rc, wRc, cRc, tRc);
 
@@ -2800,22 +2841,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "access");
         ftLastAccessTime.dwHighDateTime = TIMESTAMP_HI;
         ftLastAccessTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
 
@@ -2824,22 +2866,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
         ftLastWriteTime.dwHighDateTime = TIMESTAMP_HI;
         ftLastWriteTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
 
@@ -2848,22 +2891,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "creation");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "creation");
         ftCreationTime.dwHighDateTime = TIMESTAMP_HI;
         ftCreationTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KCTIME", rc, wRc, cRc, tRc);
 
@@ -2872,22 +2916,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "access");
         ftLastAccessTime.dwHighDateTime = TIMESTAMP_HI;
         ftLastAccessTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
@@ -2896,22 +2941,23 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
         ftLastWriteTime.dwHighDateTime = TIMESTAMP_HI;
         ftLastWriteTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
 
-        ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
 
         ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) { tRc = GetLastError(); }
+        if(!ret) tRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KMTIME", rc, wRc, cRc, tRc);
 }
@@ -2920,10 +2966,9 @@ void DirectoryDepth(const char *path)
 {
     BOOL   ret;
     DWORD  error;
-    LPSTR  lpRootPathName;
-    DWORD  dwMaxNameSize = MAX_PATH + 1;
-    size_t pathSize      = strlen(path);
-    char   filename[9];
+    LPSTR        lpRootPathName;
+    const size_t pathSize = strlen(path);
+    char         filename[9];
     long   pos = 2;
 
     lpRootPathName = malloc(dwMaxNameSize);
@@ -2937,7 +2982,7 @@ void DirectoryDepth(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -2970,8 +3015,8 @@ void DirectoryDepth(const char *path)
 
     while(ret)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%08d", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "%08d", pos);
         ret = CreateDirectoryA(filename, NULL);
 
         if(ret) ret = SetCurrentDirectoryA(filename);
@@ -2994,8 +3039,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     BOOL           ret;
     DWORD          error;
     LPSTR          lpRootPathName;
-    DWORD          dwMaxNameSize = MAX_PATH + 1;
-    size_t         pathSize      = strlen(path);
+    const size_t   pathSize = strlen(path);
     HANDLE         h;
     DWORD          rc, wRc, cRc, tRc;
     DWORD          dwNumberOfBytesWritten;
@@ -3011,7 +3055,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -3045,7 +3089,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(halfCluster);
@@ -3054,10 +3099,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < halfCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, halfCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3068,7 +3113,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(quarterCluster);
@@ -3077,10 +3123,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < quarterCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, quarterCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3091,7 +3137,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3100,10 +3147,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3114,7 +3161,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(threeQuartersCluster);
@@ -3123,10 +3171,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, threeQuartersCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3142,7 +3190,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoAndThreeQuartCluster);
@@ -3151,10 +3200,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoAndThreeQuartCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3170,7 +3219,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3179,10 +3229,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3193,7 +3243,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3202,10 +3253,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3216,7 +3267,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3225,15 +3277,15 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
     printf("\tDeleting \"TWO2\".\n");
-    ret = DeleteFile("TWO2");
+    ret = DeleteFileA("TWO2");
     if(!ret) { rc = GetLastError(); }
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
@@ -3243,7 +3295,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(threeQuartersCluster);
@@ -3252,18 +3305,18 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, threeQuartersCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
     printf("\tDeleting \"TWO1\".\n");
-    ret = DeleteFile("TWO1");
+    ret = DeleteFileA("TWO1");
     if(!ret) { rc = GetLastError(); }
     printf("\tDeleting \"TWO3\".\n");
-    ret = DeleteFile("TWO3");
+    ret = DeleteFileA("TWO3");
     if(!ret) { rc = GetLastError(); }
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
@@ -3278,7 +3331,8 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(twoAndThreeQuartCluster);
@@ -3287,10 +3341,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, twoAndThreeQuartCluster, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3309,7 +3363,6 @@ void Sparse(const char *path)
     LPSTR                            lpVolumeNameBuffer;
     DWORD                            dwMaximumComponentLength;
     DWORD                            dwFileSystemFlags;
-    DWORD                            dwMaxNameSize = MAX_PATH + 1;
     LPSTR                            lpFileSystemNameBuffer;
     LPSTR                            lpRootPathName;
     size_t                           pathSize = strlen(path);
@@ -3350,7 +3403,7 @@ void Sparse(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = GetVolumeInformationA(lpRootPathName,
                                 lpVolumeNameBuffer,
@@ -3417,7 +3470,8 @@ void Sparse(const char *path)
     cRc = 0;
     sRc = 0;
     zRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(4096 * 3);
@@ -3426,7 +3480,7 @@ void Sparse(const char *path)
         for(i = 0; i < 4096 * 3; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, 4096 * 3, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = DeviceIoControl(h, FSCTL_SET_SPARSE, NULL, 0, NULL, 0, &dwNumberOfBytesWritten, NULL);
         if(!ret)
@@ -3473,7 +3527,7 @@ void Sparse(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3492,7 +3546,8 @@ void Sparse(const char *path)
     cRc = 0;
     sRc = 0;
     zRc = 0;
-    if(h == INVALID_HANDLE_VALUE) { rc = GetLastError(); }
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
     else
     {
         buffer = malloc(4096 * 30);
@@ -3501,7 +3556,7 @@ void Sparse(const char *path)
         for(i = 0; i < 4096 * 30; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
 
         ret = WriteFile(h, buffer, 4096 * 30, &dwNumberOfBytesWritten, NULL);
-        if(!ret) { wRc = GetLastError(); }
+        if(!ret) wRc = GetLastError();
 
         ret = DeviceIoControl(h, FSCTL_SET_SPARSE, NULL, 0, NULL, 0, &dwNumberOfBytesWritten, NULL);
         if(!ret)
@@ -3548,7 +3603,7 @@ void Sparse(const char *path)
         }
 
         ret = CloseHandle(h);
-        if(!ret) { cRc = GetLastError(); }
+        if(!ret) cRc = GetLastError();
         free(buffer);
     }
 
@@ -3665,9 +3720,9 @@ void Links(const char *path)
             }
             else
             {
-                memset(&message, 0, 300);
+                memset(message, 0, 300);
                 sprintf(&message, "This file is the target of a symbolic link.\n");
-                ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
+                ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
                 if(!ret)
                 {
                     wRc = GetLastError();
@@ -3708,9 +3763,9 @@ void Links(const char *path)
             }
             else
             {
-                memset(&message, 0, 300);
+                memset(message, 0, 300);
                 sprintf(&message, "This file is part of a hard link.\n");
-                ret = WriteFile(h, &message, strlen(message), &dwNumberOfBytesWritten, NULL);
+                ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
                 if(!ret)
                 {
                     wRc = GetLastError();
@@ -3743,9 +3798,8 @@ void MillionFiles(const char *path)
     HANDLE h;
     BOOL   ret;
     DWORD  error;
-    LPSTR  lpRootPathName;
-    DWORD  dwMaxNameSize = MAX_PATH + 1;
-    size_t pathSize      = strlen(path);
+    LPSTR        lpRootPathName;
+    const size_t pathSize = strlen(path);
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -3758,7 +3812,7 @@ void MillionFiles(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -3795,7 +3849,7 @@ void MillionFiles(const char *path)
         sprintf(filename, "%08lu", pos);
 
         h = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if(h == INVALID_HANDLE_VALUE) { break; }
+        if(h == INVALID_HANDLE_VALUE) break;
 
         CloseHandle(h);
     }
@@ -3810,9 +3864,8 @@ void DeleteFiles(const char *path)
     HANDLE h;
     BOOL   ret;
     DWORD  error;
-    LPSTR  lpRootPathName;
-    DWORD  dwMaxNameSize = MAX_PATH + 1;
-    size_t pathSize      = strlen(path);
+    LPSTR        lpRootPathName;
+    const size_t pathSize = strlen(path);
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -3825,7 +3878,7 @@ void DeleteFiles(const char *path)
     memset(lpRootPathName, 0x00, MAX_PATH);
     strcpy(lpRootPathName, path);
 
-    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
     ret = SetCurrentDirectoryA(lpRootPathName);
 
@@ -3858,13 +3911,13 @@ void DeleteFiles(const char *path)
 
     for(pos = 0; pos < 64; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%X", pos);
-        h = CreateFileA(&filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        memset(filename, 0, 9);
+        sprintf(filename, "%X", pos);
+        h = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(h == INVALID_HANDLE_VALUE) { break; }
 
         CloseHandle(h);
-        DeleteFile(&filename);
+        DeleteFileA(filename);
     }
 }
 
