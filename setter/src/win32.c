@@ -361,6 +361,18 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
             dwFileSystemFlags -= FILE_VOLUME_QUOTAS;
         }
 
+        if(dwFileSystemFlags & (DWORD)FILE_RETURNS_CLEANUP_RESULT_INFO)
+        {
+            printf("\t\tOn a clean operation, volume returns additional information.\n");
+            dwFileSystemFlags -= FILE_RETURNS_CLEANUP_RESULT_INFO;
+        }
+
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_POSIX_UNLINK_RENAME)
+        {
+            printf("\t\tVolume supports POSIX-style delete and rename operations.\n");
+            dwFileSystemFlags -= FILE_SUPPORTS_POSIX_UNLINK_RENAME;
+        }
+
         if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08lx.\n", dwFileSystemFlags);
     }
 
