@@ -428,6 +428,7 @@ void FileAttributes(const char *path)
     DWORD         rc, wRc, cRc;
     OSVERSIONINFO verInfo;
     DWORD         defaultCompression = COMPRESSION_FORMAT_DEFAULT;
+    void *        func;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -1393,9 +1394,11 @@ void FileAttributes(const char *path)
     HMODULE advapi32 = LoadLibraryA("ADVAPI32.DLL");
     if(!advapi32) return;
 
-    WinNtEncryptFileA winNtEncryptFile = (WinNtEncryptFileA)GetProcAddress(advapi32, "EncryptFileA");
+    func = GetProcAddress(advapi32, "EncryptFileA");
 
-    if(!winNtEncryptFile) return;
+    if(!func) return;
+
+    WinNtEncryptFileA = func;
 
     h   = CreateFileA("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -1415,7 +1418,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("ENCRYPT");
+        ret = WinNtEncryptFileA("ENCRYPT");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("ENCRYPT", FILE_ATTRIBUTE_NORMAL);
@@ -1449,7 +1452,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("EA");
+        ret = WinNtEncryptFileA("EA");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("EA", FILE_ATTRIBUTE_ARCHIVE);
@@ -1481,7 +1484,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("HE");
+        ret = WinNtEncryptFileA("HE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("HE", FILE_ATTRIBUTE_HIDDEN);
@@ -1514,7 +1517,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("OE");
+        ret = WinNtEncryptFileA("OE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("OE", FILE_ATTRIBUTE_OFFLINE);
@@ -1548,7 +1551,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("RE");
+        ret = WinNtEncryptFileA("RE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("RE", FILE_ATTRIBUTE_READONLY);
@@ -1583,7 +1586,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TE");
+        ret = WinNtEncryptFileA("TE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("TE", FILE_ATTRIBUTE_TEMPORARY);
@@ -1619,7 +1622,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("HAE");
+        ret = WinNtEncryptFileA("HAE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("HAE", FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE);
@@ -1656,7 +1659,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("OAE");
+        ret = WinNtEncryptFileA("OAE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("OAE", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE);
@@ -1694,7 +1697,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("RAE");
+        ret = WinNtEncryptFileA("RAE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("RAE", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE);
@@ -1732,7 +1735,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TAE");
+        ret = WinNtEncryptFileA("TAE");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("TAE", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE);
@@ -1768,7 +1771,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("EAO");
+        ret = WinNtEncryptFileA("EAO");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("EAO", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
@@ -1806,7 +1809,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("EAR");
+        ret = WinNtEncryptFileA("EAR");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("EAR", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
@@ -1845,7 +1848,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("OAEH");
+        ret = WinNtEncryptFileA("OAEH");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("OAEH", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
@@ -1885,7 +1888,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("RAEH");
+        ret = WinNtEncryptFileA("RAEH");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("RAEH", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
@@ -1925,7 +1928,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TAEH");
+        ret = WinNtEncryptFileA("TAEH");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("TAEH", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
@@ -1965,7 +1968,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("RAEO");
+        ret = WinNtEncryptFileA("RAEO");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("RAEO", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
@@ -2005,7 +2008,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TAEO");
+        ret = WinNtEncryptFileA("TAEO");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("TAEO", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
@@ -2046,7 +2049,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TAER");
+        ret = WinNtEncryptFileA("TAER");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA("TAER", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
@@ -2088,7 +2091,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("RAEH");
+        ret = WinNtEncryptFileA("RAEH");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA(
@@ -2131,7 +2134,7 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
 
-        ret = winNtEncryptFile("TAEH");
+        ret = WinNtEncryptFileA("TAEH");
         if(!ret) eRc = GetLastError();
 
         ret = SetFileAttributesA(
