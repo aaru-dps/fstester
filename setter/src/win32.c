@@ -34,17 +34,20 @@ Copyright (C) 2011-2020 Natalia Portillo
 #if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \
     defined(__NT__)
 
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include "win32.h"
 
 #include "consts.h"
 #include "defs.h"
 
-#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 
-static DWORD dwMaxNameSize = MAX_PATH + 1;
+static DWORD dwMaxNameSize     = MAX_PATH + 1;
+static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
 
 void GetOsInfo()
 {
@@ -53,19 +56,19 @@ void GetOsInfo()
     DWORD         error;
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         return;
     }
 
     printf("OS information:\n");
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32s)
-        printf("\tRunning under Windows %d.%d using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+        printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
     {
         if(verInfo.dwMinorVersion == 10)
@@ -85,20 +88,22 @@ void GetOsInfo()
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %d.%02d.%d %ls.\n",
+                printf(" version %lu.%02lu.%lu%ss.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
                        verInfo.szCSDVersion);
             else
-                printf(" version %d.%02d.%d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
+                printf(
+                    " version %lu.%02lu%lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
+                printf(
+                    " version %lu.%02lu %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             else
-                printf(" version %d.%02d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+                printf(" version %lu.%02lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         }
     }
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
@@ -133,20 +138,22 @@ void GetOsInfo()
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %d.%02d.%d %ls.\n",
+                printf(" version %lu%02lu%lu%s.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
                        verInfo.szCSDVersion);
             else
-                printf(" version %d.%02d.%d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
+                printf(
+                    " version %lu.%02lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %d.%02d %ls.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
+                printf(
+                    " version %lu.%02lu %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             else
-                printf(" version %d.%02d.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+                printf(" version %lu%02lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         }
     }
 }
@@ -194,7 +201,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
@@ -203,7 +210,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -219,7 +226,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying volume information.\n", error);
+        printf("Error %lu querying volume information.\n", error);
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         free(lpRootPathName);
@@ -228,133 +235,133 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
     printf("\tFilesystem: %s\n", lpFileSystemNameBuffer);
     printf("\tVolume name: %s\n", lpVolumeNameBuffer);
-    printf("\tMaximum component size: %d\n", dwMaximumComponentLength);
+    printf("\tMaximum component size: %lu\n", dwMaximumComponentLength);
 
     if(dwFileSystemFlags > 0)
     {
         printf("\tFlags:\n");
 
-        if(dwFileSystemFlags & FILE_CASE_PRESERVED_NAMES)
+        if(dwFileSystemFlags & (DWORD)FILE_CASE_PRESERVED_NAMES)
         {
             printf("\t\tVolume preserves file name case.\n");
             dwFileSystemFlags -= FILE_CASE_PRESERVED_NAMES;
         }
 
-        if(dwFileSystemFlags & FILE_CASE_SENSITIVE_SEARCH)
+        if(dwFileSystemFlags & (DWORD)FILE_CASE_SENSITIVE_SEARCH)
         {
             printf("\t\tVolume supports case sensitiveness.\n");
             dwFileSystemFlags -= FILE_CASE_SENSITIVE_SEARCH;
         }
 
-        if(dwFileSystemFlags & FILE_DAX_VOLUME)
+        if(dwFileSystemFlags & (DWORD)FILE_DAX_VOLUME)
         {
             printf("\t\tDirect access volume.\n");
             dwFileSystemFlags -= FILE_DAX_VOLUME;
         }
 
-        if(dwFileSystemFlags & FILE_FILE_COMPRESSION)
+        if(dwFileSystemFlags & (DWORD)FILE_FILE_COMPRESSION)
         {
             printf("\t\tVolume supports per-file compression.\n");
             dwFileSystemFlags -= FILE_FILE_COMPRESSION;
         }
 
-        if(dwFileSystemFlags & FILE_NAMED_STREAMS)
+        if(dwFileSystemFlags & (DWORD)FILE_NAMED_STREAMS)
         {
             printf("\t\tVolume supports Alternate Data Streams.\n");
             dwFileSystemFlags -= FILE_NAMED_STREAMS;
         }
 
-        if(dwFileSystemFlags & FILE_PERSISTENT_ACLS)
+        if(dwFileSystemFlags & (DWORD)FILE_PERSISTENT_ACLS)
         {
             printf("\t\tVolume supports persistent Access Control Lists.\n");
             dwFileSystemFlags -= FILE_PERSISTENT_ACLS;
         }
 
-        if(dwFileSystemFlags & FILE_READ_ONLY_VOLUME)
+        if(dwFileSystemFlags & (DWORD)FILE_READ_ONLY_VOLUME)
         {
             printf("\t\tVolume is read-only.\n");
             dwFileSystemFlags -= FILE_READ_ONLY_VOLUME;
         }
 
-        if(dwFileSystemFlags & FILE_SEQUENTIAL_WRITE_ONCE)
+        if(dwFileSystemFlags & (DWORD)FILE_SEQUENTIAL_WRITE_ONCE)
         {
             printf("\t\tVolume supports a single sequential write.\n");
             dwFileSystemFlags -= FILE_SEQUENTIAL_WRITE_ONCE;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_ENCRYPTION)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_ENCRYPTION)
         {
             printf("\t\tVolume supports per-file encryption.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_ENCRYPTION;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_EXTENDED_ATTRIBUTES)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_EXTENDED_ATTRIBUTES)
         {
             printf("\t\tVolume supports extended attributes.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_EXTENDED_ATTRIBUTES;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_HARD_LINKS)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_HARD_LINKS)
         {
             printf("\t\tVolume supports hard links.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_HARD_LINKS;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_OBJECT_IDS)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_OBJECT_IDS)
         {
             printf("\t\tVolume supports object IDs.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_OBJECT_IDS;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_OPEN_BY_FILE_ID)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_OPEN_BY_FILE_ID)
         {
             printf("\t\tVolume can open files by ID.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_OPEN_BY_FILE_ID;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_REPARSE_POINTS)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_REPARSE_POINTS)
         {
             printf("\t\tVolume supports reparse points.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_REPARSE_POINTS;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_SPARSE_FILES)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_SPARSE_FILES)
         {
             printf("\t\tVolume supports sparse files.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_SPARSE_FILES;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_TRANSACTIONS)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_TRANSACTIONS)
         {
             printf("\t\tVolume supports transactions.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_TRANSACTIONS;
         }
 
-        if(dwFileSystemFlags & FILE_SUPPORTS_USN_JOURNAL)
+        if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_USN_JOURNAL)
         {
             printf("\t\tVolume has an USN journal.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_USN_JOURNAL;
         }
 
-        if(dwFileSystemFlags & FILE_UNICODE_ON_DISK)
+        if(dwFileSystemFlags & (DWORD)FILE_UNICODE_ON_DISK)
         {
             printf("\t\tVolume stores filenames as Unicode.\n");
             dwFileSystemFlags -= FILE_UNICODE_ON_DISK;
         }
 
-        if(dwFileSystemFlags & FILE_VOLUME_IS_COMPRESSED)
+        if(dwFileSystemFlags & (DWORD)FILE_VOLUME_IS_COMPRESSED)
         {
             printf("\t\tVolume is compressed.\n");
             dwFileSystemFlags -= FILE_VOLUME_IS_COMPRESSED;
         }
 
-        if(dwFileSystemFlags & FILE_VOLUME_QUOTAS)
+        if(dwFileSystemFlags & (DWORD)FILE_VOLUME_QUOTAS)
         {
             printf("\t\tVolume supports user quotas.\n");
             dwFileSystemFlags -= FILE_VOLUME_QUOTAS;
         }
 
-        if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08x.\n", dwFileSystemFlags);
+        if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08lx.\n", dwFileSystemFlags);
     }
 
     free(lpVolumeNameBuffer);
@@ -366,22 +373,22 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying volume space.\n", error);
+        printf("Error %lu querying volume space.\n", error);
         free(lpRootPathName);
         return;
     }
 
     *clusterSize = dwSectorsPerCluster * dwBytesPerSector;
-    printf("\tBytes per sector: %u\n", dwBytesPerSector);
-    printf("\tSectors per cluster: %u (%u bytes)\n", dwSectorsPerCluster, *clusterSize);
+    printf("\tBytes per sector: %lu\n", dwBytesPerSector);
+    printf("\tSectors per cluster: %lu (%u bytes)\n", dwSectorsPerCluster, *clusterSize);
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         free(lpRootPathName);
         return;
     }
@@ -395,7 +402,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %d querying extended volume space.\n", error);
+            printf("Error %lu querying extended volume space.\n", error);
             free(lpRootPathName);
             return;
         }
@@ -432,14 +439,14 @@ void FileAttributes(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -448,7 +455,7 @@ void FileAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -457,7 +464,7 @@ void FileAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -466,24 +473,24 @@ void FileAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         free(lpRootPathName);
         return;
     }
 
     printf("Creating attributes files.\n");
 
-    h   = CreateFileA("NONE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("NONE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -497,9 +504,9 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with no attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "NONE", rc, wRc, cRc);
+    printf("\tFile with no attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "NONE", rc, wRc, cRc);
 
-    h   = CreateFileA("ARCHIVE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, NULL);
+    h   = CreateFileA("ARCHIVE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -514,9 +521,9 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHIVE", rc, wRc, cRc);
+    printf("\tFile with archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "ARCHIVE", rc, wRc, cRc);
 
-    h   = CreateFileA("HIDDEN", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
+    h   = CreateFileA("HIDDEN", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -530,9 +537,9 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HIDDEN", rc, wRc, cRc);
+    printf("\tFile with hidden attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "HIDDEN", rc, wRc, cRc);
 
-    h   = CreateFileA("OFFLINE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE, NULL);
+    h   = CreateFileA("OFFLINE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -546,9 +553,9 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OFFLINE", rc, wRc, cRc);
+    printf("\tFile is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "OFFLINE", rc, wRc, cRc);
 
-    h   = CreateFileA("READONLY", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY, NULL);
+    h   = CreateFileA("READONLY", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -563,9 +570,10 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "READONLY", rc, wRc, cRc);
+    printf(
+        "\tFile with read-only attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "READONLY", rc, wRc, cRc);
 
-    h   = CreateFileA("SYSTEM", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM, NULL);
+    h   = CreateFileA("SYSTEM", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -579,9 +587,9 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SYSTEM", rc, wRc, cRc);
+    printf("\tFile with system attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "SYSTEM", rc, wRc, cRc);
 
-    h   = CreateFileA("TEMPORAR", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
+    h   = CreateFileA("TEMPORAR", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -596,15 +604,10 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TEMPORAR", rc, wRc, cRc);
+    printf("\tTemporary file: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "TEMPORAR", rc, wRc, cRc);
 
-    h   = CreateFileA("HA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
+    h = CreateFileA(
+        "HA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -621,16 +624,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tFile with hidden and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HA", rc, wRc, cRc);
+    printf("\tFile with hidden and archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "HA",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("OA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
+    h = CreateFileA(
+        "OA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -647,19 +648,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with archived attribute is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with archived attribute is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "OA",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("RA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
+    h = CreateFileA(
+        "RA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -677,19 +673,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with read-only and archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "RA",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("SA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
+    h = CreateFileA(
+        "SA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -706,16 +697,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tFile with system and archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SA", rc, wRc, cRc);
+    printf("\tFile with system and archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "SA",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("TA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
+    h = CreateFileA(
+        "TA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -733,16 +722,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tTemporary file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TA", rc, wRc, cRc);
+    printf("\tTemporary file with archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "TA",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("OH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
+    h = CreateFileA(
+        "OH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -758,19 +745,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with hidden attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with hidden attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "OH",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("RH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
+    h = CreateFileA(
+        "RH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -787,19 +769,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with system and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "RH",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("SH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
+    h = CreateFileA(
+        "SH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -815,16 +792,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tFile with system and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "SH", rc, wRc, cRc);
+    printf("\tFile with system and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "SH",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("TH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
+    h = CreateFileA(
+        "TH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -841,15 +816,11 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TH", rc, wRc, cRc);
+    printf(
+        "\tTemporary file with hidden attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "TH", rc, wRc, cRc);
 
-    h   = CreateFileA("RO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
+    h = CreateFileA(
+        "RO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_OFFLINE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -866,19 +837,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with read-only attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "RO",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("SO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
+    h = CreateFileA(
+        "SO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_OFFLINE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -894,19 +860,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with system attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "SO",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("TO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
+    h = CreateFileA(
+        "TO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_OFFLINE, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -923,16 +884,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tTemporary file that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TO", rc, wRc, cRc);
+    printf("\tTemporary file that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "TO",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("SR",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_READONLY,
-                    NULL);
+    h = CreateFileA(
+        "SR", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_READONLY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -949,19 +908,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with system and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "SR",
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("TR",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_READONLY,
-                    NULL);
+    h = CreateFileA(
+        "TR", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_READONLY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -979,16 +933,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tTemporary file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TR", rc, wRc, cRc);
+    printf("\tTemporary file with read-only attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "TR",
+           rc,
+           wRc,
+           cRc);
 
-    h   = CreateFileA("ST",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY,
-                    NULL);
+    h = CreateFileA(
+        "ST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_TEMPORARY, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1005,10 +957,11 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ST", rc, wRc, cRc);
+    printf(
+        "\tTemporary file with system attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "ST", rc, wRc, cRc);
 
     h   = CreateFileA("OAH",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1032,15 +985,16 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc "
-           "= %d\n",
-           "OAH",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tFile with archive and hidden attributes that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc "
+        "= %d\n",
+        "OAH",
+        rc,
+        wRc,
+        cRc);
 
     h   = CreateFileA("RAH",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1065,14 +1019,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only, hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with read-only, hidden and archive attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "RAH",
            rc,
            wRc,
            cRc);
 
     h   = CreateFileA("SAH",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1096,14 +1050,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with system, archive and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "SAH",
            rc,
            wRc,
            cRc);
 
     h   = CreateFileA("TAH",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1128,14 +1082,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tTemporary file with archive and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TAH",
            rc,
            wRc,
            cRc);
 
     h   = CreateFileA("RAO",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1160,15 +1114,16 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, "
-           "cRc = %d\n",
-           "RAO",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %lu, wRc = %lu, "
+        "cRc = %lu\n",
+        "RAO",
+        rc,
+        wRc,
+        cRc);
 
     h   = CreateFileA("SAO",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1192,15 +1147,16 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with system and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc "
-           "= %d\n",
-           "SAO",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tFile with system and archive attributes that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc "
+        "= %d\n",
+        "SAO",
+        rc,
+        wRc,
+        cRc);
 
     h   = CreateFileA("TAO",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1225,15 +1181,16 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d\n",
-           "TAO",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tTemporary file with archive attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+        "%d\n",
+        "TAO",
+        rc,
+        wRc,
+        cRc);
 
     h   = CreateFileA("OAR",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1258,15 +1215,16 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, wRc = %d, "
-           "cRc = %d\n",
-           "OAR",
-           rc,
-           wRc,
-           cRc);
+    printf(
+        "\tFile with read-only and archive attributes that is available offline: name = \"%s\", rc = %lu, wRc = %lu, "
+        "cRc = %lu\n",
+        "OAR",
+        rc,
+        wRc,
+        cRc);
 
     h   = CreateFileA("TAR",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1292,14 +1250,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tTemporary file with archive and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TAR",
            rc,
            wRc,
            cRc);
 
     h   = CreateFileA("TAS",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1324,14 +1282,14 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tTemporary file with archive and system attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tTemporary file with archive and system attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TAS",
            rc,
            wRc,
            cRc);
 
     h   = CreateFileA("AHORST",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     0,
                     NULL,
                     CREATE_ALWAYS,
@@ -1364,12 +1322,12 @@ void FileAttributes(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with all attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "AHORST", rc, wRc, cRc);
+    printf("\tFile with all attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "AHORST", rc, wRc, cRc);
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
-        h  = CreateFileA("COMPRESS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        rc = 0;
+        h   = CreateFileA("COMPRESS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        rc  = 0;
         wRc = 0;
         cRc = 0;
         if(h == INVALID_HANDLE_VALUE)
@@ -1388,7 +1346,7 @@ void FileAttributes(const char *path)
             ret = CloseHandle(h);
             if(!ret) cRc = GetLastError();
         }
-        printf("\tFile is compressed: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMPRESS", rc, wRc, cRc);
+        printf("\tFile is compressed: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "COMPRESS", rc, wRc, cRc);
     }
 
     HMODULE advapi32 = LoadLibraryA("ADVAPI32.DLL");
@@ -1400,10 +1358,10 @@ void FileAttributes(const char *path)
 
     WinNtEncryptFileA = func;
 
-    h   = CreateFileA("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
+    h         = CreateFileA("ENCRYPT", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc        = 0;
+    wRc       = 0;
+    cRc       = 0;
     DWORD aRc = 0;
     DWORD eRc = 0;
 
@@ -1424,7 +1382,7 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("ENCRYPT", FILE_ATTRIBUTE_NORMAL);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted file: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
            "ENCRYPT",
            rc,
            wRc,
@@ -1432,7 +1390,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("EA", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("EA", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1458,14 +1416,15 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("EA", FILE_ATTRIBUTE_ARCHIVE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted file with archived attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = "
+           "%lu\n",
            "EA",
            rc,
            wRc,
            cRc,
            aRc,
            eRc);
-    h   = CreateFileA("HE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("HE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1490,15 +1449,16 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("HE", FILE_ATTRIBUTE_HIDDEN);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
-           "HE",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with hidden attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
+        "HE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("OE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("OE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1523,15 +1483,16 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("OE", FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
-           "OE",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
+        "OE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("RE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("RE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1557,16 +1518,16 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("RE", FILE_ATTRIBUTE_READONLY);
         if(!ret) aRc = GetLastError();
     }
-    printf(
-        "\tEncrypted file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
-        "RE",
-        rc,
-        wRc,
-        cRc,
-        aRc,
-        eRc);
+    printf("\tEncrypted file with read-only attribute: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = "
+           "%lu\n",
+           "RE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
 
-    h   = CreateFileA("TE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1592,7 +1553,7 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("TE", FILE_ATTRIBUTE_TEMPORARY);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted temporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted temporary file: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
            "TE",
            rc,
            wRc,
@@ -1600,7 +1561,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("HAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("HAE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1628,8 +1589,9 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("HAE", FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, "
-           "eRc = %d\n",
+    printf("\tEncrypted file with hidden and archive attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = "
+           "%lu, "
+           "eRc = %lu\n",
            "HAE",
            rc,
            wRc,
@@ -1637,7 +1599,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("OAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("OAE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1665,16 +1627,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("OAE", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
-           "OAE",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+        "%d, aRc = %lu, eRc = %lu\n",
+        "OAE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("RAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("RAE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1703,16 +1666,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("RAE", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = "
-           "%d, eRc = %d\n",
-           "RAE",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = "
+        "%d, eRc = %lu\n",
+        "RAE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("TAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TAE", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1741,16 +1705,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("TAE", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
-           "TAE",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+        "%d, aRc = %lu, eRc = %lu\n",
+        "TAE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("EAO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("EAO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1777,16 +1742,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("EAO", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
-           "EAO",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+        "%d, aRc = %lu, eRc = %lu\n",
+        "EAO",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("EAR", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("EAR", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1815,16 +1781,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("EAR", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = "
-           "%d, eRc = %d\n",
-           "EAR",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = "
+        "%d, eRc = %lu\n",
+        "EAR",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("OAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("OAEH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1854,16 +1821,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("OAEH", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc "
-           "= %d, cRc = %d, aRc = %d, eRc = %d\n",
-           "OAEH",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted file with archive and hidden attributes that is available offline: name = \"%s\", rc = %lu, wRc "
+        "= %d, cRc = %lu, aRc = %lu, eRc = %lu\n",
+        "OAEH",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("RAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("RAEH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1894,8 +1862,8 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("RAEH", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+           "%d, aRc = %lu, eRc = %lu\n",
            "RAEH",
            rc,
            wRc,
@@ -1903,7 +1871,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("TAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TAEH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1934,16 +1902,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("TAEH", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted temporary file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, "
-           "aRc = %d, eRc = %d\n",
-           "TAEH",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted temporary file with hidden and archive attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, "
+        "aRc = %lu, eRc = %lu\n",
+        "TAEH",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("RAEO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("RAEO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -1974,8 +1943,8 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("RAEO", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, "
-           "wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted file with read-only and archive attributes that is available offline: name = \"%s\", rc = %lu, "
+           "wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
            "RAEO",
            rc,
            wRc,
@@ -1983,7 +1952,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("TAEO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TAEO", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2014,16 +1983,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("TAEO", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted temporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = "
-           "%d, cRc = %d, aRc = %d, eRc = %d\n",
-           "TAEO",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted temporary file with archive attribute that is available offline: name = \"%s\", rc = %lu, wRc = "
+        "%d, cRc = %lu, aRc = %lu, eRc = %lu\n",
+        "TAEO",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("TAER", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TAER", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2055,16 +2025,17 @@ void FileAttributes(const char *path)
         ret = SetFileAttributesA("TAER", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted temporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
-           "TAER",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted temporary file with archive and read-only attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+        "%d, aRc = %lu, eRc = %lu\n",
+        "TAER",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
-    h   = CreateFileA("RAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("RAEH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2098,8 +2069,8 @@ void FileAttributes(const char *path)
             "RAEH", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d, aRc = %d, eRc = %d\n",
+    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = "
+           "%d, aRc = %lu, eRc = %lu\n",
            "RAEH",
            rc,
            wRc,
@@ -2107,7 +2078,7 @@ void FileAttributes(const char *path)
            aRc,
            eRc);
 
-    h   = CreateFileA("TAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TAEH", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2141,14 +2112,15 @@ void FileAttributes(const char *path)
             "TAEH", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE);
         if(!ret) aRc = GetLastError();
     }
-    printf("\tEncrypted temporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, "
-           "aRc = %d, eRc = %d\n",
-           "TAEH",
-           rc,
-           wRc,
-           cRc,
-           aRc,
-           eRc);
+    printf(
+        "\tEncrypted temporary file with archive and hidden attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, "
+        "aRc = %lu, eRc = %lu\n",
+        "TAEH",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
 
     FreeLibrary(advapi32);
 }
@@ -2165,7 +2137,7 @@ void ExtendedAttributes(const char *path)
     HMODULE                   ntdll;
     void *                    func;
     DWORD                     dwNumberOfBytesWritten;
-    DWORD                     rc, wRc, cRc, rRc, cmp;
+    DWORD                     rc, wRc, cRc, rRc;
     char                      message[300];
     IO_STATUS_BLOCK           eaStatus;
     HANDLE                    h;
@@ -2173,14 +2145,15 @@ void ExtendedAttributes(const char *path)
     size_t                    pathSize = strlen(path);
     PFILE_FULL_EA_INFORMATION eaData;
     int                       i;
+    BOOL                      cmp;
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         return;
     }
 
@@ -2195,7 +2168,7 @@ void ExtendedAttributes(const char *path)
     if(ntdll == NULL)
     {
         error = GetLastError();
-        printf("Error %d loading NTDLL.DLL.\n", error);
+        printf("Error %lu loading NTDLL.DLL.\n", error);
         return;
     }
 
@@ -2204,7 +2177,7 @@ void ExtendedAttributes(const char *path)
     if(func == NULL)
     {
         error = GetLastError();
-        printf("Error %d finding NtSetEaFile.\n", error);
+        printf("Error %lu finding NtSetEaFile.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -2216,7 +2189,7 @@ void ExtendedAttributes(const char *path)
     if(func == NULL)
     {
         error = GetLastError();
-        printf("Error %d finding NtQueryEaFile.\n", error);
+        printf("Error %lu finding NtQueryEaFile.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -2225,7 +2198,7 @@ void ExtendedAttributes(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         FreeLibrary(ntdll);
@@ -2233,7 +2206,7 @@ void ExtendedAttributes(const char *path)
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -2242,7 +2215,7 @@ void ExtendedAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -2252,7 +2225,7 @@ void ExtendedAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -2262,7 +2235,7 @@ void ExtendedAttributes(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -2275,7 +2248,7 @@ void ExtendedAttributes(const char *path)
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("COMMENTS",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL,
                     CREATE_ALWAYS,
@@ -2325,7 +2298,7 @@ void ExtendedAttributes(const char *path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+    printf("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
            "COMMENTS",
            rc,
            wRc,
@@ -2339,7 +2312,7 @@ void ExtendedAttributes(const char *path)
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("COMMENTS.CRT",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL,
                     CREATE_ALWAYS,
@@ -2389,7 +2362,7 @@ void ExtendedAttributes(const char *path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+    printf("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
            "COMMENTS.CRT",
            rc,
            wRc,
@@ -2403,7 +2376,7 @@ void ExtendedAttributes(const char *path)
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("ICON",
-                    GENERIC_READ | GENERIC_WRITE,
+                    dwFilePermissions,
                     FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL,
                     CREATE_ALWAYS,
@@ -2453,7 +2426,7 @@ void ExtendedAttributes(const char *path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with icon = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+    printf("\tFile with icon = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
            "ICON",
            rc,
            wRc,
@@ -2474,15 +2447,16 @@ void ResourceFork(const char *path)
     DWORD         dwNumberOfBytesWritten;
     DWORD         rc, wRc, cRc;
     OSVERSIONINFO verInfo;
-    int           maxLoop, i;
+    unsigned int  maxLoop;
+    int           i;
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         return;
     }
 
@@ -2494,14 +2468,14 @@ void ResourceFork(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -2510,7 +2484,7 @@ void ResourceFork(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -2519,7 +2493,7 @@ void ResourceFork(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -2528,13 +2502,13 @@ void ResourceFork(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
     printf("Creating alternate data streams.\n");
 
-    h   = CreateFileA("TINY:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TINY:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2548,17 +2522,17 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TINY:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
-    h   = CreateFileA("SMALL:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
+    h       = CreateFileA("SMALL:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc      = 0;
+    wRc     = 0;
+    cRc     = 0;
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
     else
@@ -2579,17 +2553,17 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with small alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "SMALL:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
-    h   = CreateFileA("MEDIUM:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
+    h       = CreateFileA("MEDIUM:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc      = 0;
+    wRc     = 0;
+    cRc     = 0;
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
     else
@@ -2611,14 +2585,14 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "MEDIUM:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
-    h       = CreateFileA("BIG:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h       = CreateFileA("BIG:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
@@ -2642,11 +2616,14 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf(
-        "\tFile with big alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "BIG:ADS", rc, wRc, cRc);
+    printf("\tFile with big alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+           "BIG:ADS",
+           rc,
+           wRc,
+           cRc);
 
-    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc = 0;
+    h   = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
     wRc = 0;
     cRc = 0;
     if(h == INVALID_HANDLE_VALUE)
@@ -2659,17 +2636,17 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "MULTIPLE:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
-    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc = 0;
-    wRc = 0;
-    cRc = 0;
+    h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc      = 0;
+    wRc     = 0;
+    cRc     = 0;
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
     else
@@ -2691,17 +2668,17 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with small alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "MULTIPLE:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
-    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc = 0;
-    wRc = 0;
-    cRc = 0;
+    h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc      = 0;
+    wRc     = 0;
+    cRc     = 0;
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
     else
@@ -2724,17 +2701,17 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "MULTIPLE:ADS",
            rc,
            wRc,
            cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
-    h  = CreateFileA("MULTIPLE:ADS", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc = 0;
-    wRc = 0;
-    cRc = 0;
+    h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc      = 0;
+    wRc     = 0;
+    cRc     = 0;
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
     else
@@ -2756,7 +2733,7 @@ void ResourceFork(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
            "MULTIPLE:ADS",
            rc,
            wRc,
@@ -2777,14 +2754,14 @@ void Filenames(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -2793,7 +2770,7 @@ void Filenames(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -2802,7 +2779,7 @@ void Filenames(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -2811,7 +2788,7 @@ void Filenames(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -2819,8 +2796,7 @@ void Filenames(const char *path)
 
     for(pos = 0; filenames[pos]; pos++)
     {
-        h = CreateFileA(
-            filenames[pos], GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        h   = CreateFileA(filenames[pos], dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         rc  = 0;
         wRc = 0;
         cRc = 0;
@@ -2839,7 +2815,7 @@ void Filenames(const char *path)
             if(!ret) cRc = GetLastError();
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+        printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", filenames[pos], rc, wRc, cRc);
     }
 }
 
@@ -2859,14 +2835,14 @@ void Timestamps(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -2875,7 +2851,7 @@ void Timestamps(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -2884,7 +2860,7 @@ void Timestamps(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -2893,13 +2869,13 @@ void Timestamps(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
     printf("Creating timestamped files.\n");
 
-    h   = CreateFileA("MAXCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2922,9 +2898,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("MAXATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2947,9 +2923,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("MAXMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MAXMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2972,9 +2948,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("MINCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -2997,9 +2973,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("MINATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3022,9 +2998,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("MINMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("MINMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3047,9 +3023,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y1KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3072,9 +3048,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KCTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y1KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3097,9 +3073,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y1KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y1KMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3122,9 +3098,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KMTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y2KCTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3147,9 +3123,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KCTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KCTIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y2KATIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3172,9 +3148,9 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
-    h   = CreateFileA("Y2KMTIME", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("Y2KMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3197,7 +3173,7 @@ void Timestamps(const char *path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KMTIME", rc, wRc, cRc, tRc);
+    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KMTIME", rc, wRc, cRc, tRc);
 }
 
 void DirectoryDepth(const char *path)
@@ -3211,14 +3187,14 @@ void DirectoryDepth(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -3227,7 +3203,7 @@ void DirectoryDepth(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -3236,7 +3212,7 @@ void DirectoryDepth(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -3245,7 +3221,7 @@ void DirectoryDepth(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -3262,7 +3238,7 @@ void DirectoryDepth(const char *path)
         pos++;
     }
 
-    printf("\tCreated %d levels of directory hierarchy\n", pos);
+    printf("\tCreated %ld levels of directory hierarchy\n", pos);
 }
 
 void Fragmentation(const char *path, size_t clusterSize)
@@ -3284,14 +3260,14 @@ void Fragmentation(const char *path, size_t clusterSize)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -3300,7 +3276,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -3309,7 +3285,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -3318,11 +3294,11 @@ void Fragmentation(const char *path, size_t clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    h   = CreateFileA("HALFCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("HALFCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3344,9 +3320,9 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("QUARCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("QUARCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3368,9 +3344,10 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
+    printf(
+        "\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("TWOCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWOCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3392,9 +3369,9 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("TRQTCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TRQTCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3416,14 +3393,14 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
            "TRQTCLST",
            threeQuartersCluster,
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("TWTQCLST", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWTQCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3445,14 +3422,14 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
            "TWTQCLST",
            twoAndThreeQuartCluster,
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("TWO1", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO1", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3474,9 +3451,9 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO1", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("TWO2", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO2", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3498,9 +3475,9 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO2", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("TWO3", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("TWO3", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3526,9 +3503,9 @@ void Fragmentation(const char *path, size_t clusterSize)
     ret = DeleteFileA("TWO2");
     if(!ret) { rc = GetLastError(); }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO3", twoCluster, rc, wRc, cRc);
 
-    h   = CreateFileA("FRAGTHRQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("FRAGTHRQ", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3557,14 +3534,14 @@ void Fragmentation(const char *path, size_t clusterSize)
     ret = DeleteFileA("TWO3");
     if(!ret) { rc = GetLastError(); }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
            "FRAGTHRQ",
            threeQuartersCluster,
            rc,
            wRc,
            cRc);
 
-    h   = CreateFileA("FRAGSIXQ", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("FRAGSIXQ", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3586,7 +3563,7 @@ void Fragmentation(const char *path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
            "FRAGSIXQ",
            twoAndThreeQuartCluster,
            rc,
@@ -3630,7 +3607,7 @@ void Sparse(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
@@ -3639,7 +3616,7 @@ void Sparse(const char *path)
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -3655,7 +3632,7 @@ void Sparse(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying volume information.\n", error);
+        printf("Error %lu querying volume information.\n", error);
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         free(lpRootPathName);
@@ -3665,7 +3642,7 @@ void Sparse(const char *path)
     free(lpVolumeNameBuffer);
     free(lpFileSystemNameBuffer);
 
-    if(!(dwFileSystemFlags & FILE_SUPPORTS_SPARSE_FILES))
+    if(!(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_SPARSE_FILES))
     {
         free(lpRootPathName);
         return;
@@ -3676,7 +3653,7 @@ void Sparse(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -3685,7 +3662,7 @@ void Sparse(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -3694,7 +3671,7 @@ void Sparse(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -3702,7 +3679,7 @@ void Sparse(const char *path)
 
     printf("Creating sparse files.\n");
 
-    h   = CreateFileA("SMALL", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("SMALL", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3769,7 +3746,7 @@ void Sparse(const char *path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
            "SMALL",
            4096 * 3,
            rc,
@@ -3778,7 +3755,7 @@ void Sparse(const char *path)
            sRc,
            zRc);
 
-    h   = CreateFileA("BIG", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    h   = CreateFileA("BIG", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
     wRc = 0;
     cRc = 0;
@@ -3845,7 +3822,7 @@ void Sparse(const char *path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d, zRc = %d\n",
+    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
            "BIG",
            4096 * 30,
            rc,
@@ -3870,12 +3847,12 @@ void Links(const char *path)
     size_t        pathSize = strlen(path);
 
     verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionEx(&verInfo);
+    ret                         = GetVersionExA(&verInfo);
 
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d querying Windows version.\n", error);
+        printf("Error %lu querying Windows version.\n", error);
         return;
     }
 
@@ -3887,14 +3864,14 @@ void Links(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
@@ -3903,7 +3880,7 @@ void Links(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -3912,7 +3889,7 @@ void Links(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -3921,7 +3898,7 @@ void Links(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -3930,7 +3907,7 @@ void Links(const char *path)
     if(!kernel32)
     {
         error = GetLastError();
-        printf("Error %d loading KERNEL32.DLL.\n", error);
+        printf("Error %lu loading KERNEL32.DLL.\n", error);
         return;
     }
 
@@ -3939,7 +3916,7 @@ void Links(const char *path)
     if(!func)
     {
         error = GetLastError();
-        printf("Error %d finding CreateSymbolicLinkA.\n", error);
+        printf("Error %lu finding CreateSymbolicLinkA.\n", error);
     }
     else
     {
@@ -3947,7 +3924,7 @@ void Links(const char *path)
         printf("Creating symbolic links.\n");
 
         h   = CreateFileA("TARGET",
-                        GENERIC_READ | GENERIC_WRITE,
+                        dwFilePermissions,
                         FILE_SHARE_READ | FILE_SHARE_WRITE,
                         NULL,
                         CREATE_ALWAYS,
@@ -3973,7 +3950,7 @@ void Links(const char *path)
             if(!ret) lRc = GetLastError();
         }
 
-        printf("\tSymbolic link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+        printf("\tSymbolic link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
 
     func = GetProcAddress(kernel32, "CreateHardLinkA");
@@ -3981,7 +3958,7 @@ void Links(const char *path)
     if(!func)
     {
         error = GetLastError();
-        printf("Error %d finding CreateHardLinkA.\n", error);
+        printf("Error %lu finding CreateHardLinkA.\n", error);
     }
     else
     {
@@ -3989,7 +3966,7 @@ void Links(const char *path)
         printf("Creating hard links.\n");
 
         h   = CreateFileA("HARDTRGT",
-                        GENERIC_READ | GENERIC_WRITE,
+                        dwFilePermissions,
                         FILE_SHARE_READ | FILE_SHARE_WRITE,
                         NULL,
                         CREATE_ALWAYS,
@@ -4015,7 +3992,7 @@ void Links(const char *path)
             if(!ret) lRc = GetLastError();
         }
 
-        printf("\tHard link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+        printf("\tHard link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
 
     FreeLibrary(kernel32);
@@ -4033,14 +4010,14 @@ void MillionFiles(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -4049,7 +4026,7 @@ void MillionFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -4058,7 +4035,7 @@ void MillionFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -4067,7 +4044,7 @@ void MillionFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -4078,7 +4055,7 @@ void MillionFiles(const char *path)
         memset(filename, 0, 9);
         sprintf(filename, "%08lu", pos);
 
-        h = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        h = CreateFileA(filename, dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(h == INVALID_HANDLE_VALUE) break;
 
         CloseHandle(h);
@@ -4099,14 +4076,14 @@ void DeleteFiles(const char *path)
 
     lpRootPathName = malloc(dwMaxNameSize);
 
-    if(lpRootPathName == NULL)
+    if(!lpRootPathName)
     {
         printf("Could not allocate memory.\n");
         return;
     }
 
     memset(lpRootPathName, 0x00, MAX_PATH);
-    strcpy(lpRootPathName, path);
+    strncpy(lpRootPathName, path, MAX_PATH);
 
     if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
 
@@ -4115,7 +4092,7 @@ void DeleteFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to specified path.\n", error);
+        printf("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -4124,7 +4101,7 @@ void DeleteFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d creating working directory.\n", error);
+        printf("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -4133,7 +4110,7 @@ void DeleteFiles(const char *path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %d changing to working directory.\n", error);
+        printf("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -4142,8 +4119,8 @@ void DeleteFiles(const char *path)
     for(pos = 0; pos < 64; pos++)
     {
         memset(filename, 0, 9);
-        sprintf(filename, "%X", pos);
-        h = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        sprintf(filename, "%lX", pos);
+        h = CreateFileA(filename, dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(h == INVALID_HANDLE_VALUE) { break; }
 
         CloseHandle(h);
