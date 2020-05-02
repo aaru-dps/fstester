@@ -201,6 +201,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -218,6 +220,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -235,6 +239,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -252,6 +258,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -273,6 +281,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -294,6 +304,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -315,6 +327,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -336,6 +350,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(ProjectDir)fssetter.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
