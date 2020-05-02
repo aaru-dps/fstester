@@ -2146,199 +2146,319 @@ void FileAttributes(const char *path)
            cRc,
            aRc,
            eRc);
+
+    FreeLibrary(advapi32);
 }
 
-void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
+void FilePermissions(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-// TODO: It is not working properly
 void ExtendedAttributes(const char *path)
 {
-    /*
-        BOOL ret;
-        DWORD error;
-        OSVERSIONINFO verInfo;
-        HINSTANCE ntdll;
-        void *func;
-        DWORD dwNumberOfBytesWritten;
-        DWORD rc, wRc, cRc;
-        char   message[300];
-        IO_STATUS_BLOCK eaStatus;
-        HANDLE h;
-        LPSTR lpRootPathName;
-        DWORD dwMaxNameSize = MAX_PATH + 1;
-        size_t pathSize = strlen(path);
-        PVOID eaData;
+    BOOL                      ret;
+    DWORD                     error;
+    OSVERSIONINFO             verInfo;
+    HMODULE                   ntdll;
+    void *                    func;
+    DWORD                     dwNumberOfBytesWritten;
+    DWORD                     rc, wRc, cRc, rRc, cmp;
+    char                      message[300];
+    IO_STATUS_BLOCK           eaStatus;
+    HANDLE                    h;
+    LPSTR                     lpRootPathName;
+    size_t                    pathSize = strlen(path);
+    PFILE_FULL_EA_INFORMATION eaData;
+    int                       i;
 
-        verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-        ret = GetVersionEx(&verInfo);
+    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    ret                         = GetVersionEx(&verInfo);
 
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d querying Windows version.\n", error);
+        return;
+    }
+
+    if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
+    {
+        // Not supported on Windows 9x
+        return;
+    }
+
+    ntdll = LoadLibraryA("ntdll.dll");
+
+    if(ntdll == NULL)
+    {
+        error = GetLastError();
+        printf("Error %d loading NTDLL.DLL.\n", error);
+        return;
+    }
+
+    func = GetProcAddress(ntdll, "NtSetEaFile");
+
+    if(func == NULL)
+    {
+        error = GetLastError();
+        printf("Error %d finding NtSetEaFile.\n", error);
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    NtSetEaFile = func;
+
+    func = GetProcAddress(ntdll, "NtQueryEaFile");
+
+    if(func == NULL)
+    {
+        error = GetLastError();
+        printf("Error %d finding NtQueryEaFile.\n", error);
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    NtQueryEaFile = func;
+
+    lpRootPathName = malloc(dwMaxNameSize);
+
+    if(lpRootPathName == NULL)
+    {
+        printf("Could not allocate memory.\n");
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    memset(lpRootPathName, 0x00, MAX_PATH);
+    strcpy(lpRootPathName, path);
+
+    if(path[pathSize - 1] != '\\') lpRootPathName[pathSize] = '\\';
+
+    ret = SetCurrentDirectoryA(lpRootPathName);
+
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d changing to specified path.\n", error);
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    ret = CreateDirectoryA("XATTRS", NULL);
+
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d creating working directory.\n", error);
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    ret = SetCurrentDirectoryA("XATTRS");
+
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d changing to working directory.\n", error);
+        FreeLibrary(ntdll);
+        return;
+    }
+
+    printf("Creating files with extended attributes.\n");
+
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    rRc = 0;
+    cmp = TRUE;
+    h   = CreateFileA("COMMENTS",
+                    GENERIC_READ | GENERIC_WRITE,
+                    FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_NORMAL,
+                    NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        memset(message, 0, 300);
+        sprintf(message, "This files has an optional .COMMENTS EA\n");
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
         if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d querying Windows version.\n", error);
-            return;
-        }
-
-        if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
-        {
-            // Not supported on Windows 9x
-            return;
-        }
-
-        lpRootPathName = malloc(dwMaxNameSize);
-
-        if(lpRootPathName == NULL)
-        {
-            printf("Could not allocate memory.\n");
-            return;
-        }
-
-        memset(lpRootPathName, 0x00, MAX_PATH);
-        strcpy(lpRootPathName, path);
-
-        if(path[pathSize - 1] != '\\')
-        {
-            lpRootPathName[pathSize] = '\\';
-        }
-
-        ret = SetCurrentDirectoryA(lpRootPathName);
-
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d changing to specified path.\n", error);
-            return;
-        }
-
-        ret = CreateDirectoryA("XATTRS", NULL);
-
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d creating working directory.\n", error);
-            return;
-        }
-
-        ret = SetCurrentDirectoryA("XATTRS");
-
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d changing to working directory.\n", error);
-            return;
-        }
-
-        ntdll = LoadLibrary("ntdll.dll");
-
-        if(ntdll == NULL)
-        {
-            error = GetLastError();
-            printf("Error %d loading NTDLL.DLL.\n", error);
-            return;
-        }
-
-        func = GetProcAddress(ntdll, "NtSetEaFile");
-
-        if(func == NULL)
-        {
-            error = GetLastError();
-            printf("Error %d finding NtSetEaFile.\n", error);
-            return;
-        }
-
-        NtSetEaFile = func;
-
-        printf("Creating files with extended attributes.\n");
-
-        h = CreateFileA("COMMENTS", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
-       FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
-        {
-            rc = GetLastError();
-        }
+            wRc = GetLastError();
         else
         {
-            memset(message, 0, 300);
-            sprintf(&message, "This files has an optional .COMMENTS EA\n");
-            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-            if(!ret)
-            {
-                wRc = GetLastError();
-            }
-
             eaData = malloc(sizeof(CommentsEA));
             memcpy(eaData, &CommentsEA, sizeof(CommentsEA));
 
             rc = NtSetEaFile(h, &eaStatus, eaData, sizeof(CommentsEA));
-            ret = CloseHandle(h);
-            if(!ret)
-            {
-                cRc = GetLastError();
-            }
+
             free(eaData);
+
+            if(!rc)
+            {
+                eaData = malloc(sizeof(CommentsEA));
+                memset(eaData, 0, sizeof(CommentsEA));
+                rRc = NtQueryEaFile(h, &eaStatus, eaData, sizeof(CommentsEA), TRUE, NULL, 0, NULL, FALSE);
+
+                for(i = 0; i < sizeof(CommentsEA); i++)
+                {
+                    if(((unsigned char *)eaData)[i] != CommentsEA[i])
+                    {
+                        cmp = FALSE;
+                        break;
+                    }
+                }
+
+                free(eaData);
+            }
         }
 
-        printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d\n", "COMMENTS", rc, wRc, cRc);
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+    }
 
-        h = CreateFileA("COMMENTS.CRT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
-       CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
-        {
-            rc = GetLastError();
-        }
+    printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+           "COMMENTS",
+           rc,
+           wRc,
+           cRc,
+           rRc,
+           cmp);
+
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    rRc = 0;
+    cmp = TRUE;
+    h   = CreateFileA("COMMENTS.CRT",
+                    GENERIC_READ | GENERIC_WRITE,
+                    FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_NORMAL,
+                    NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        memset(message, 0, 300);
+        sprintf(message, "This files has a critical .COMMENTS EA\n");
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret)
+            wRc = GetLastError();
         else
         {
-            memset(message, 0, 300);
-            sprintf(&message, "This files has a critical .COMMENTS EA\n");
-            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-            if(!ret)
-            {
-                wRc = GetLastError();
-            }
-
             eaData = malloc(sizeof(CommentsEACritical));
             memcpy(eaData, &CommentsEACritical, sizeof(CommentsEACritical));
 
             rc = NtSetEaFile(h, &eaStatus, eaData, sizeof(CommentsEACritical));
-            ret = CloseHandle(h);
-            if(!ret)
-            {
-                cRc = GetLastError();
-            }
+
             free(eaData);
+
+            if(!rc)
+            {
+                eaData = malloc(sizeof(CommentsEACritical));
+                memset(eaData, 0, sizeof(CommentsEACritical));
+                rRc = NtQueryEaFile(h, &eaStatus, eaData, sizeof(CommentsEACritical), TRUE, NULL, 0, NULL, FALSE);
+
+                for(i = 0; i < sizeof(CommentsEACritical); i++)
+                {
+                    if(((unsigned char *)eaData)[i] != CommentsEACritical[i])
+                    {
+                        cmp = FALSE;
+                        break;
+                    }
+                }
+
+                free(eaData);
+            }
         }
 
-        printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d\n", "COMMENTS.CRT", rc, wRc, cRc);
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+    }
 
-            h = CreateFileA("ICON", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
-       FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; if(h == INVALID_HANDLE_VALUE)
-        {
-            rc = GetLastError();
-        }
+    printf("\tFile with comments = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+           "COMMENTS.CRT",
+           rc,
+           wRc,
+           cRc,
+           rRc,
+           cmp);
+
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    rRc = 0;
+    cmp = TRUE;
+    h   = CreateFileA("ICON",
+                    GENERIC_READ | GENERIC_WRITE,
+                    FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    NULL,
+                    CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_NORMAL,
+                    NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        memset(message, 0, 300);
+        sprintf(message, "This files has an optional .ICON EA\n");
+        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+        if(!ret)
+            wRc = GetLastError();
         else
         {
-            memset(message, 0, 300);
-            sprintf(&message, "This files has an optional .ICON EA\n");
-            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-            if(!ret)
-            {
-                wRc = GetLastError();
-            }
-
             eaData = malloc(sizeof(IconEA));
             memcpy(eaData, &IconEA, sizeof(IconEA));
 
             rc = NtSetEaFile(h, &eaStatus, eaData, sizeof(IconEA));
-            ret = CloseHandle(h);
-            if(!ret)
-            {
-                cRc = GetLastError();
-            }
+
             free(eaData);
+
+            if(!rc)
+            {
+                eaData = malloc(sizeof(IconEA));
+                memset(eaData, 0, sizeof(IconEA));
+                rRc = NtQueryEaFile(h, &eaStatus, eaData, sizeof(IconEA), TRUE, NULL, 0, NULL, FALSE);
+
+                for(i = 0; i < sizeof(IconEA); i++)
+                {
+                    if(((unsigned char *)eaData)[i] != IconEA[i])
+                    {
+                        cmp = FALSE;
+                        break;
+                    }
+                }
+
+                free(eaData);
+            }
         }
 
-        printf("\tFile with icon = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d\n", "ICON", rc, wRc, cRc);
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+    }
 
-        FreeLibrary(ntdll);
-    */
+    printf("\tFile with icon = \"%s\", rc = 0x%08x, wRc = %d, cRc = %d, rRc = %d, cmp = %d\n",
+           "ICON",
+           rc,
+           wRc,
+           cRc,
+           rRc,
+           cmp);
+
+    FreeLibrary(ntdll);
 }
 
 void ResourceFork(const char *path)
