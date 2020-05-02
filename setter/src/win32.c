@@ -3857,176 +3857,168 @@ void Sparse(const char *path)
 
 void Links(const char *path)
 {
-    /*
-        BOOL ret;
-        DWORD error;
-        OSVERSIONINFO verInfo;
-        HINSTANCE kernel32;
-        void *func;
-        DWORD dwNumberOfBytesWritten;
-        DWORD rc, wRc, cRc, lRc;
-        char   message[300];
-        HANDLE h;
-        LPSTR lpRootPathName;
-        DWORD dwMaxNameSize = MAX_PATH + 1;
-        size_t pathSize = strlen(path);
+    BOOL          ret;
+    DWORD         error;
+    OSVERSIONINFO verInfo;
+    HINSTANCE     kernel32;
+    void *        func;
+    DWORD         dwNumberOfBytesWritten;
+    DWORD         rc, wRc, cRc, lRc;
+    char          message[300];
+    HANDLE        h;
+    LPSTR         lpRootPathName;
+    size_t        pathSize = strlen(path);
 
-        verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-        ret = GetVersionEx(&verInfo);
+    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    ret                         = GetVersionEx(&verInfo);
 
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d querying Windows version.\n", error);
-            return;
-        }
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d querying Windows version.\n", error);
+        return;
+    }
 
-        if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
-        {
-            // Not supported on Windows 9x
-            return;
-        }
+    if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
+    {
+        // Not supported on Windows 9x
+        return;
+    }
 
-        lpRootPathName = malloc(dwMaxNameSize);
+    lpRootPathName = malloc(dwMaxNameSize);
 
-        if(lpRootPathName == NULL)
-        {
-            printf("Could not allocate memory.\n");
-            return;
-        }
+    if(lpRootPathName == NULL)
+    {
+        printf("Could not allocate memory.\n");
+        return;
+    }
 
-        memset(lpRootPathName, 0x00, MAX_PATH);
-        strcpy(lpRootPathName, path);
+    memset(lpRootPathName, 0x00, MAX_PATH);
+    strcpy(lpRootPathName, path);
 
-        if(path[pathSize - 1] != '\\')
-        {
-            lpRootPathName[pathSize] = '\\';
-        }
+    if(path[pathSize - 1] != '\\') { lpRootPathName[pathSize] = '\\'; }
 
-        ret = SetCurrentDirectoryA(lpRootPathName);
+    ret = SetCurrentDirectoryA(lpRootPathName);
 
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d changing to specified path.\n", error);
-            return;
-        }
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d changing to specified path.\n", error);
+        return;
+    }
 
-        ret = CreateDirectoryA("LINKS", NULL);
+    ret = CreateDirectoryA("LINKS", NULL);
 
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d creating working directory.\n", error);
-            return;
-        }
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d creating working directory.\n", error);
+        return;
+    }
 
-        ret = SetCurrentDirectoryA("LINKS");
+    ret = SetCurrentDirectoryA("LINKS");
 
-        if(!ret)
-        {
-            error = GetLastError();
-            printf("Error %d changing to working directory.\n", error);
-            return;
-        }
+    if(!ret)
+    {
+        error = GetLastError();
+        printf("Error %d changing to working directory.\n", error);
+        return;
+    }
 
-        kernel32 = LoadLibrary("kernel32.dll");
+    kernel32 = LoadLibraryA("kernel32.dll");
 
-        if(kernel32 == NULL)
-        {
-            error = GetLastError();
-            printf("Error %d loading KERNEL32.DLL.\n", error);
-            return;
-        }
+    if(!kernel32)
+    {
+        error = GetLastError();
+        printf("Error %d loading KERNEL32.DLL.\n", error);
+        return;
+    }
 
-        func = GetProcAddress(kernel32, "CreateSymbolicLinkA");
+    func = GetProcAddress(kernel32, "CreateSymbolicLinkA");
 
-        if(func == NULL)
-        {
-            error = GetLastError();
-            printf("Error %d finding CreateSymbolicLinkA.\n", error);
-        }
+    if(!func)
+    {
+        error = GetLastError();
+        printf("Error %d finding CreateSymbolicLinkA.\n", error);
+    }
+    else
+    {
+        WinNtCreateSymbolicLinkA = func;
+        printf("Creating symbolic links.\n");
+
+        h   = CreateFileA("TARGET",
+                        GENERIC_READ | GENERIC_WRITE,
+                        FILE_SHARE_READ | FILE_SHARE_WRITE,
+                        NULL,
+                        CREATE_ALWAYS,
+                        FILE_ATTRIBUTE_NORMAL,
+                        NULL);
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+        lRc = 0;
+        if(h == INVALID_HANDLE_VALUE)
+            rc = GetLastError();
         else
         {
-            CreateSymbolicLinkA = func;
-            printf("Creating symbolic links.\n");
+            memset(message, 0, 300);
+            sprintf(message, "This file is the target of a symbolic link.\n");
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            if(!ret) wRc = GetLastError();
 
-            h = CreateFileA("TARGET", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
-       CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; lRc = 0; if(h == INVALID_HANDLE_VALUE)
-            {
-                rc = GetLastError();
-            }
-            else
-            {
-                memset(message, 0, 300);
-                sprintf(&message, "This file is the target of a symbolic link.\n");
-                ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-                if(!ret)
-                {
-                    wRc = GetLastError();
-                }
+            ret = CloseHandle(h);
+            if(!ret) cRc = GetLastError();
 
-                ret = CloseHandle(h);
-                if(!ret)
-                {
-                    cRc = GetLastError();
-                }
-
-                ret = CreateSymbolicLinkA("SYMLINK", "TARGET", 0);
-                if(!ret)
-                {
-                    cRc = GetLastError();
-                }
-            }
-
-            printf("\tSymbolic link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+            ret = WinNtCreateSymbolicLinkA("SYMLINK", "TARGET", 0);
+            if(!ret) lRc = GetLastError();
         }
 
-        func = GetProcAddress(kernel32, "CreateHardLinkA");
+        printf("\tSymbolic link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+    }
 
-        if(func == NULL)
-        {
-            error = GetLastError();
-            printf("Error %d finding CreateHardLinkA.\n", error);
-        }
+    func = GetProcAddress(kernel32, "CreateHardLinkA");
+
+    if(!func)
+    {
+        error = GetLastError();
+        printf("Error %d finding CreateHardLinkA.\n", error);
+    }
+    else
+    {
+        WinNtCreateHardLinkA = func;
+        printf("Creating hard links.\n");
+
+        h   = CreateFileA("HARDTRGT",
+                        GENERIC_READ | GENERIC_WRITE,
+                        FILE_SHARE_READ | FILE_SHARE_WRITE,
+                        NULL,
+                        CREATE_ALWAYS,
+                        FILE_ATTRIBUTE_NORMAL,
+                        NULL);
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+        lRc = 0;
+        if(h == INVALID_HANDLE_VALUE)
+            rc = GetLastError();
         else
         {
-            CreateSymbolicLinkA = func;
-            printf("Creating hard links.\n");
+            memset(message, 0, 300);
+            sprintf(message, "This file is part of a hard link.\n");
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            if(!ret) wRc = GetLastError();
 
-            h = CreateFileA("HARDTRGT", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL,
-       CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); rc = 0; wRc = 0; cRc = 0; lRc = 0; if(h == INVALID_HANDLE_VALUE)
-            {
-                rc = GetLastError();
-            }
-            else
-            {
-                memset(message, 0, 300);
-                sprintf(&message, "This file is part of a hard link.\n");
-                ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-                if(!ret)
-                {
-                    wRc = GetLastError();
-                }
+            ret = CloseHandle(h);
+            if(!ret) cRc = GetLastError();
 
-                ret = CloseHandle(h);
-                if(!ret)
-                {
-                    cRc = GetLastError();
-                }
-
-                ret = CreateSymbolicLinkA("HARDLINK", "HARDTRGT", NULL);
-                if(!ret)
-                {
-                    cRc = GetLastError();
-                }
-            }
-
-            printf("\tHard link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+            ret = WinNtCreateHardLinkA("HARDLINK", "HARDTRGT", NULL);
+            if(!ret) lRc = GetLastError();
         }
 
-        FreeLibrary(kernel32);
-    */
+        printf("\tHard link, rc = 0x%08x, wRc = %d, cRc = %d, lRc = %d\n", rc, wRc, cRc, lRc);
+    }
+
+    FreeLibrary(kernel32);
 }
 
 void MillionFiles(const char *path)
