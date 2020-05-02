@@ -422,7 +422,7 @@ void FileAttributes(const char *path)
     BOOL          ret;
     DWORD         error;
     LPSTR         lpRootPathName;
-    size_t        pathSize      = strlen(path);
+    size_t        pathSize = strlen(path);
     HANDLE        h;
     DWORD         dwNumberOfBytesWritten;
     DWORD         rc, wRc, cRc;
@@ -515,23 +515,6 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ARCHIVE", rc, wRc, cRc);
 
-    h   = CreateFileA("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ENCRYPTED, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ENCRYPT", rc, wRc, cRc);
-
     h   = CreateFileA("HIDDEN", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
     rc  = 0;
     wRc = 0;
@@ -613,33 +596,6 @@ void FileAttributes(const char *path)
         if(!ret) cRc = GetLastError();
     }
     printf("\tTemporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TEMPORAR", rc, wRc, cRc);
-
-    h   = CreateFileA("EA",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "EA", rc, wRc, cRc);
 
     h   = CreateFileA("HA",
                     GENERIC_READ | GENERIC_WRITE,
@@ -778,109 +734,6 @@ void FileAttributes(const char *path)
     }
     printf(
         "\tTemporary file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TA", rc, wRc, cRc);
-
-    h   = CreateFileA("HE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "HE", rc, wRc, cRc);
-
-    h   = CreateFileA("OE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "OE", rc, wRc, cRc);
-
-    h   = CreateFileA("RE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "RE", rc, wRc, cRc);
-
-    h   = CreateFileA("TE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted temporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "TE", rc, wRc, cRc);
 
     h   = CreateFileA("OH",
                     GENERIC_READ | GENERIC_WRITE,
@@ -1153,138 +1006,6 @@ void FileAttributes(const char *path)
     }
     printf("\tTemporary file with system attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ST", rc, wRc, cRc);
 
-    h   = CreateFileA("HAE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "HAE",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("OAE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d\n",
-           "OAE",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("RAE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "RAE",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("TAE",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d\n",
-           "TAE",
-           rc,
-           wRc,
-           cRc);
-
     h   = CreateFileA("OAH",
                     GENERIC_READ | GENERIC_WRITE,
                     0,
@@ -1412,38 +1133,6 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFileA("EAO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)encryptedAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d\n",
-           "EAO",
-           rc,
-           wRc,
-           cRc);
-
     h   = CreateFileA("RAO",
                     GENERIC_READ | GENERIC_WRITE,
                     0,
@@ -1538,39 +1227,6 @@ void FileAttributes(const char *path)
     printf("\tTemporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
            "%d\n",
            "TAO",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("EAR",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-           "EAR",
            rc,
            wRc,
            cRc);
@@ -1673,304 +1329,6 @@ void FileAttributes(const char *path)
            wRc,
            cRc);
 
-    h   = CreateFileA("OAEH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc "
-           "= %d, cRc = %d\n",
-           "OAEH",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("RAEH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED | FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-        "RAEH",
-        rc,
-        wRc,
-        cRc);
-
-    h   = CreateFileA("TAEH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_HIDDEN,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted temporary file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-        "TAEH",
-        rc,
-        wRc,
-        cRc);
-
-    h   = CreateFileA("RAEO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted file with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, "
-           "wRc = %d, cRc = %d\n",
-           "RAEO",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("TAEO",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted temporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = "
-           "%d, cRc = %d\n",
-           "TAEO",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("TAER",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_READONLY,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tEncrypted temporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
-           "%d\n",
-           "TAER",
-           rc,
-           wRc,
-           cRc);
-
-    h   = CreateFileA("RAEH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret =
-            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-        "RAEH",
-        rc,
-        wRc,
-        cRc);
-
-    h   = CreateFileA("TAEH",
-                    GENERIC_READ | GENERIC_WRITE,
-                    0,
-                    NULL,
-                    CREATE_ALWAYS,
-                    FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_ENCRYPTED |
-                        FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE,
-                    NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
-    else
-    {
-        ret = WriteFile(
-            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret =
-            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(
-            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf(
-        "\tEncrypted temporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-        "TAEH",
-        rc,
-        wRc,
-        cRc);
-
     h   = CreateFileA("AHORST",
                     GENERIC_READ | GENERIC_WRITE,
                     0,
@@ -2031,6 +1389,763 @@ void FileAttributes(const char *path)
         }
         printf("\tFile is compressed: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMPRESS", rc, wRc, cRc);
     }
+
+    HMODULE advapi32 = LoadLibraryA("ADVAPI32.DLL");
+    if(!advapi32) return;
+
+    WinNtEncryptFileA winNtEncryptFile = (WinNtEncryptFileA)GetProcAddress(advapi32, "EncryptFileA");
+
+    if(!winNtEncryptFile) return;
+
+    h   = CreateFileA("ENCRYPT", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    DWORD aRc = 0;
+    DWORD eRc = 0;
+
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("ENCRYPT");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("ENCRYPT", FILE_ATTRIBUTE_NORMAL);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "ENCRYPT",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("EA", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("EA");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("EA", FILE_ATTRIBUTE_ARCHIVE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archived attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "EA",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+    h   = CreateFileA("HE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("HE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("HE", FILE_ATTRIBUTE_HIDDEN);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with hidden attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "HE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("OE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("OE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("OE", FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "OE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("RE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("RE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("RE", FILE_ATTRIBUTE_READONLY);
+        if(!ret) aRc = GetLastError();
+    }
+    printf(
+        "\tEncrypted file with read-only attribute: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+        "RE",
+        rc,
+        wRc,
+        cRc,
+        aRc,
+        eRc);
+
+    h   = CreateFileA("TE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("TE", FILE_ATTRIBUTE_TEMPORARY);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted temporary file: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "TE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("HAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("HAE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("HAE", FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_ARCHIVE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = %d, "
+           "eRc = %d\n",
+           "HAE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("OAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("OAE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("OAE", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "OAE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("RAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("RAE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("RAE", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = "
+           "%d, eRc = %d\n",
+           "RAE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("TAE", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TAE");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("TAE", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "TAE",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("EAO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)encryptedAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("EAO");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("EAO", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "EAO",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("EAR", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("EAR");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("EAR", FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, aRc = "
+           "%d, eRc = %d\n",
+           "EAR",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("OAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("OAEH");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("OAEH", FILE_ATTRIBUTE_OFFLINE | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with archive and hidden attributes that is available offline: name = \"%s\", rc = %d, wRc "
+           "= %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "OAEH",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("RAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("RAEH");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("RAEH", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "RAEH",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("TAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TAEH");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("TAEH", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted temporary file with hidden and archive attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, "
+           "aRc = %d, eRc = %d\n",
+           "TAEH",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("RAEO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("RAEO");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("RAEO", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with read-only and archive attributes that is available offline: name = \"%s\", rc = %d, "
+           "wRc = %d, cRc = %d, aRc = %d, eRc = %d\n",
+           "RAEO",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("TAEO", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TAEO");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("TAEO", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted temporary file with archive attribute that is available offline: name = \"%s\", rc = %d, wRc = "
+           "%d, cRc = %d, aRc = %d, eRc = %d\n",
+           "TAEO",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("TAER", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TAER");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA("TAER", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_READONLY);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted temporary file with archive and read-only attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "TAER",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("RAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret =
+            WriteFile(h, (LPCVOID)readonlyAttributeText, strlen(readonlyAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("RAEH");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA(
+            "RAEH", FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted file with read-only, archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = "
+           "%d, aRc = %d, eRc = %d\n",
+           "RAEH",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
+
+    h   = CreateFileA("TAEH", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
+    if(h == INVALID_HANDLE_VALUE)
+        rc = GetLastError();
+    else
+    {
+        ret = WriteFile(
+            h, (LPCVOID)temporaryAttributeText, strlen(temporaryAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret =
+            WriteFile(h, (LPCVOID)archivedAttributeText, strlen(archivedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(
+            h, (LPCVOID)encryptedAttributeText, strlen(encryptedAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+        ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
+        if(!ret) wRc = GetLastError();
+
+        ret = CloseHandle(h);
+        if(!ret) cRc = GetLastError();
+
+        ret = winNtEncryptFile("TAEH");
+        if(!ret) eRc = GetLastError();
+
+        ret = SetFileAttributesA(
+            "TAEH", FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_OFFLINE);
+        if(!ret) aRc = GetLastError();
+    }
+    printf("\tEncrypted temporary file with archive and hidden attributes: name = \"%s\", rc = %d, wRc = %d, cRc = %d, "
+           "aRc = %d, eRc = %d\n",
+           "TAEH",
+           rc,
+           wRc,
+           cRc,
+           aRc,
+           eRc);
 }
 
 void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
@@ -2231,7 +2346,7 @@ void ResourceFork(const char *path)
     BOOL          ret;
     DWORD         error;
     LPSTR         lpRootPathName;
-    size_t        pathSize      = strlen(path);
+    size_t        pathSize = strlen(path);
     HANDLE        h;
     DWORD         dwNumberOfBytesWritten;
     DWORD         rc, wRc, cRc;
@@ -2527,15 +2642,15 @@ void ResourceFork(const char *path)
 
 void Filenames(const char *path)
 {
-    BOOL   ret;
-    DWORD  error;
+    BOOL         ret;
+    DWORD        error;
     LPSTR        lpRootPathName;
     const size_t pathSize = strlen(path);
     HANDLE       h;
-    DWORD  dwNumberOfBytesWritten;
-    DWORD  rc, wRc, cRc;
-    char   message[300];
-    int    pos = 0;
+    DWORD        dwNumberOfBytesWritten;
+    DWORD        rc, wRc, cRc;
+    char         message[300];
+    int          pos = 0;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -2611,7 +2726,7 @@ void Timestamps(const char *path)
     BOOL     ret;
     DWORD    error;
     LPSTR    lpRootPathName;
-    size_t   pathSize      = strlen(path);
+    size_t   pathSize = strlen(path);
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
     FILETIME ftLastWriteTime;
@@ -2964,12 +3079,12 @@ void Timestamps(const char *path)
 
 void DirectoryDepth(const char *path)
 {
-    BOOL   ret;
-    DWORD  error;
+    BOOL         ret;
+    DWORD        error;
     LPSTR        lpRootPathName;
     const size_t pathSize = strlen(path);
     char         filename[9];
-    long   pos = 2;
+    long         pos = 2;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -3793,11 +3908,11 @@ void Links(const char *path)
 
 void MillionFiles(const char *path)
 {
-    char   filename[9];
-    DWORD  pos = 0;
-    HANDLE h;
-    BOOL   ret;
-    DWORD  error;
+    char         filename[9];
+    DWORD        pos = 0;
+    HANDLE       h;
+    BOOL         ret;
+    DWORD        error;
     LPSTR        lpRootPathName;
     const size_t pathSize = strlen(path);
 
@@ -3859,11 +3974,11 @@ void MillionFiles(const char *path)
 
 void DeleteFiles(const char *path)
 {
-    char   filename[9];
-    DWORD  pos = 0;
-    HANDLE h;
-    BOOL   ret;
-    DWORD  error;
+    char         filename[9];
+    DWORD        pos = 0;
+    HANDLE       h;
+    BOOL         ret;
+    DWORD        error;
     LPSTR        lpRootPathName;
     const size_t pathSize = strlen(path);
 

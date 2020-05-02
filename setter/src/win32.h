@@ -450,6 +450,7 @@ unsigned char IconEA[3516] = {
 
 BOOL (*WinNtCreateHardLinkA)(LPCSTR, LPCSTR, LPSECURITY_ATTRIBUTES);
 BOOL (*WinNtCreateSymbolicLinkA)(LPCSTR, LPCSTR, DWORD);
+typedef BOOL(WINAPI *WinNtEncryptFileA)(LPCSTR);
 
 #endif
 
