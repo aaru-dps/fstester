@@ -562,3 +562,10 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Watcom generated files
+*.mk
+*.err
+*.mk1
+*.lk1
+*.sym
