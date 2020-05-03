@@ -1,0 +1,41 @@
+{
+    "folders": [
+        {
+            "path": "..\\.."
+        }
+    ],
+    "settings": {
+        "C_Cpp.clang_format_sortIncludes": true,
+        "C_Cpp.default.cStandard": "c89",
+        "C_Cpp.default.compilerPath": "C:\\watcom\\binnt64\\wcc386.exe",
+        "C_Cpp.default.systemIncludePath": [
+            "C:\\watcom\\h",
+            "C:\\watcom\\h\\os2"
+        ],
+        "C_Cpp.default.compilerArgs": [
+            "-i=\"C:\\WATCOM\\H;C:\\WATCOM\\OS2\"",
+            "-w4",
+            "-e25",
+            "-zq",
+            "-od",
+            "-d2",
+            "-3r",
+            "-bt=os2",
+            "-fo=.obj",
+            "-mf"
+        ],
+        "C_Cpp.default.defines": [
+            "__X86__",
+            "__386__",
+            "M_I386",
+            "_M_I386",
+            "_M_IX86=500",
+            "__OS2__",
+            "__FLAT__",
+            "M_386FM",
+            "_M_386FM",
+            "__WATCOMC__=1280",
+            "_INTEGRAL_MAX_BITS=64"
+        ]
+    }
+}
