@@ -1089,12 +1089,12 @@ void Links(const char *path)
 
 void MillionFiles(const char *path)
 {
-    char               driveNo = path[0] - '@';
-    int                rc      = 0;
-    char               filename[9];
-    unsigned long long pos = 0;
-    int                handle;
-    unsigned           total;
+    char          driveNo = path[0] - '@';
+    int           rc      = 0;
+    char          filename[9];
+    unsigned long pos = 0;
+    int           handle;
+    unsigned      total;
 
     if(driveNo > 32) driveNo -= 32;
 
@@ -1113,7 +1113,7 @@ void MillionFiles(const char *path)
 
     printf("Creating lots of files.\n");
 
-    for(pos = 0; pos < 100000ULL; pos++)
+    for(pos = 0; pos < 100000; pos++)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08llu", pos);

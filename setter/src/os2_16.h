@@ -44,19 +44,6 @@ Copyright (C) 2011-2020 Natalia Portillo
 #define FSAT_LOCALDRV 3  /* Local drive */
 #define FSAT_REMOTEDRV 4 /* Remote drive attached to FSD */
 
-/* Cannot be used directly must be traversed manually, at least with OpenWatcom 1.8 */
-typedef struct _FSQBUFFER /* fsqbuf Data structure for QFSAttach */
-{
-    USHORT iType;        /* Item type */
-    USHORT cbName;       /* Length of item name, sans NULL */
-    UCHAR  szName[1];    /* ASCIIZ item name */
-    USHORT cbFSDName;    /* Length of FSD name, sans NULL */
-    UCHAR  szFSDName[1]; /* ASCIIZ FSD name */
-    USHORT cbFSAData;    /* Length of FSD Attach data returned */
-    UCHAR  rgFSAData[1]; /* FSD Attach data from FSD */
-} FSQBUFFER;
-typedef FSQBUFFER *PFSQBUFFER;
-
 unsigned char CommentsEA[72] = {
     0x45, 0x00, 0x00, 0x00, 0x00, 0x09, 0x33, 0x00, 0x2E, 0x43, 0x4F, 0x4D, 0x4D, 0x45, 0x4E, 0x54, 0x53, 0x00,
     0xFD, 0xFF, 0x2E, 0x00, 0x54, 0x68, 0x69, 0x73, 0x20, 0x45, 0x41, 0x20, 0x63, 0x6F, 0x6E, 0x74, 0x61, 0x69,

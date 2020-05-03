@@ -61,7 +61,7 @@ void GetOsInfo()
         return;
     }
 
-    if(aulBuffer[0] = 20)
+    if(aulBuffer[0] == 20)
     {
         MajorVer = aulBuffer[1] / 10;
         MinorVer = aulBuffer[1] % 10;
@@ -1593,12 +1593,12 @@ void Links(const char *path)
 
 void MillionFiles(const char *path)
 {
-    char               drivePath[4];
-    APIRET             rc = 0;
-    char               filename[9];
-    unsigned long long pos         = 0;
-    ULONG              actionTaken = 0;
-    HFILE              handle;
+    char          drivePath[4];
+    APIRET        rc = 0;
+    char          filename[9];
+    unsigned long pos         = 0;
+    ULONG         actionTaken = 0;
+    HFILE         handle;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
@@ -1625,10 +1625,10 @@ void MillionFiles(const char *path)
 
     printf("Creating lots of files.\n");
 
-    for(pos = 0; pos < 100000ULL; pos++)
+    for(pos = 0; pos < 100000; pos++)
     {
         memset(&filename, 0, 9);
-        sprintf(&filename, "%08d", pos);
+        sprintf(&filename, "%08lu", pos);
         rc = DosOpen(&filename,
                      &handle,
                      &actionTaken,
@@ -1642,7 +1642,7 @@ void MillionFiles(const char *path)
         DosClose(handle);
     }
 
-    printf("\tCreated %llu files\n", pos);
+    printf("\tCreated %lu files\n", pos);
 }
 
 void DeleteFiles(const char *path)

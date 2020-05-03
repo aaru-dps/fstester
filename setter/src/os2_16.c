@@ -1670,12 +1670,12 @@ void Sparse(const char *path)
 
 void MillionFiles(const char *path)
 {
-    char               drivePath[4];
-    USHORT             rc = 0;
-    char               filename[9];
-    unsigned long long pos         = 0;
-    USHORT             actionTaken = 0;
-    HFILE              handle;
+    char          drivePath[4];
+    USHORT        rc = 0;
+    char          filename[9];
+    unsigned long pos         = 0;
+    USHORT        actionTaken = 0;
+    HFILE         handle;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
@@ -1702,7 +1702,7 @@ void MillionFiles(const char *path)
 
     printf("Creating lots of files.\n");
 
-    for(pos = 0; pos < 100000ULL; pos++)
+    for(pos = 0; pos < 100000; pos++)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08llu", pos);
@@ -1719,7 +1719,7 @@ void MillionFiles(const char *path)
         DosClose(handle);
     }
 
-    printf("\tCreated %llu files\n", pos);
+    printf("\tCreated %lu files\n", pos);
 }
 
 void DeleteFiles(const char *path)
