@@ -57,7 +57,9 @@ ForEachMacros:
   - Q_FOREACH
   - BOOST_FOREACH
 IncludeBlocks:   Regroup
-IncludeCategories: 
+IncludeCategories:
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        -1
   - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
     Priority:        2
   - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
