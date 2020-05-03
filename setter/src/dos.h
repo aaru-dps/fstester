@@ -29,7 +29,7 @@ Contains DOS definitions
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined (MSDOS)
+#if defined(__DOS__) || defined(MSDOS)
 
 #ifndef AARU_FSTESTER_SETTER_DOS_H
 #define AARU_FSTESTER_SETTER_DOS_H

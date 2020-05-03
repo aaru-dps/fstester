@@ -32,19 +32,19 @@ Copyright (C) 2011-2020 Natalia Portillo
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) && (defined(__OS2__) || defined(__os2__)) &&              \
     !defined(__DOS__)
 
+#define INCL_DOSMISC
+#define INCL_DOSFILEMGR
+
+#include <os2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define INCL_DOSMISC
-#define INCL_DOSFILEMGR
+#include "os2_16.h"
 
 #include "consts.h"
 #include "defs.h"
 #include "dosos2.h"
-#include "os2_16.h"
-
-#include <os2.h>
 
 void GetOsInfo()
 {

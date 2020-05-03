@@ -31,19 +31,20 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include "dos.h"
-
-#include "consts.h"
-#include "defs.h"
-#include "dosos2.h"
-
 #include <direct.h>
+#include <dos.h>
 #include <i86.h>
 #include <io.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "dos.h"
+
+#include "consts.h"
+#include "defs.h"
+#include "dosos2.h"
 
 void GetOsInfo()
 {
@@ -407,11 +408,17 @@ void FileAttributes(const char *path)
            cRc);
 }
 
-void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
+void FilePermissions(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-void ExtendedAttributes(const char *path) { /* Do nothing, not supported by target operating system */ }
+void ExtendedAttributes(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-void ResourceFork(const char *path) { /* Do nothing, not supported by target operating system */ }
+void ResourceFork(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 void Filenames(const char *path)
 {
@@ -1072,9 +1079,13 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path) { /* Do nothing, not supported by target operating system */ }
+void Sparse(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-void Links(const char *path) { /* Do nothing, not supported by target operating system */ }
+void Links(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 void MillionFiles(const char *path)
 {

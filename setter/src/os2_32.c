@@ -29,22 +29,21 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2020 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_IX86)) &&                             \
+#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \
     (defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
+
+#include <os2.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "consts.h"
 #include "defs.h"
 #include "dosos2.h"
 #include "os2_16.h"
-
-#include <os2.h>
 
 void GetOsInfo()
 {
@@ -553,11 +552,17 @@ void FileAttributes(const char *path)
            cRc);
 }
 
-void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
+void FilePermissions(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-void ExtendedAttributes(const char *path) { /* TODO: Implement */ }
+void ExtendedAttributes(const char *path)
+{ /* TODO: Implement */
+}
 
-void ResourceFork(const char *path) { /* Do nothing, not supported by target operating system */ }
+void ResourceFork(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 void Filenames(const char *path)
 {
@@ -1577,7 +1582,9 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path) { /* Do nothing, not supported by target operating system */ }
+void Sparse(const char *path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 void Links(const char *path)
 {
@@ -1690,4 +1697,5 @@ void DeleteFiles(const char *path)
         DosDelete(&filename);
     }
 }
+
 #endif
