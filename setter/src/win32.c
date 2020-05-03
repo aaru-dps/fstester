@@ -46,17 +46,53 @@ Copyright (C) 2011-2020 Natalia Portillo
 #include "consts.h"
 #include "defs.h"
 
-static DWORD dwMaxNameSize     = MAX_PATH + 1;
-static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-
+static DWORD     dwMaxNameSize     = MAX_PATH + 1;
+static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
+static DWORD     oldVersion;
+static HINSTANCE kernel32;
+;
 void GetOsInfo()
 {
-    OSVERSIONINFO verInfo;
-    BOOL          ret;
-    DWORD         error;
+    WIN_OSVERSIONINFO verInfo;
+    BOOL              ret;
+    DWORD             error;
+    void *            func;
+    kernel32 = LoadLibraryA("KERNEL32.DLL");
 
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
+    if(!kernel32)
+    {
+        oldVersion = GetVersion();
+
+        if(oldVersion == 0)
+            printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+        else
+            printf("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+
+        return;
+    }
+
+    func = GetProcAddress(kernel32, "GetVersionExA");
+
+    if(!func)
+    {
+        oldVersion = GetVersion();
+
+        verInfo.dwMajorVersion = (oldVersion & 0xFF00) >> 8;
+        verInfo.dwMinorVersion = oldVersion & 0xFF;
+        oldVersion &= 0x80000000;
+
+        if(oldVersion == 0)
+            printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+        else
+            printf("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+
+        return;
+    }
+
+    WinGetVersionExA = func;
+
+    verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+    ret                         = WinGetVersionExA(&verInfo);
 
     if(!ret)
     {
@@ -160,22 +196,23 @@ void GetOsInfo()
 
 void GetVolumeInfo(const char *path, size_t *clusterSize)
 {
-    BOOL           ret;
-    DWORD          error;
-    LPSTR          lpVolumeNameBuffer;
-    DWORD          dwMaximumComponentLength;
-    DWORD          dwFileSystemFlags;
-    LPSTR          lpFileSystemNameBuffer;
-    LPSTR          lpRootPathName;
-    const size_t   pathSize = strlen(path);
-    DWORD          dwSectorsPerCluster;
-    DWORD          dwBytesPerSector;
-    DWORD          dwNumberOfFreeClusters;
-    DWORD          dwTotalNumberOfClusters;
-    OSVERSIONINFO  verInfo;
-    ULARGE_INTEGER qwFreeBytesAvailableToCaller;
-    ULARGE_INTEGER qwTotalNumberOfBytes;
-    ULARGE_INTEGER qwTotalNumberOfFreeBytes;
+    BOOL              ret;
+    DWORD             error;
+    LPSTR             lpVolumeNameBuffer;
+    DWORD             dwMaximumComponentLength;
+    DWORD             dwFileSystemFlags;
+    LPSTR             lpFileSystemNameBuffer;
+    LPSTR             lpRootPathName;
+    const size_t      pathSize = strlen(path);
+    DWORD             dwSectorsPerCluster;
+    DWORD             dwBytesPerSector;
+    DWORD             dwNumberOfFreeClusters;
+    DWORD             dwTotalNumberOfClusters;
+    WIN_OSVERSIONINFO verInfo;
+    ULARGE_INTEGER    qwFreeBytesAvailableToCaller;
+    ULARGE_INTEGER    qwTotalNumberOfBytes;
+    ULARGE_INTEGER    qwTotalNumberOfFreeBytes;
+    void *            func;
 
     *clusterSize = 0;
 
@@ -394,21 +431,32 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     printf("\tBytes per sector: %lu\n", dwBytesPerSector);
     printf("\tSectors per cluster: %lu (%u bytes)\n", dwSectorsPerCluster, *clusterSize);
 
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
-
-    if(!ret)
+    if(WinGetVersionExA)
     {
-        error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
-        free(lpRootPathName);
-        return;
+        verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+        ret                         = WinGetVersionExA(&verInfo);
+
+        if(!ret)
+        {
+            error = GetLastError();
+            printf("Error %lu querying Windows version.\n", error);
+            free(lpRootPathName);
+            return;
+        }
     }
+    else if(oldVersion == 0)
+        verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && verInfo.dwBuildNumber >= 1000 ||
-       verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
+       verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && kernel32)
     {
-        ret = GetDiskFreeSpaceExA(
+        func = GetProcAddress(kernel32, "GetDiskFreeSpaceExA");
+        if(func) WinGetDiskFreeSpaceExA = func;
+    }
+
+    if(WinGetDiskFreeSpaceExA)
+    {
+        ret = WinGetDiskFreeSpaceExA(
             lpRootPathName, &qwFreeBytesAvailableToCaller, &qwTotalNumberOfBytes, &qwTotalNumberOfFreeBytes);
 
         if(!ret)
@@ -438,17 +486,17 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
 
 void FileAttributes(const char *path)
 {
-    BOOL          ret;
-    DWORD         error;
-    LPSTR         lpRootPathName;
-    size_t        pathSize = strlen(path);
-    HANDLE        h;
-    DWORD         dwNumberOfBytesWritten;
-    DWORD         rc, wRc, cRc, aRc, eRc;
-    OSVERSIONINFO verInfo;
-    DWORD         defaultCompression = COMPRESSION_FORMAT_DEFAULT;
-    void *        func;
-    HMODULE       advapi32;
+    BOOL              ret;
+    DWORD             error;
+    LPSTR             lpRootPathName;
+    size_t            pathSize = strlen(path);
+    HANDLE            h;
+    DWORD             dwNumberOfBytesWritten;
+    DWORD             rc, wRc, cRc, aRc, eRc;
+    WIN_OSVERSIONINFO verInfo;
+    DWORD             defaultCompression = COMPRESSION_FORMAT_DEFAULT;
+    void *            func;
+    HMODULE           advapi32;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -487,17 +535,6 @@ void FileAttributes(const char *path)
     {
         error = GetLastError();
         printf("Error %lu changing to working directory.\n", error);
-        return;
-    }
-
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
-
-    if(!ret)
-    {
-        error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
-        free(lpRootPathName);
         return;
     }
 
@@ -1337,6 +1374,22 @@ void FileAttributes(const char *path)
     }
     printf("\tFile with all attributes: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "AHORST", rc, wRc, cRc);
 
+    if(WinGetVersionExA)
+    {
+        verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+        ret                         = WinGetVersionExA(&verInfo);
+
+        if(!ret)
+        {
+            error = GetLastError();
+            printf("Error %lu querying Windows version.\n", error);
+            free(lpRootPathName);
+            return;
+        }
+    }
+    else if(oldVersion == 0)
+        verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
+
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
     {
         h   = CreateFileA("COMPRESS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -2146,7 +2199,7 @@ void ExtendedAttributes(const char *path)
 {
     BOOL                      ret;
     DWORD                     error;
-    OSVERSIONINFO             verInfo;
+    WIN_OSVERSIONINFO         verInfo;
     HMODULE                   ntdll;
     void *                    func;
     DWORD                     dwNumberOfBytesWritten;
@@ -2160,15 +2213,20 @@ void ExtendedAttributes(const char *path)
     int                       i;
     BOOL                      cmp;
 
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
-
-    if(!ret)
+    if(WinGetVersionExA)
     {
-        error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
-        return;
+        verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+        ret                         = WinGetVersionExA(&verInfo);
+
+        if(!ret)
+        {
+            error = GetLastError();
+            printf("Error %lu querying Windows version.\n", error);
+            return;
+        }
     }
+    else if(oldVersion == 0)
+        verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
 
     if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
     {
@@ -2452,26 +2510,30 @@ void ExtendedAttributes(const char *path)
 
 void ResourceFork(const char *path)
 {
-    BOOL          ret;
-    DWORD         error;
-    LPSTR         lpRootPathName;
-    size_t        pathSize = strlen(path);
-    HANDLE        h;
-    DWORD         dwNumberOfBytesWritten;
-    DWORD         rc, wRc, cRc;
-    OSVERSIONINFO verInfo;
-    unsigned int  maxLoop;
-    int           i;
+    BOOL              ret;
+    DWORD             error;
+    LPSTR             lpRootPathName;
+    size_t            pathSize = strlen(path);
+    HANDLE            h;
+    DWORD             dwNumberOfBytesWritten;
+    DWORD             rc, wRc, cRc;
+    WIN_OSVERSIONINFO verInfo;
+    unsigned int      maxLoop, i;
 
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
-
-    if(!ret)
+    if(WinGetVersionExA)
     {
-        error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
-        return;
+        verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+        ret                         = WinGetVersionExA(&verInfo);
+
+        if(!ret)
+        {
+            error = GetLastError();
+            printf("Error %lu querying Windows version.\n", error);
+            return;
+        }
     }
+    else if(oldVersion == 0)
+        verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
 
     if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
     {
@@ -3243,7 +3305,7 @@ void DirectoryDepth(const char *path)
     while(ret)
     {
         memset(filename, 0, 9);
-        sprintf(filename, "%08d", pos);
+        sprintf(filename, "%08ld", pos);
         ret = CreateDirectoryA(filename, NULL);
 
         if(ret) ret = SetCurrentDirectoryA(filename);
@@ -3262,7 +3324,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     size_t         threeQuartersCluster    = halfCluster + quarterCluster;
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char *buffer;
-    long           i;
+    size_t         i;
     BOOL           ret;
     DWORD          error;
     LPSTR          lpRootPathName;
@@ -3847,27 +3909,31 @@ void Sparse(const char *path)
 
 void Links(const char *path)
 {
-    BOOL          ret;
-    DWORD         error;
-    OSVERSIONINFO verInfo;
-    HINSTANCE     kernel32;
-    void *        func;
-    DWORD         dwNumberOfBytesWritten;
-    DWORD         rc, wRc, cRc, lRc;
-    char          message[300];
-    HANDLE        h;
-    LPSTR         lpRootPathName;
-    size_t        pathSize = strlen(path);
+    BOOL              ret;
+    DWORD             error;
+    WIN_OSVERSIONINFO verInfo;
+    void *            func;
+    DWORD             dwNumberOfBytesWritten;
+    DWORD             rc, wRc, cRc, lRc;
+    char              message[300];
+    HANDLE            h;
+    LPSTR             lpRootPathName;
+    size_t            pathSize = strlen(path);
 
-    verInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ret                         = GetVersionExA(&verInfo);
-
-    if(!ret)
+    if(WinGetVersionExA)
     {
-        error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
-        return;
+        verInfo.dwOSVersionInfoSize = sizeof(WIN_OSVERSIONINFO);
+        ret                         = WinGetVersionExA(&verInfo);
+
+        if(!ret)
+        {
+            error = GetLastError();
+            printf("Error %lu querying Windows version.\n", error);
+            return;
+        }
     }
+    else if(oldVersion == 0)
+        verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
 
     if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
     {
@@ -4007,8 +4073,6 @@ void Links(const char *path)
 
         printf("\tHard link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
-
-    FreeLibrary(kernel32);
 }
 
 void MillionFiles(const char *path)
