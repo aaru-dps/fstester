@@ -36,15 +36,15 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include "win32.h"
-
-#include "consts.h"
-#include "defs.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+
+#include "win32.h"
+
+#include "consts.h"
+#include "defs.h"
 
 static DWORD dwMaxNameSize     = MAX_PATH + 1;
 static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
@@ -444,10 +444,11 @@ void FileAttributes(const char *path)
     size_t        pathSize = strlen(path);
     HANDLE        h;
     DWORD         dwNumberOfBytesWritten;
-    DWORD         rc, wRc, cRc;
+    DWORD         rc, wRc, cRc, aRc, eRc;
     OSVERSIONINFO verInfo;
     DWORD         defaultCompression = COMPRESSION_FORMAT_DEFAULT;
     void *        func;
+    HMODULE       advapi32;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -1361,7 +1362,7 @@ void FileAttributes(const char *path)
         printf("\tFile is compressed: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "COMPRESS", rc, wRc, cRc);
     }
 
-    HMODULE advapi32 = LoadLibraryA("ADVAPI32.DLL");
+    advapi32 = LoadLibraryA("ADVAPI32.DLL");
     if(!advapi32) return;
 
     func = GetProcAddress(advapi32, "EncryptFileA");
@@ -1370,12 +1371,12 @@ void FileAttributes(const char *path)
 
     WinNtEncryptFileA = func;
 
-    h         = CreateFileA("ENCRYPT", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc        = 0;
-    wRc       = 0;
-    cRc       = 0;
-    DWORD aRc = 0;
-    DWORD eRc = 0;
+    h   = CreateFileA("ENCRYPT", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    rc  = 0;
+    wRc = 0;
+    cRc = 0;
+    aRc = 0;
+    eRc = 0;
 
     if(h == INVALID_HANDLE_VALUE)
         rc = GetLastError();
