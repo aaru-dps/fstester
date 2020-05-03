@@ -7,7 +7,7 @@ WRect
 0
 0
 10320
-10382
+10372
 2
 MProject
 3
@@ -20,7 +20,7 @@ MCommand
 5
 WFileName
 24
-fssetter-os2-386-ow2.tgt
+fssetter.netware.ow2.tgt
 6
 WVList
 1
@@ -28,8 +28,8 @@ WVList
 VComponent
 8
 WRect
-1088
-1071
+645
+635
 5685
 4285
 0
@@ -37,7 +37,7 @@ WRect
 9
 WFileName
 24
-fssetter-os2-386-ow2.tgt
+fssetter.netware.ow2.tgt
 0
 20
 7

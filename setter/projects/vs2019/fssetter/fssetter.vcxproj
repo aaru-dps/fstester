@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\..\src\linux.h" />
     <ClInclude Include="..\..\..\src\macos.h" />
     <ClInclude Include="..\..\..\src\main.h" />
+    <ClInclude Include="..\..\..\src\netware.h" />
     <ClInclude Include="..\..\..\src\os2_16.h" />
     <ClInclude Include="..\..\..\src\os2_32.h" />
     <ClInclude Include="..\..\..\src\unix.h" />
@@ -52,6 +53,7 @@
     <ClCompile Include="..\..\..\src\linux.c" />
     <ClCompile Include="..\..\..\src\macos.c" />
     <ClCompile Include="..\..\..\src\main.c" />
+    <ClCompile Include="..\..\..\src\netware.c" />
     <ClCompile Include="..\..\..\src\os2_16.c" />
     <ClCompile Include="..\..\..\src\os2_32.c" />
     <ClCompile Include="..\..\..\src\unix.c" />
