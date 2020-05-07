@@ -1625,7 +1625,7 @@ void MillionFiles(const char *path)
 
     printf("Creating lots of files.\n");
 
-    for(pos = 0; pos < 100000; pos++)
+    for(pos = 0; pos < 1000; pos++)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08lu", pos);
