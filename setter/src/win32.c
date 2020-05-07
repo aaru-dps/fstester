@@ -180,7 +180,7 @@ void GetOsInfo()
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %lu%02lu%lu%s.\n",
+                printf(" version %lu.%02lu.%lu %s.\n",
                        verInfo.dwMajorVersion,
                        verInfo.dwMinorVersion,
                        verInfo.dwBuildNumber,
