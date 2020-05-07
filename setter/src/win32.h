@@ -177,6 +177,10 @@ Copyright (C) 2011-2020 Natalia Portillo
 #define FILE_SUPPORTS_POSIX_UNLINK_RENAME 0x00000400
 #endif
 
+#ifndef FS_LFN_APIS
+#define FS_LFN_APIS 0x00004000
+#endif
+
 #ifndef COMPRESSION_FORMAT_DEFAULT
 #define COMPRESSION_FORMAT_DEFAULT 1
 #endif

@@ -416,6 +416,12 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
             dwFileSystemFlags -= FILE_SUPPORTS_POSIX_UNLINK_RENAME;
         }
 
+        if(dwFileSystemFlags & (DWORD)FS_LFN_APIS)
+        {
+            printf("\t\tVolume supports LFN API.\n");
+            dwFileSystemFlags -= FS_LFN_APIS;
+        }
+
         if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08lx.\n", dwFileSystemFlags);
     }
 
