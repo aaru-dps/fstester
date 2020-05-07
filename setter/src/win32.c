@@ -479,8 +479,8 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
             return;
         }
 
-        printf("\tVolume size: %lld bytes\n", qwTotalNumberOfBytes.QuadPart);
-        printf("\tVolume free: %lld bytes\n", qwTotalNumberOfFreeBytes.QuadPart);
+        printf("\tVolume size: %I64d bytes\n", qwTotalNumberOfBytes.QuadPart);
+        printf("\tVolume free: %I64d bytes\n", qwTotalNumberOfFreeBytes.QuadPart);
     }
     else
     {
@@ -489,8 +489,8 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
         qwTotalNumberOfBytes.QuadPart *= *clusterSize;
         qwTotalNumberOfFreeBytes.QuadPart *= *clusterSize;
 
-        printf("\tClusters: %lu (%lld bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes.QuadPart);
-        printf("\tFree clusters: %lu (%lld bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes.QuadPart);
+        printf("\tClusters: %lu (%I64d bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes.QuadPart);
+        printf("\tFree clusters: %lu (%I64d bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes.QuadPart);
     }
 
     free(lpRootPathName);
