@@ -50,7 +50,7 @@ static DWORD     dwMaxNameSize     = MAX_PATH + 1;
 static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
 static DWORD     oldVersion;
 static HINSTANCE kernel32;
-;
+
 void GetOsInfo()
 {
     WIN_OSVERSIONINFO verInfo;
@@ -59,9 +59,15 @@ void GetOsInfo()
     void *            func;
     kernel32 = LoadLibraryA("KERNEL32.DLL");
 
+    memset(&verInfo, 0, sizeof(WIN_OSVERSIONINFO));
+
     if(!kernel32)
     {
         oldVersion = GetVersion();
+
+        verInfo.dwMajorVersion = (oldVersion & 0xFF00) >> 8;
+        verInfo.dwMinorVersion = oldVersion & 0xFF;
+        oldVersion &= 0x80000000;
 
         if(oldVersion == 0)
             printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
