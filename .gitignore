@@ -569,3 +569,16 @@ fabric.properties
 *.mk1
 *.lk1
 *.sym
+
+# Visual C++ 1 files
+*.bsc
+*.EXE
+*.PCH
+*.PDB
+*.VCW
+*.WSP
+*.SBR
+*.SBR
+
+# NetWare binaries
+*.nlm
