@@ -26,7 +26,7 @@ Contains 32-bit OS/2 code
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \

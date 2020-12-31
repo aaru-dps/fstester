@@ -26,14 +26,14 @@ Contains global definitions
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #ifndef AARU_FSTESTER_GETTER_MAIN_H
 #define AARU_FSTESTER_GETTER_MAIN_H
 
 #define AARU_FSTESTER_VERSION "4.5.99.2020"
-#define AARU_COPYRIGHT "Copyright (C) 2011-2020 Natalia Portillo"
+#define AARU_COPYRIGHT "Copyright (C) 2011-2021 Natalia Portillo"
 
 #if defined(__alpha__) || defined(_M_ALPHA)
 #define OS_ARCH "axp"
@@ -47,7 +47,7 @@ Copyright (C) 2011-2020 Natalia Portillo
 #define OS_ARCH "ia32"
 #elif defined(__ia64__) || defined(_M_IA64)
 #define OS_ARCH "ia64"
-#elif defined(__m68k__) || defined(_M_M68K) || defined(M68000) || defined(__MC68K__)
+#elif defined(__m68k__) || defined(_M_M68K) || defined(M68000) || defined(__MC68K__) || defined(mc68000)
 #define OS_ARCH "m68k"
 #elif defined(__mips__) || defined(__mips) || defined(__MIPS__)
 #define OS_ARCH "mips"
@@ -111,6 +111,8 @@ Copyright (C) 2011-2020 Natalia Portillo
 #define OS_NAME "NetBSD"
 #elif defined(__NETWARE__) || defined(__netware__)
 #define OS_NAME "NetWare"
+#elif defined(NeXT) && defined(__MACH__)
+#define OS_NAME "NeXTStep"
 #elif defined(__OpenBSD__)
 #define OS_NAME "OpenBSD"
 #elif defined(__OS2__) || defined(__os2__) && !defined(__DOS__)

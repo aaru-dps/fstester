@@ -26,7 +26,7 @@ Contains definitions common to DOS and OS/2
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #if defined(__OS2__) || defined(__os2__) || defined(__DOS__) || defined(MSDOS)

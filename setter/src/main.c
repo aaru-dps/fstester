@@ -26,9 +26,8 @@ Contains global definitions
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
-
 
 #include "main.h"
 #include "defs.h"

@@ -26,7 +26,7 @@ Contains 32-bit and 64-bit Windows code
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 // ReSharper disable CppJoinDeclarationAndAssignment

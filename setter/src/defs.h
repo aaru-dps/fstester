@@ -26,7 +26,7 @@ Contains common definitions
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #ifndef AARU_FSTESTER_SETTER_DEFS_H
@@ -34,7 +34,7 @@ Copyright (C) 2011-2020 Natalia Portillo
 
 #include <stddef.h>
 
-void GetOsInfo();
+void GetOsInfo(void);
 
 void GetVolumeInfo(const char *path, size_t *clusterSize);
 

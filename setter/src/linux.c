@@ -26,7 +26,7 @@ Contains Linux implementations
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2020 Natalia Portillo
+Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
