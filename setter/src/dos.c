@@ -42,9 +42,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "dos.h"
 
-#include "consts.h"
-#include "defs.h"
 #include "dosos2.h"
+#include "include/consts.h"
+#include "include/defs.h"
 
 void GetOsInfo()
 {
@@ -87,14 +87,14 @@ void GetOsInfo()
     printf("\tRunning under DOS %d.%d\n", major, minor);
 }
 
-void GetVolumeInfo(const char *path, size_t *clusterSize)
+void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
     union REGS        regs;
     struct SREGS      sregs;
     char              drivePath[4];
     char              driveNo = path[0] - '@';
     struct diskfree_t oldFreeSpace;
-    Fat32FreeSpace *  freeSpace = malloc(sizeof(Fat32FreeSpace));
+    Fat32FreeSpace*   freeSpace = malloc(sizeof(Fat32FreeSpace));
 
     memset(freeSpace, 0, sizeof(Fat32FreeSpace));
 
@@ -146,7 +146,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     }
 }
 
-void FileAttributes(const char *path)
+void FileAttributes(const char* path)
 {
     char     driveNo = path[0] - '@';
     unsigned total, actionTaken;
@@ -173,7 +173,7 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)noAttributeText, strlen(noAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)noAttributeText, strlen(noAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("NONE", _A_NORMAL);
     }
@@ -184,7 +184,7 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCHIVE", _A_ARCH);
     }
@@ -195,7 +195,7 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("SYSTEM", _A_SYSTEM);
     }
@@ -206,7 +206,7 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("HIDDEN", _A_HIDDEN);
     }
@@ -217,7 +217,7 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("READONLY", _A_RDONLY);
     }
@@ -228,8 +228,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("HIDDREAD", _A_HIDDEN | _A_RDONLY);
     }
@@ -244,8 +244,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("SYSTREAD", _A_SYSTEM | _A_RDONLY);
     }
@@ -260,8 +260,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("SYSTHIDD", _A_SYSTEM | _A_HIDDEN);
     }
@@ -276,9 +276,9 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("SYSRDYHD", _A_SYSTEM | _A_RDONLY | _A_HIDDEN);
     }
@@ -293,8 +293,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCHREAD", _A_ARCH | _A_RDONLY);
     }
@@ -309,8 +309,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCHHIDD", _A_ARCH | _A_HIDDEN);
     }
@@ -325,9 +325,9 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCHDRDY", _A_ARCH | _A_HIDDEN | _A_RDONLY);
     }
@@ -342,8 +342,8 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCHSYST", _A_ARCH | _A_SYSTEM);
     }
@@ -358,9 +358,9 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARSYSRDY", _A_ARCH | _A_SYSTEM | _A_RDONLY);
     }
@@ -375,9 +375,9 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARCSYSHD", _A_ARCH | _A_SYSTEM | _A_HIDDEN);
     }
@@ -392,10 +392,10 @@ void FileAttributes(const char *path)
 
     if(!rc)
     {
-        wRc = _dos_write(handle, (void *)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)systemAttributeText, strlen(systemAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
-        wRc = _dos_write(handle, (void *)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)archivedAttributeText, strlen(archivedAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)systemAttributeText, strlen(systemAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)hiddenAttributeText, strlen(hiddenAttributeText), &actionTaken);
+        wRc = _dos_write(handle, (void*)readonlyAttributeText, strlen(readonlyAttributeText), &actionTaken);
         cRc = _dos_close(handle);
         rc  = _dos_setfileattr("ARSYHDRD", _A_ARCH | _A_SYSTEM | _A_HIDDEN | _A_RDONLY);
     }
@@ -408,19 +408,19 @@ void FileAttributes(const char *path)
            cRc);
 }
 
-void FilePermissions(const char *path)
+void FilePermissions(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void ExtendedAttributes(const char *path)
+void ExtendedAttributes(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void ResourceFork(const char *path)
+void ResourceFork(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void Filenames(const char *path)
+void Filenames(const char* path)
 {
     char     driveNo = path[0] - '@';
     int      rc = 0, wRc = 0, cRc = 0;
@@ -464,7 +464,7 @@ void Filenames(const char *path)
 
 #define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"
 
-void Timestamps(const char *path)
+void Timestamps(const char* path)
 {
     char           driveNo = path[0] - '@';
     int            rc = 0, wRc = 0, cRc = 0, tRc = 0;
@@ -832,7 +832,7 @@ void Timestamps(const char *path)
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 }
 
-void DirectoryDepth(const char *path)
+void DirectoryDepth(const char* path)
 {
     char     driveNo = path[0] - '@';
     int      rc      = 0;
@@ -871,14 +871,14 @@ void DirectoryDepth(const char *path)
     printf("\tCreated %d levels of directory hierarchy\n", pos);
 }
 
-void Fragmentation(const char *path, size_t clusterSize)
+void Fragmentation(const char* path, size_t clusterSize)
 {
     size_t         halfCluster             = clusterSize / 2;
     size_t         quarterCluster          = clusterSize / 4;
     size_t         twoCluster              = clusterSize * 2;
     size_t         threeQuartersCluster    = halfCluster + quarterCluster;
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
-    unsigned char *buffer;
+    unsigned char* buffer;
     char           driveNo = path[0] - '@';
     int            rc = 0, wRc = 0, cRc = 0;
     unsigned       total, actionTaken = 0;
@@ -1079,15 +1079,15 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path)
+void Sparse(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void Links(const char *path)
+void Links(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void MillionFiles(const char *path)
+void MillionFiles(const char* path)
 {
     char          driveNo = path[0] - '@';
     int           rc      = 0;
@@ -1126,7 +1126,7 @@ void MillionFiles(const char *path)
     printf("\tCreated %llu files\n", pos);
 }
 
-void DeleteFiles(const char *path)
+void DeleteFiles(const char* path)
 {
     char     driveNo = path[0] - '@';
     int      rc      = 0;

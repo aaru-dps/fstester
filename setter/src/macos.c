@@ -31,11 +31,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(macintosh)
 
-#include "macos.h"
-
-#include "consts.h"
-#include "defs.h"
-
 #include <Aliases.h>
 #include <FileTypesAndCreators.h>
 #include <Files.h>
@@ -47,6 +42,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "macos.h"
+
+#include "include/consts.h"
+#include "include/defs.h"
 
 void GetOsInfo()
 {
@@ -86,7 +86,7 @@ void GetOsInfo()
     }
 }
 
-void GetVolumeInfo(const char *path, size_t *clusterSize)
+void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
     OSErr        rc;
     Str255       str255;
@@ -107,7 +107,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     int          bigVol      = 0;
     *clusterSize             = 0;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
 
     rc = Gestalt(gestaltFSAttr, &gestaltResponse);
     if(!rc)
@@ -194,7 +194,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     }
 }
 
-void FileAttributes(const char *path)
+void FileAttributes(const char* path)
 {
     OSErr        rc, wRc, cRc;
     Str255       str255;
@@ -204,10 +204,10 @@ void FileAttributes(const char *path)
     int32_t      dirId;
     FInfo        finderInfo;
     int32_t      count;
-    HFileInfo *  fpb;
+    HFileInfo*   fpb;
     CInfoPBRec   cipbr;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -219,7 +219,7 @@ void FileAttributes(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pATTRS", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pATTRS", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -836,9 +836,13 @@ void FileAttributes(const char *path)
     printf("\tFile has all flags bits set: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ALL", rc, wRc, cRc);
 }
 
-void FilePermissions(const char *path) { /* Do nothing, not supported by target operating system */ }
+void FilePermissions(const char* path)
+{ /* Do nothing, not supported by target operating system */
+}
 
-void ExtendedAttributes(const char *path) { /* Do nothing, not supported by target operating system */ }
+void ExtendedAttributes(const char* path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 static OSErr SaveResourceToNewFile(int16_t        vRefNum,
                                    int32_t        dirID,
@@ -846,7 +850,7 @@ static OSErr SaveResourceToNewFile(int16_t        vRefNum,
                                    ResType        type,
                                    int16_t        resId,
                                    Str255         resName,
-                                   unsigned char *buffer,
+                                   unsigned char* buffer,
                                    size_t         length)
 {
     Handle  h;
@@ -878,7 +882,7 @@ static OSErr SaveResourceToNewFile(int16_t        vRefNum,
     return rc;
 }
 
-void ResourceFork(const char *path)
+void ResourceFork(const char* path)
 {
     OSErr        rc, wRc, cRc, rRc, rRc2, rRc3;
     Str255       str255;
@@ -888,10 +892,10 @@ void ResourceFork(const char *path)
     int32_t      dirId;
     FInfo        finderInfo;
     int32_t      count;
-    HFileInfo *  fpb;
+    HFileInfo*   fpb;
     CInfoPBRec   cipbr;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -903,7 +907,7 @@ void ResourceFork(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pRSRC", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pRSRC", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -922,7 +926,7 @@ void ResourceFork(const char *path)
                                     rtIcons,
                                     -16455,
                                     "\pIcon resource",
-                                    (unsigned char *)IcnsResource,
+                                    (unsigned char*)IcnsResource,
                                     sizeof(IcnsResource));
         rc  = HOpenDF(refNum, dirId, "\pICON", 0, &refFile);
         if(!rc)
@@ -953,7 +957,7 @@ void ResourceFork(const char *path)
                                     ftPICTFile,
                                     29876,
                                     "\pPicture resource",
-                                    (unsigned char *)PictResource,
+                                    (unsigned char*)PictResource,
                                     sizeof(PictResource));
         rc  = HOpenDF(refNum, dirId, "\pPICT", 0, &refFile);
         if(!rc)
@@ -983,7 +987,7 @@ void ResourceFork(const char *path)
                                     rtVersion,
                                     1,
                                     "\pVersion resource",
-                                    (unsigned char *)VersResource,
+                                    (unsigned char*)VersResource,
                                     sizeof(VersResource));
         rc  = HOpenDF(refNum, dirId, "\pVERSION", 0, &refFile);
         if(!rc)
@@ -1013,7 +1017,7 @@ void ResourceFork(const char *path)
                                     rtIcons,
                                     -16455,
                                     "\pIcon resource",
-                                    (unsigned char *)IcnsResource,
+                                    (unsigned char*)IcnsResource,
                                     sizeof(IcnsResource));
         rRc2 = SaveResourceToNewFile(refNum,
                                      dirId,
@@ -1021,7 +1025,7 @@ void ResourceFork(const char *path)
                                      ftPICTFile,
                                      29876,
                                      "\pPicture resource",
-                                     (unsigned char *)PictResource,
+                                     (unsigned char*)PictResource,
                                      sizeof(PictResource));
         rRc3 = SaveResourceToNewFile(refNum,
                                      dirId,
@@ -1029,7 +1033,7 @@ void ResourceFork(const char *path)
                                      rtVersion,
                                      1,
                                      "\pVersion resource",
-                                     (unsigned char *)VersResource,
+                                     (unsigned char*)VersResource,
                                      sizeof(VersResource));
         rc   = HOpenDF(refNum, dirId, "\pALL", 0, &refFile);
         if(!rc)
@@ -1054,7 +1058,7 @@ void ResourceFork(const char *path)
            rRc3);
 }
 
-void Filenames(const char *path)
+void Filenames(const char* path)
 {
     OSErr        rc, wRc, cRc;
     Str255       str255;
@@ -1067,7 +1071,7 @@ void Filenames(const char *path)
     char         message[300];
     int          pos = 0;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -1079,7 +1083,7 @@ void Filenames(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pFILENAME", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pFILENAME", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -1103,7 +1107,7 @@ void Filenames(const char *path)
             if(!rc)
             {
                 memset(&message, 0, 300);
-                sprintf((char *)message, FILENAME_FORMAT, filenames[pos]);
+                sprintf((char*)message, FILENAME_FORMAT, filenames[pos]);
                 count = strlen(message);
                 wRc   = FSWrite(refFile, &count, message);
                 cRc   = FSClose(refFile);
@@ -1114,7 +1118,7 @@ void Filenames(const char *path)
     }
 }
 
-void Timestamps(const char *path)
+void Timestamps(const char* path)
 {
     OSErr        rc, wRc, cRc, tRc;
     Str255       str255;
@@ -1124,11 +1128,11 @@ void Timestamps(const char *path)
     int32_t      dirId;
     FInfo        finderInfo;
     int32_t      count;
-    HFileInfo *  fpb;
+    HFileInfo*   fpb;
     CInfoPBRec   cipbr;
     char         message[300];
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -1140,7 +1144,7 @@ void Timestamps(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pTIMES", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pTIMES", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -1156,13 +1160,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "creation");
+            sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "creation");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMAXCTIME";
         fpb->ioDirID     = dirId;
@@ -1184,13 +1188,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "modification");
+            sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "modification");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMAXMTIME";
         fpb->ioDirID     = dirId;
@@ -1212,13 +1216,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "backup");
+            sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "backup");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMAXBTIME";
         fpb->ioDirID     = dirId;
@@ -1240,13 +1244,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "creation");
+            sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "creation");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMINCTIME";
         fpb->ioDirID     = dirId;
@@ -1268,13 +1272,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "modification");
+            sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "modification");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMINMTIME";
         fpb->ioDirID     = dirId;
@@ -1296,13 +1300,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "backup");
+            sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "backup");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMINBTIME";
         fpb->ioDirID     = dirId;
@@ -1324,13 +1328,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "creation");
+            sprintf((char*)message, DATETIME_FORMAT, Y2KDATETIME, "creation");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY2KCTIME";
         fpb->ioDirID     = dirId;
@@ -1352,13 +1356,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "modification");
+            sprintf((char*)message, DATETIME_FORMAT, Y2KDATETIME, "modification");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY2KMTIME";
         fpb->ioDirID     = dirId;
@@ -1380,13 +1384,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "backup");
+            sprintf((char*)message, DATETIME_FORMAT, Y2KDATETIME, "backup");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY2KBTIME";
         fpb->ioDirID     = dirId;
@@ -1408,13 +1412,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "creation");
+            sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "creation");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY1KCTIME";
         fpb->ioDirID     = dirId;
@@ -1436,13 +1440,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
+            sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY1KMTIME";
         fpb->ioDirID     = dirId;
@@ -1464,13 +1468,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "backup");
+            sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "backup");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY1KBTIME";
         fpb->ioDirID     = dirId;
@@ -1492,13 +1496,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MAXDATETIME, "all");
+            sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "all");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMAXTIME";
         fpb->ioDirID     = dirId;
@@ -1520,13 +1524,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, MINDATETIME, "all");
+            sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "all");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pMINTIME";
         fpb->ioDirID     = dirId;
@@ -1548,13 +1552,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, NONDATETIME, "all");
+            sprintf((char*)message, DATETIME_FORMAT, NONDATETIME, "all");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pNOTIME";
         fpb->ioDirID     = dirId;
@@ -1576,13 +1580,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y2KDATETIME, "all");
+            sprintf((char*)message, DATETIME_FORMAT, Y2KDATETIME, "all");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY2KTIME";
         fpb->ioDirID     = dirId;
@@ -1604,13 +1608,13 @@ void Timestamps(const char *path)
         if(!rc)
         {
             memset(&message, 0, 300);
-            sprintf((char *)message, DATETIME_FORMAT, Y1KDATETIME, "all");
+            sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "all");
             count = strlen(message);
             wRc   = FSWrite(refFile, &count, message);
             cRc   = FSClose(refFile);
         }
         memset(&cipbr, 0, sizeof(CInfoPBRec));
-        fpb              = (HFileInfo *)&cipbr;
+        fpb              = (HFileInfo*)&cipbr;
         fpb->ioVRefNum   = refNum;
         fpb->ioNamePtr   = "\pY1KTIME";
         fpb->ioDirID     = dirId;
@@ -1626,7 +1630,7 @@ void Timestamps(const char *path)
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KTIME", rc, wRc, cRc, tRc);
 }
 
-void DirectoryDepth(const char *path)
+void DirectoryDepth(const char* path)
 {
     OSErr        rc, wRc, cRc;
     Str255       str255;
@@ -1639,7 +1643,7 @@ void DirectoryDepth(const char *path)
     char         filename[9];
     int          pos = 0;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -1651,7 +1655,7 @@ void DirectoryDepth(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pDEPTH", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pDEPTH", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -1663,7 +1667,7 @@ void DirectoryDepth(const char *path)
     while(!rc)
     {
         memset(&filename, 0, 9);
-        sprintf((char *)filename, "%08d", pos);
+        sprintf((char*)filename, "%08d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 
@@ -1677,14 +1681,14 @@ void DirectoryDepth(const char *path)
     printf("\tCreated %d levels of directory hierarchy\n", pos);
 }
 
-void Fragmentation(const char *path, size_t clusterSize)
+void Fragmentation(const char* path, size_t clusterSize)
 {
     size_t         halfCluster             = clusterSize / 2;
     size_t         quarterCluster          = clusterSize / 4;
     size_t         twoCluster              = clusterSize * 2;
     size_t         threeQuartersCluster    = halfCluster + quarterCluster;
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
-    unsigned char *buffer;
+    unsigned char* buffer;
     OSErr          rc, wRc, cRc;
     Str255         str255;
     HVolumeParam   hpb;
@@ -1694,7 +1698,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     int32_t        count;
     long           i;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -1706,7 +1710,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pFRAGS", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pFRAGS", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -1935,11 +1939,13 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path) { /* Do nothing, not supported by target operating system */ }
+void Sparse(const char* path)
+{ /* Do nothing, not supported by target operating system */
+}
 
 static pascal OSErr
 
-    CreateAliasFile(const FSSpec *targetFile, const FSSpec *aliasFile, OSType fileCreator, OSType fileType)
+    CreateAliasFile(const FSSpec* targetFile, const FSSpec* aliasFile, OSType fileCreator, OSType fileType)
 {
     short       rsrcID;
     short       aliasRefnum;
@@ -1972,7 +1978,7 @@ static pascal OSErr
     return err;
 }
 
-void Links(const char *path)
+void Links(const char* path)
 {
     int32_t      gestaltResponse;
     OSErr        rc, wRc, cRc, oRc, aRc;
@@ -1993,7 +1999,7 @@ void Links(const char *path)
         return;
     }
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -2005,7 +2011,7 @@ void Links(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pLINKS", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pLINKS", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -2017,7 +2023,7 @@ void Links(const char *path)
     for(pos = 0; pos < 64; pos++)
     {
         memset(&filename, 0, 9);
-        sprintf((char *)filename, "TARGET%02d", pos);
+        sprintf((char*)filename, "TARGET%02d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 
@@ -2039,7 +2045,7 @@ void Links(const char *path)
         memcpy(targetSpec.name + 1, filename, 8);
 
         memset(&filename, 0, 9);
-        sprintf((char *)filename, "ALIAS_%02d", pos);
+        sprintf((char*)filename, "ALIAS_%02d", pos);
         memset(&aliasSpec, 0, sizeof(FSSpec));
         aliasSpec.vRefNum = refNum;
         aliasSpec.parID   = dirId;
@@ -2054,7 +2060,7 @@ void Links(const char *path)
     printf("pos = %d, rc = %d, wRc = %d, cRc = %d, oRc = %d, aRc = %d\n", pos, rc, wRc, cRc, oRc, aRc);
 }
 
-void MillionFiles(const char *path)
+void MillionFiles(const char* path)
 {
     OSErr        rc, wRc, cRc;
     Str255       str255;
@@ -2067,7 +2073,7 @@ void MillionFiles(const char *path)
     char         filename[9];
     int          pos = 0;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -2079,7 +2085,7 @@ void MillionFiles(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pMILLION", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pMILLION", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -2091,7 +2097,7 @@ void MillionFiles(const char *path)
     for(pos = 0; pos < 5000; pos++)
     {
         memset(&filename, 0, 9);
-        sprintf((char *)filename, "%08d", pos);
+        sprintf((char*)filename, "%08d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 
@@ -2103,7 +2109,7 @@ void MillionFiles(const char *path)
     printf("\tCreated %d files\n", pos);
 }
 
-void DeleteFiles(const char *path)
+void DeleteFiles(const char* path)
 {
     OSErr        rc, wRc, cRc;
     Str255       str255;
@@ -2116,7 +2122,7 @@ void DeleteFiles(const char *path)
     char         filename[9];
     int          pos = 0;
 
-    snprintf((char *)str255, 255, "%s", path);
+    snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
@@ -2128,7 +2134,7 @@ void DeleteFiles(const char *path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char *)"\pDELETED", &dirId);
+    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pDELETED", &dirId);
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
@@ -2140,7 +2146,7 @@ void DeleteFiles(const char *path)
     for(pos = 0; pos < 64; pos++)
     {
         memset(&filename, 0, 9);
-        sprintf((char *)filename, "%08d", pos);
+        sprintf((char*)filename, "%08d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 

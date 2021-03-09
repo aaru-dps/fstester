@@ -29,18 +29,19 @@ Contains global definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include "main.h"
-#include "defs.h"
-
 #include <stddef.h>
 #include <stdio.h>
+
+#include "main.h"
+
+#include "include/defs.h"
 
 #if defined(macintosh)
 #include <SIOUX.h>
 #include <console.h>
 #endif
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     size_t clusterSize = 0;
 

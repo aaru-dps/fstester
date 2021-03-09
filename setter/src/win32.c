@@ -36,15 +36,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
+#include <windows.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 
 #include "win32.h"
 
-#include "consts.h"
-#include "defs.h"
+#include "include/consts.h"
+#include "include/defs.h"
 
 static DWORD     dwMaxNameSize     = MAX_PATH + 1;
 static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
@@ -56,7 +57,7 @@ void GetOsInfo()
     WIN_OSVERSIONINFO verInfo;
     BOOL              ret;
     DWORD             error;
-    void *            func;
+    void*             func;
     kernel32 = LoadLibraryA("KERNEL32.DLL");
 
     memset(&verInfo, 0, sizeof(WIN_OSVERSIONINFO));
@@ -115,8 +116,7 @@ void GetOsInfo()
     {
         if(verInfo.dwMinorVersion == 10)
         {
-            if(verInfo.dwBuildNumber == 2222)
-                printf("\tRunning under Windows 98 SE");
+            if(verInfo.dwBuildNumber == 2222) printf("\tRunning under Windows 98 SE");
             else
                 printf("\tRunning under Windows 98");
         }
@@ -200,7 +200,7 @@ void GetOsInfo()
     }
 }
 
-void GetVolumeInfo(const char *path, size_t *clusterSize)
+void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
     BOOL              ret;
     DWORD             error;
@@ -218,7 +218,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     ULARGE_INTEGER    qwFreeBytesAvailableToCaller;
     ULARGE_INTEGER    qwTotalNumberOfBytes;
     ULARGE_INTEGER    qwTotalNumberOfFreeBytes;
-    void *            func;
+    void*             func;
 
     *clusterSize = 0;
 
@@ -496,7 +496,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     free(lpRootPathName);
 }
 
-void FileAttributes(const char *path)
+void FileAttributes(const char* path)
 {
     BOOL              ret;
     DWORD             error;
@@ -507,7 +507,7 @@ void FileAttributes(const char *path)
     DWORD             rc, wRc, cRc, aRc, eRc;
     WIN_OSVERSIONINFO verInfo;
     DWORD             defaultCompression = COMPRESSION_FORMAT_DEFAULT;
-    void *            func;
+    void*             func;
     HMODULE           advapi32;
 
     lpRootPathName = malloc(dwMaxNameSize);
@@ -556,8 +556,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)noAttributeText, strlen(noAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -572,8 +571,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -589,8 +587,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -605,8 +602,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -621,8 +617,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -639,8 +634,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -655,8 +649,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -673,8 +666,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -697,8 +689,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -721,8 +712,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -746,8 +736,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -770,8 +759,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -795,8 +783,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -818,8 +805,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -842,8 +828,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -865,8 +850,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -886,8 +870,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -910,8 +893,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -933,8 +915,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -957,8 +938,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -981,8 +961,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1006,8 +985,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1032,8 +1010,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1065,8 +1042,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1097,8 +1073,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1128,8 +1103,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1160,8 +1134,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1194,8 +1167,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)systemAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1227,8 +1199,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1261,8 +1232,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1295,8 +1265,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1328,8 +1297,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1361,8 +1329,7 @@ void FileAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1408,8 +1375,7 @@ void FileAttributes(const char *path)
         rc  = 0;
         wRc = 0;
         cRc = 0;
-        if(h == INVALID_HANDLE_VALUE)
-            rc = GetLastError();
+        if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
         else
         {
             ret = WriteFile(
@@ -1443,8 +1409,7 @@ void FileAttributes(const char *path)
     aRc = 0;
     eRc = 0;
 
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1474,8 +1439,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1508,8 +1472,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1542,8 +1505,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1576,8 +1538,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1611,8 +1572,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1645,8 +1605,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)hiddenAttributeText, strlen(hiddenAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1683,8 +1642,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1721,8 +1679,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1760,8 +1717,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1799,8 +1755,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)encryptedAttributeText, strlen(systemAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1836,8 +1791,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1875,8 +1829,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)offlineAttributeText, strlen(offlineAttributeText), &dwNumberOfBytesWritten, NULL);
@@ -1915,8 +1868,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -1955,8 +1907,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -1996,8 +1947,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -2036,8 +1986,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -2077,8 +2026,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -2119,8 +2067,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret =
@@ -2162,8 +2109,7 @@ void FileAttributes(const char *path)
     cRc = 0;
     aRc = 0;
     eRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(
@@ -2203,17 +2149,17 @@ void FileAttributes(const char *path)
     FreeLibrary(advapi32);
 }
 
-void FilePermissions(const char *path)
+void FilePermissions(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void ExtendedAttributes(const char *path)
+void ExtendedAttributes(const char* path)
 {
     BOOL                      ret;
     DWORD                     error;
     WIN_OSVERSIONINFO         verInfo;
     HMODULE                   ntdll;
-    void *                    func;
+    void*                     func;
     DWORD                     dwNumberOfBytesWritten;
     DWORD                     rc, wRc, cRc, rRc;
     char                      message[300];
@@ -2340,15 +2286,13 @@ void ExtendedAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
         sprintf(message, "This files has an optional .COMMENTS EA\n");
         ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret)
-            wRc = GetLastError();
+        if(!ret) wRc = GetLastError();
         else
         {
             eaData = malloc(sizeof(CommentsEA));
@@ -2366,7 +2310,7 @@ void ExtendedAttributes(const char *path)
 
                 for(i = 0; i < sizeof(CommentsEA); i++)
                 {
-                    if(((unsigned char *)eaData)[i] != CommentsEA[i])
+                    if(((unsigned char*)eaData)[i] != CommentsEA[i])
                     {
                         cmp = FALSE;
                         break;
@@ -2404,15 +2348,13 @@ void ExtendedAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
         sprintf(message, "This files has a critical .COMMENTS EA\n");
         ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret)
-            wRc = GetLastError();
+        if(!ret) wRc = GetLastError();
         else
         {
             eaData = malloc(sizeof(CommentsEACritical));
@@ -2430,7 +2372,7 @@ void ExtendedAttributes(const char *path)
 
                 for(i = 0; i < sizeof(CommentsEACritical); i++)
                 {
-                    if(((unsigned char *)eaData)[i] != CommentsEACritical[i])
+                    if(((unsigned char*)eaData)[i] != CommentsEACritical[i])
                     {
                         cmp = FALSE;
                         break;
@@ -2468,15 +2410,13 @@ void ExtendedAttributes(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
         sprintf(message, "This files has an optional .ICON EA\n");
         ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret)
-            wRc = GetLastError();
+        if(!ret) wRc = GetLastError();
         else
         {
             eaData = malloc(sizeof(IconEA));
@@ -2494,7 +2434,7 @@ void ExtendedAttributes(const char *path)
 
                 for(i = 0; i < sizeof(IconEA); i++)
                 {
-                    if(((unsigned char *)eaData)[i] != IconEA[i])
+                    if(((unsigned char*)eaData)[i] != IconEA[i])
                     {
                         cmp = FALSE;
                         break;
@@ -2520,7 +2460,7 @@ void ExtendedAttributes(const char *path)
     FreeLibrary(ntdll);
 }
 
-void ResourceFork(const char *path)
+void ResourceFork(const char* path)
 {
     BOOL              ret;
     DWORD             error;
@@ -2599,8 +2539,7 @@ void ResourceFork(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)tinyAdsText, strlen(tinyAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2620,8 +2559,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)smallAdsText, strlen(smallAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2651,8 +2589,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)mediumAdsText, strlen(mediumAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2683,8 +2620,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)bigAdsText, strlen(bigAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2713,8 +2649,7 @@ void ResourceFork(const char *path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)tinyAdsText, strlen(tinyAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2734,8 +2669,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)smallAdsText, strlen(smallAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2766,8 +2700,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)mediumAdsText, strlen(mediumAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2799,8 +2732,7 @@ void ResourceFork(const char *path)
     rc      = 0;
     wRc     = 0;
     cRc     = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         ret = WriteFile(h, (LPCVOID)bigAdsText, strlen(bigAdsText), &dwNumberOfBytesWritten, NULL);
@@ -2827,7 +2759,7 @@ void ResourceFork(const char *path)
            cRc);
 }
 
-void Filenames(const char *path)
+void Filenames(const char* path)
 {
     BOOL         ret;
     DWORD        error;
@@ -2888,8 +2820,7 @@ void Filenames(const char *path)
         wRc = 0;
         cRc = 0;
 
-        if(h == INVALID_HANDLE_VALUE)
-            rc = GetLastError();
+        if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
         else
         {
             memset(message, 0, 300);
@@ -2906,7 +2837,7 @@ void Filenames(const char *path)
     }
 }
 
-void Timestamps(const char *path)
+void Timestamps(const char* path)
 {
     char     message[300];
     BOOL     ret;
@@ -2967,8 +2898,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -2992,8 +2922,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3017,8 +2946,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3042,8 +2970,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3067,8 +2994,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3092,8 +3018,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3117,8 +3042,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3142,8 +3066,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3167,8 +3090,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3192,8 +3114,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3217,8 +3138,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3242,8 +3162,7 @@ void Timestamps(const char *path)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         memset(message, 0, 300);
@@ -3263,7 +3182,7 @@ void Timestamps(const char *path)
     printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KMTIME", rc, wRc, cRc, tRc);
 }
 
-void DirectoryDepth(const char *path)
+void DirectoryDepth(const char* path)
 {
     BOOL         ret;
     DWORD        error;
@@ -3328,14 +3247,14 @@ void DirectoryDepth(const char *path)
     printf("\tCreated %ld levels of directory hierarchy\n", pos);
 }
 
-void Fragmentation(const char *path, size_t clusterSize)
+void Fragmentation(const char* path, size_t clusterSize)
 {
     size_t         halfCluster             = clusterSize / 2;
     size_t         quarterCluster          = clusterSize / 4;
     size_t         twoCluster              = clusterSize * 2;
     size_t         threeQuartersCluster    = halfCluster + quarterCluster;
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
-    unsigned char *buffer;
+    unsigned char* buffer;
     size_t         i;
     BOOL           ret;
     DWORD          error;
@@ -3390,8 +3309,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(halfCluster);
@@ -3414,8 +3332,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(quarterCluster);
@@ -3439,8 +3356,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3463,8 +3379,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(threeQuartersCluster);
@@ -3492,8 +3407,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoAndThreeQuartCluster);
@@ -3521,8 +3435,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3545,8 +3458,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3569,8 +3481,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoCluster);
@@ -3597,8 +3508,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(threeQuartersCluster);
@@ -3633,8 +3543,7 @@ void Fragmentation(const char *path, size_t clusterSize)
     wRc = 0;
     cRc = 0;
     tRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(twoAndThreeQuartCluster);
@@ -3658,7 +3567,7 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path)
+void Sparse(const char* path)
 {
     BOOL                             ret;
     DWORD                            error;
@@ -3671,7 +3580,7 @@ void Sparse(const char *path)
     DWORD                            rc, wRc, cRc, sRc, zRc;
     WINNT_FILE_ZERO_DATA_INFORMATION zeroData;
     HANDLE                           h;
-    unsigned char *                  buffer;
+    unsigned char*                   buffer;
     int                              i;
     DWORD                            dwNumberOfBytesWritten;
 
@@ -3772,8 +3681,7 @@ void Sparse(const char *path)
     cRc = 0;
     sRc = 0;
     zRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(4096 * 3);
@@ -3848,8 +3756,7 @@ void Sparse(const char *path)
     cRc = 0;
     sRc = 0;
     zRc = 0;
-    if(h == INVALID_HANDLE_VALUE)
-        rc = GetLastError();
+    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
         buffer = malloc(4096 * 30);
@@ -3919,12 +3826,12 @@ void Sparse(const char *path)
            zRc);
 }
 
-void Links(const char *path)
+void Links(const char* path)
 {
     BOOL              ret;
     DWORD             error;
     WIN_OSVERSIONINFO verInfo;
-    void *            func;
+    void*             func;
     DWORD             dwNumberOfBytesWritten;
     DWORD             rc, wRc, cRc, lRc;
     char              message[300];
@@ -4025,8 +3932,7 @@ void Links(const char *path)
         wRc = 0;
         cRc = 0;
         lRc = 0;
-        if(h == INVALID_HANDLE_VALUE)
-            rc = GetLastError();
+        if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
         else
         {
             memset(message, 0, 300);
@@ -4067,8 +3973,7 @@ void Links(const char *path)
         wRc = 0;
         cRc = 0;
         lRc = 0;
-        if(h == INVALID_HANDLE_VALUE)
-            rc = GetLastError();
+        if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
         else
         {
             memset(message, 0, 300);
@@ -4087,7 +3992,7 @@ void Links(const char *path)
     }
 }
 
-void MillionFiles(const char *path)
+void MillionFiles(const char* path)
 {
     char         filename[9];
     DWORD        pos = 0;
@@ -4153,7 +4058,7 @@ void MillionFiles(const char *path)
     printf("\tCreated %lu files\n", pos);
 }
 
-void DeleteFiles(const char *path)
+void DeleteFiles(const char* path)
 {
     char         filename[9];
     DWORD        pos = 0;

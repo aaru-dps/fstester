@@ -40,9 +40,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "consts.h"
-#include "defs.h"
 #include "dosos2.h"
+#include "include/consts.h"
+#include "include/defs.h"
 #include "os2_16.h"
 
 void GetOsInfo()
@@ -74,8 +74,7 @@ void GetOsInfo()
 
     printf("OS information:\n");
 
-    if(aulBuffer[2] > 0x20)
-        printf("\tRunning under OS/2 %d.%d revision %c.\n", MajorVer, MinorVer, aulBuffer[2]);
+    if(aulBuffer[2] > 0x20) printf("\tRunning under OS/2 %d.%d revision %c.\n", MajorVer, MinorVer, aulBuffer[2]);
     else
         printf("\tRunning under OS/2 %d.%d\n", MajorVer, MinorVer);
 
@@ -84,14 +83,14 @@ void GetOsInfo()
     printf("\tMaximum path is %lu bytes.\n", pathLen[0]);
 }
 
-void GetVolumeInfo(const char *path, size_t *clusterSize)
+void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
     APIRET      rc;
     BYTE        bData[64];
     ULONG       cbData = sizeof(bData);
     PFSALLOCATE pfsAllocateBuffer;
     ULONG       driveNo = path[0] - '@';
-    char *      fsdName;
+    char*       fsdName;
     PFSINFO     pfsInfo;
 
     if(driveNo > 32) driveNo -= 32;
@@ -152,7 +151,7 @@ void GetVolumeInfo(const char *path, size_t *clusterSize)
     free(pfsInfo);
 }
 
-void FileAttributes(const char *path)
+void FileAttributes(const char* path)
 {
     char        drivePath[4];
     APIRET      rc = 0, wRc = 0, cRc = 0;
@@ -552,19 +551,19 @@ void FileAttributes(const char *path)
            cRc);
 }
 
-void FilePermissions(const char *path)
+void FilePermissions(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void ExtendedAttributes(const char *path)
+void ExtendedAttributes(const char* path)
 { /* TODO: Implement */
 }
 
-void ResourceFork(const char *path)
+void ResourceFork(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void Filenames(const char *path)
+void Filenames(const char* path)
 {
     char   drivePath[4];
     APIRET rc = 0, wRc = 0, cRc = 0;
@@ -623,7 +622,7 @@ void Filenames(const char *path)
 
 #define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"
 
-void Timestamps(const char *path)
+void Timestamps(const char* path)
 {
     char        drivePath[4];
     APIRET      rc = 0, wRc = 0, cRc = 0, tRc = 0;
@@ -1250,7 +1249,7 @@ void Timestamps(const char *path)
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2K_TIME", rc, wRc, cRc, tRc);
 }
 
-void DirectoryDepth(const char *path)
+void DirectoryDepth(const char* path)
 {
     char   drivePath[4];
     APIRET rc = 0;
@@ -1296,14 +1295,14 @@ void DirectoryDepth(const char *path)
     printf("\tCreated %d levels of directory hierarchy\n", pos);
 }
 
-void Fragmentation(const char *path, size_t clusterSize)
+void Fragmentation(const char* path, size_t clusterSize)
 {
     size_t         halfCluster             = clusterSize / 2;
     size_t         quarterCluster          = clusterSize / 4;
     size_t         twoCluster              = clusterSize * 2;
     size_t         threeQuartersCluster    = halfCluster + quarterCluster;
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
-    unsigned char *buffer;
+    unsigned char* buffer;
     char           drivePath[4];
     APIRET         rc = 0, wRc = 0, cRc = 0;
     ULONG          actionTaken = 0;
@@ -1582,16 +1581,16 @@ void Fragmentation(const char *path, size_t clusterSize)
            cRc);
 }
 
-void Sparse(const char *path)
+void Sparse(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
 
-void Links(const char *path)
+void Links(const char* path)
 {
     // TODO: Check if can ask WPS to make Shadow
 }
 
-void MillionFiles(const char *path)
+void MillionFiles(const char* path)
 {
     char          drivePath[4];
     APIRET        rc = 0;
@@ -1645,7 +1644,7 @@ void MillionFiles(const char *path)
     printf("\tCreated %lu files\n", pos);
 }
 
-void DeleteFiles(const char *path)
+void DeleteFiles(const char* path)
 {
     char   drivePath[4];
     APIRET rc = 0;
