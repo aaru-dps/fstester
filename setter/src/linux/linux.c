@@ -31,20 +31,21 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
 
-#include "consts.h"
+#include "../consts.h"
 #define _GNU_SOURCE
-#include "linux.h"
-
 #include <errno.h>
 #include <fcntl.h>
 #include <features.h>
-#include <linux/fs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
+#include "linux.h"
+
+#include <linux/fs.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
 
 #if((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)) || (__GLIBC__ > 2)
 #include <sys/ioctl.h>
