@@ -38,7 +38,10 @@
             "_INTEGRAL_MAX_BITS=64"
         ],
         "files.associations": {
-            "dosos2.h": "c"
-        }
+            "dosos2.h": "c",
+            "string.h": "c",
+            "consts.h": "c",
+            "cstdio": "c"
+        },
     }
 }
