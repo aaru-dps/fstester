@@ -40,9 +40,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "dos.h"
 
-#include "dosos2.h"
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../include/consts.h"
+#include "../include/defs.h"
+#include "../include/dosos2.h"
 
 void GetOsInfo()
 {
