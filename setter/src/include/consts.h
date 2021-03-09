@@ -30,7 +30,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_CONSTS_H
 #define AARU_FSTESTER_SETTER_CONSTS_H
 
-static const char *filenames[] = {
+static const char* filenames[] = {
     "FILNAM",
     "FILNAM.EXT",
     "FILENAME",

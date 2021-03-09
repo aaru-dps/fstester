@@ -32,9 +32,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
 
-void LinuxExtendedAttributes(const char *path);
-void LinuxSparse(const char *path);
-void LinuxFileAttributes(const char *path);
+void LinuxExtendedAttributes(const char* path);
+void LinuxSparse(const char* path);
+void LinuxFileAttributes(const char* path);
 
 static unsigned char CommentsEA[72] = {
     0x45, 0x00, 0x00, 0x00, 0x00, 0x09, 0x33, 0x00, 0x2E, 0x43, 0x4F, 0x4D, 0x4D, 0x45, 0x4E, 0x54, 0x53, 0x00,
