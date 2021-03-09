@@ -5,8 +5,6 @@ Aaru Data Preservation Suite
 Filename       : unix.h
 Author(s)      : Natalia Portillo
 
-Component      : fstester.setter
-
 --[ Description ] -----------------------------------------------------------
 
 Contains UNIX definitions

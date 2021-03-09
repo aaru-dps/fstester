@@ -2,14 +2,12 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : win32.c
+Filename       : unix.c
 Author(s)      : Natalia Portillo
-
-Component      : fstester.setter.os2
 
 --[ Description ] -----------------------------------------------------------
 
-Contains 32-bit and 64-bit Windows code
+Contains common implementations for UNIX family and compatibles
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify
