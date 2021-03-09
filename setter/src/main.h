@@ -5,8 +5,6 @@ Aaru Data Preservation Suite
 Filename       : main.h
 Author(s)      : Natalia Portillo
 
-Component      : fstester.setter
-
 --[ Description ] -----------------------------------------------------------
 
 Contains global definitions
@@ -18,8 +16,8 @@ Contains global definitions
      License, or (at your option) any later version.
 
      This program is distributed in the hope that it will be useful,
-     but WITHOUT ANY WARRANTY; without even the implied warraty of
-     MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
      GNU General Public License for more details.
 
      You should have received a copy of the GNU General Public License

@@ -5,8 +5,6 @@ Aaru Data Preservation Suite
 Filename       : os2_32.c
 Author(s)      : Natalia Portillo
 
-Component      : fstester.setter.os2
-
 --[ Description ] -----------------------------------------------------------
 
 Contains 32-bit OS/2 code
@@ -18,8 +16,8 @@ Contains 32-bit OS/2 code
      License, or (at your option) any later version.
 
      This program is distributed in the hope that it will be useful,
-     but WITHOUT ANY WARRANTY; without even the implied warraty of
-     MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
      GNU General Public License for more details.
 
      You should have received a copy of the GNU General Public License
