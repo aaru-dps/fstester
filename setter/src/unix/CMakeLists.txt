@@ -1,4 +1,4 @@
-if(NOT "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     return()
 endif()
 
