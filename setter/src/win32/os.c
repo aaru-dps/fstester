@@ -37,17 +37,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <windows.h>
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "win32.h"
-#include "../include/consts.h"
 #include "../include/defs.h"
 
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
+DWORD oldVersion;
 
 void GetOsInfo()
 {
@@ -55,6 +50,7 @@ void GetOsInfo()
     BOOL              ret;
     DWORD             error;
     void*             func;
+    HINSTANCE         kernel32;
     kernel32 = LoadLibraryA("KERNEL32.DLL");
 
     memset(&verInfo, 0, sizeof(WIN_OSVERSIONINFO));
@@ -90,6 +86,8 @@ void GetOsInfo()
         else
             printf("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
 
+        FreeLibrary(kernel32);
+
         return;
     }
 
@@ -102,6 +100,7 @@ void GetOsInfo()
     {
         error = GetLastError();
         printf("Error %lu querying Windows version.\n", error);
+        FreeLibrary(kernel32);
         return;
     }
 
@@ -195,6 +194,8 @@ void GetOsInfo()
                 printf(" version %lu%02lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         }
     }
+
+    FreeLibrary(kernel32);
 }
 
 #endif

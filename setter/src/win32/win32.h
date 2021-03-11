@@ -256,6 +256,9 @@ typedef WIN_LPOSVERSIONINFOA WIN_LPOSVERSIONINFO;
 
 static BOOL(WINAPI* WinGetVersionExA)(WIN_LPOSVERSIONINFOA);
 
+static DWORD dwMaxNameSize     = MAX_PATH + 1;
+static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
+
 #endif
 
 #endif

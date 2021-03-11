@@ -44,13 +44,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "volume.h"
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
+extern DWORD oldVersion;
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
@@ -71,6 +67,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     ULARGE_INTEGER    qwTotalNumberOfBytes;
     ULARGE_INTEGER    qwTotalNumberOfFreeBytes;
     void*             func;
+    HINSTANCE         kernel32;
 
     *clusterSize = 0;
 
@@ -314,8 +311,13 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && verInfo.dwBuildNumber >= 1000 ||
        verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && kernel32)
     {
-        func = GetProcAddress(kernel32, "GetDiskFreeSpaceExA");
-        if(func) WinGetDiskFreeSpaceExA = func;
+        kernel32 = LoadLibraryA("kernel32.dll");
+
+        if(kernel32)
+        {
+            func = GetProcAddress(kernel32, "GetDiskFreeSpaceExA");
+            if(func) WinGetDiskFreeSpaceExA = func;
+        }
     }
 
     if(WinGetDiskFreeSpaceExA)
@@ -346,6 +348,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     }
 
     free(lpRootPathName);
+
+    if(func) FreeLibrary(kernel32);
 }
 
 #endif

@@ -44,13 +44,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "xattr.h"
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
+extern DWORD oldVersion;
 
 void ExtendedAttributes(const char* path)
 {

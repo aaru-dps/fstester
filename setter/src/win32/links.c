@@ -44,13 +44,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "links.h"
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
+extern DWORD oldVersion;
 
 void Links(const char* path)
 {
@@ -64,6 +60,7 @@ void Links(const char* path)
     HANDLE            h;
     LPSTR             lpRootPathName;
     size_t            pathSize = strlen(path);
+    HINSTANCE         kernel32;
 
     if(WinGetVersionExA)
     {
@@ -216,6 +213,8 @@ void Links(const char* path)
 
         printf("\tHard link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
+
+    FreeLibrary(kernel32);
 }
 
 #endif

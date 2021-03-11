@@ -34,20 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include <windows.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "win32.h"
-#include "../include/consts.h"
 #include "../include/defs.h"
-
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
 
 void FilePermissions(const char* path)
 { /* Do nothing, not supported by target operating system */

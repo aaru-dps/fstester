@@ -44,11 +44,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/consts.h"
 #include "../include/defs.h"
 
-static DWORD     dwMaxNameSize     = MAX_PATH + 1;
-static DWORD     dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-static DWORD     oldVersion;
-static HINSTANCE kernel32;
-
 void Sparse(const char* path)
 {
     BOOL                             ret;
