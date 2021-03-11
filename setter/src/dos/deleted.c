@@ -70,13 +70,13 @@ void DeleteFiles(const char* path)
 
     for(pos = 0; pos < 64; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%X", pos);
-        rc = _dos_creatnew(&filename, _A_NORMAL, &handle);
+        memset(filename, 0, 9);
+        sprintf(filename, "%X", pos);
+        rc = _dos_creatnew(filename, _A_NORMAL, &handle);
         if(rc) break;
 
         _dos_close(handle);
-        unlink(&filename);
+        unlink(filename);
     }
 }
 

@@ -75,9 +75,9 @@ void Filenames(const char* path)
 
         if(!rc)
         {
-            memset(&message, 0, 300);
-            sprintf(&message, FILENAME_FORMAT, filenames[pos]);
-            wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
+            memset(message, 0, 300);
+            sprintf(message, FILENAME_FORMAT, filenames[pos]);
+            wRc = _dos_write(handle, message, strlen(message), &actionTaken);
             cRc = _dos_close(handle);
         }
 
