@@ -2,8 +2,8 @@
   Claunia.com
  ------------------------------------------------------------------------
 
-        Filename   : int21h.c
-        Version    : 0.07
+        Filename   : dosuname.c
+        Version    : 0.08
         Author(s)  : Natalia Portillo
 
         Component : UNAME for DOS
@@ -49,6 +49,7 @@
         0.07: Implemented a workaround so OS/2 3.x and upper versions can be
               easily detected, without exact knowledge of the versions by
               this program.
+        0.08: Changed function parameters to use a struct.
 
  --[ How to compile ]----------------------------------------------------
 
@@ -78,44 +79,30 @@
         Foundation,Inc.,59 Temple Place - Suite 330,Boston,MA  02111-1307,USA.
 
  ------------------------------------------------------------------------
- Copyright (c) 2001 Claunia.com
+ Copyright (c) 2001-2021 Natalia Portillo
 *************************************************************************/
 
 #include <dos.h>
 
-void getdosver(int* DOS_FLAVOR,
-               int* major,
-               int* minor,
-               int* sim_major,
-               int* sim_minor,
-               int* dos_oem,
-               int* desq_ma,
-               int* desq_mi,
-               int* _4dos_ma,
-               int* _4dos_mi,
-               int* ndos_ma,
-               int* ndos_mi,
-               int* win_ma,
-               int* win_mi,
-               int* win_mode,
-               int* softice_ma,
-               int* softice_mi)
+#include "dosuname.h"
+
+void getdosver(struct dosuname_version_t* version)
 {
     union REGS regs;
     int        dos_temp, nt_flag;
-    nt_flag     = 0;
-    *DOS_FLAVOR = 0;
+    nt_flag         = 0;
+    version->flavor = 0;
 
     regs.x.ax = 0x3306;        /* Set function 3306h */
     int86(0x21, &regs, &regs); /* Call INT 21h */
     if(regs.h.al != 255)       /* If DOS >= 5.0 */
     {
-        *major = regs.h.bl; /* Major True version */
-        *minor = regs.h.bh; /* Minor True version */
+        version->major = regs.h.bl; /* Major True version */
+        version->minor = regs.h.bh; /* Minor True version */
         if(regs.h.bh == 50)
         {
-            *minor  = 0;
-            nt_flag = 1;
+            version->minor = 0;
+            nt_flag        = 1;
         }
 
         regs.h.ah = 0x30;
@@ -124,84 +111,84 @@ void getdosver(int* DOS_FLAVOR,
         dos_temp = regs.h.bh; /* Set DOS type */
         if(dos_temp == 253)   /* Checks for FreeDOS */
         {
-            *major = regs.h.bl; /* Get FreeDOS kernel version */
-            *minor = 0;         /* Put minor version to zero */
+            version->major = regs.h.bl; /* Get FreeDOS kernel version */
+            version->minor = 0;         /* Put minor version to zero */
         }
-        *sim_major = regs.h.al; /* Set the simulated major version */
-        *sim_minor = regs.h.ah; /* Set the simulated minor version */
+        version->simulated_major = regs.h.al; /* Set the simulated major version */
+        version->simulated_minor = regs.h.ah; /* Set the simulated minor version */
     }
     else
     {
         regs.h.ah = 0x30;
         regs.h.al = 0x00;
         int86(0x21, &regs, &regs);
-        dos_temp   = regs.h.bh; /* Set DOS type */
-        *major     = regs.h.al; /* Set the simulated major version */
-        *minor     = regs.h.ah; /* Set the simulated minor version */
-        *sim_major = *major;
-        *sim_minor = *minor;
+        dos_temp           = regs.h.bh; /* Set DOS type */
+        version->major     = regs.h.al; /* Set the simulated major version */
+        version->minor     = regs.h.ah; /* Set the simulated minor version */
+        version->simulated_major = version->major;
+        version->simulated_minor = version->minor;
     }
 
     /* Set DOS to DOS type */
-    if(dos_temp == 0 && *major <= 3) { *DOS_FLAVOR = 12; }
-    if(dos_temp == 0 && *major >= 4) { *DOS_FLAVOR = 2; }
-    if(dos_temp == 0 && *major >= 10) { *DOS_FLAVOR = 7; }
-    if(dos_temp == 0xff && *major <= 6) { *DOS_FLAVOR = 1; }
-    if(dos_temp == 0xff && *major == 7)
+    if(dos_temp == 0 && version->major <= 3) { version->flavor = 12; }
+    if(dos_temp == 0 && version->major >= 4) { version->flavor = 2; }
+    if(dos_temp == 0 && version->major >= 10) { version->flavor = 7; }
+    if(dos_temp == 0xff && version->major <= 6) { version->flavor = 1; }
+    if(dos_temp == 0xff && version->major == 7)
     {
-        if(*minor == 0) { *DOS_FLAVOR = 5; }
-        if(*minor == 10) { *DOS_FLAVOR = 13; }
+        if(version->minor == 0) { version->flavor = 5; }
+        if(version->minor == 10) { version->flavor = 13; }
     }
-    if(dos_temp == 0xff && *major == 8) { *DOS_FLAVOR = 14; }
-    if(dos_temp == 253) { *DOS_FLAVOR = 4; }
-    if(dos_temp == 0xff && nt_flag == 1) { *DOS_FLAVOR = 6; }
-    if(dos_temp == 0x66) { *DOS_FLAVOR = 8; }
-    if(dos_temp == 0x5E) { *DOS_FLAVOR = 9; }
+    if(dos_temp == 0xff && version->major == 8) { version->flavor = 14; }
+    if(dos_temp == 253) { version->flavor = 4; }
+    if(dos_temp == 0xff && nt_flag == 1) { version->flavor = 6; }
+    if(dos_temp == 0x66) { version->flavor = 8; }
+    if(dos_temp == 0x5E) { version->flavor = 9; }
 
     /* Check for Concurrent DOS versions */
     regs.x.ax = 0x4451;        /* Set function 4451h */
     int86(0x21, &regs, &regs); /* Call INT 21h */
     if(regs.h.al == 0x32)
     {
-        *major      = 3;
-        *minor      = 2;
-        *DOS_FLAVOR = 10;
+        version->major  = 3;
+        version->minor  = 2;
+        version->flavor = 10;
     }
     if(regs.h.al == 0x41)
     {
-        *major      = 4;
-        *minor      = 1;
-        *DOS_FLAVOR = 10;
+        version->major  = 4;
+        version->minor  = 1;
+        version->flavor = 10;
     }
     if(regs.h.al == 0x50)
     {
-        *major      = 5;
-        *minor      = 0;
-        *DOS_FLAVOR = 10;
+        version->major  = 5;
+        version->minor  = 0;
+        version->flavor = 10;
     }
     if(regs.h.al == 0x60)
     {
-        *major      = 6;
-        *minor      = 0;
-        *DOS_FLAVOR = 10;
+        version->major  = 6;
+        version->minor  = 0;
+        version->flavor = 10;
     }
     if(regs.h.al == 0x62)
     {
-        *major      = 6;
-        *minor      = 2;
-        *DOS_FLAVOR = 10;
+        version->major  = 6;
+        version->minor  = 2;
+        version->flavor = 10;
     }
     if(regs.h.al == 0x66)
     {
-        *major      = 5;
-        *minor      = 1;
-        *DOS_FLAVOR = 6;
+        version->major  = 5;
+        version->minor  = 1;
+        version->flavor = 6;
     }
     if(regs.h.al == 0x67)
     {
-        *major      = 5;
-        *minor      = 1;
-        *DOS_FLAVOR = 10;
+        version->major  = 5;
+        version->minor  = 1;
+        version->flavor = 10;
     }
     /* End of check for Concurrent DOS versions */
 
@@ -210,102 +197,102 @@ void getdosver(int* DOS_FLAVOR,
     int86(0x21, &regs, &regs); /* Call INT 21h */
     if(regs.h.al == 0x41)
     {
-        *major      = 1;
-        *minor      = 2;
-        *DOS_FLAVOR = 3;
+        version->major  = 1;
+        version->minor  = 2;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x60)
     {
-        *major      = 2;
-        *minor      = 0;
-        *DOS_FLAVOR = 3;
+        version->major  = 2;
+        version->minor  = 0;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x63)
     {
-        *major      = 3;
-        *minor      = 41;
-        *DOS_FLAVOR = 3;
+        version->major  = 3;
+        version->minor  = 41;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x64)
     {
-        *major      = 3;
-        *minor      = 42;
-        *DOS_FLAVOR = 3;
+        version->major  = 3;
+        version->minor  = 42;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x65)
     {
-        *major      = 5;
-        *minor      = 0;
-        *DOS_FLAVOR = 3;
+        version->major  = 5;
+        version->minor  = 0;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x67)
     {
-        *major      = 6;
-        *minor      = 0;
-        *DOS_FLAVOR = 3;
+        version->major  = 6;
+        version->minor  = 0;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x71)
     {
-        *major      = 6;
-        *minor      = 0;
-        *DOS_FLAVOR = 3;
+        version->major  = 6;
+        version->minor  = 0;
+        version->flavor = 3;
     }
     if(regs.h.al == 0x72)
     {
-        *major      = 7;
-        *minor      = 0;
-        *DOS_FLAVOR = 11;
+        version->major  = 7;
+        version->minor  = 0;
+        version->flavor = 11;
     }
     if(regs.h.al == 0x73)
     {
-        *major      = 7;
-        *minor      = 0;
-        *DOS_FLAVOR = 3;
+        version->major  = 7;
+        version->minor  = 0;
+        version->flavor = 3;
     }
     /* End of check for DR-DOS_FLAVOR versions */
-    *dos_oem  = dos_temp;
-    *desq_ma  = 0;
-    *desq_mi  = 0;
-    regs.h.ah = 0x2b;          /* Set function */
-    regs.x.cx = 0x4445;        /* Set function */
-    regs.x.dx = 0x5351;        /* Set function */
-    regs.h.al = 0x01;          /* Set function */
-    int86(0x21, &regs, &regs); /* Call INT 21h */
+    version->dos_oem        = dos_temp;
+    version->desqview_major = 0;
+    version->desqview_minor = 0;
+    regs.h.ah               = 0x2b;   /* Set function */
+    regs.x.cx               = 0x4445; /* Set function */
+    regs.x.dx               = 0x5351; /* Set function */
+    regs.h.al               = 0x01;   /* Set function */
+    int86(0x21, &regs, &regs);        /* Call INT 21h */
     if(regs.h.al != 0xFF)
     {
-        *desq_ma = regs.h.bh;
-        *desq_mi = regs.h.bl;
+        version->desqview_major = regs.h.bh;
+        version->desqview_minor = regs.h.bl;
     }
-    *_4dos_ma = 0;
-    *_4dos_mi = 0;
-    regs.h.bh = 0x00;          /* Set function */
-    regs.x.ax = 0xD44D;        /* Set 4DOS API */
-    int86(0x2F, &regs, &regs); /* Call INT 2Fh */
+    version->_4dos_major = 0;
+    version->_4dos_minor = 0;
+    regs.h.bh            = 0x00;   /* Set function */
+    regs.x.ax            = 0xD44D; /* Set 4DOS API */
+    int86(0x2F, &regs, &regs);     /* Call INT 2Fh */
     if(regs.x.ax == 0x44DD)
     {
-        *_4dos_ma = regs.h.bl;
-        *_4dos_mi = regs.h.bh;
+        version->_4dos_major = regs.h.bl;
+        version->_4dos_minor = regs.h.bh;
     }
-    *ndos_ma  = 0;
-    *ndos_mi  = 0;
-    regs.h.bh = 0x00;          /* Set function */
-    regs.x.ax = 0xE44D;        /* Set 4DOS API (Well, NDOS is the Norton version of 4DOS */
-    int86(0x2F, &regs, &regs); /* Call INT 2Fh */
+    version->ndos_major = 0;
+    version->ndos_minor = 0;
+    regs.h.bh           = 0x00;   /* Set function */
+    regs.x.ax           = 0xE44D; /* Set 4DOS API (Well, NDOS is the Norton version of 4DOS */
+    int86(0x2F, &regs, &regs);    /* Call INT 2Fh */
     if(regs.x.ax == 0x44EE)
     {
-        *ndos_ma = regs.h.bl;
-        *ndos_mi = regs.h.bh;
+        version->ndos_major = regs.h.bl;
+        version->ndos_minor = regs.h.bh;
     }
-    *win_ma   = 0;
-    *win_mi   = 0;
-    *win_mode = 0;
-    regs.x.ax = 0x160A;        /* Set function (Windows 3.1 or upper) */
-    int86(0x2F, &regs, &regs); /* Call INT 2Fh */
+    version->windows_major = 0;
+    version->windows_minor = 0;
+    version->windows_mode  = 0;
+    regs.x.ax              = 0x160A; /* Set function (Windows 3.1 or upper) */
+    int86(0x2F, &regs, &regs);       /* Call INT 2Fh */
     if(regs.x.ax == 0x0000)
     {
-        *win_ma   = regs.h.bh;
-        *win_mi   = regs.h.bl;
-        *win_mode = regs.x.cx;
+        version->windows_major = regs.h.bh;
+        version->windows_minor = regs.h.bl;
+        version->windows_mode  = regs.x.cx;
     }
     else
     {
@@ -313,18 +300,18 @@ void getdosver(int* DOS_FLAVOR,
         int86(0x2F, &regs, &regs); /* Call INT 2Fh */
         if(regs.h.al == 0x01 || regs.h.al == 0xFF)
         {
-            *win_ma   = 2;
-            *win_mi   = regs.h.ah;
-            *win_mode = 3;
+            version->windows_major = 2;
+            version->windows_minor = regs.h.ah;
+            version->windows_mode  = 3;
         }
         else if(regs.h.al >= 3)
         {
-            *win_ma   = regs.h.al;
-            *win_mi   = regs.h.ah;
-            *win_mode = 3;
+            version->windows_major = regs.h.al;
+            version->windows_minor = regs.h.ah;
+            version->windows_mode  = 3;
         }
         else
-            *win_ma = *win_mi = 0;
+            version->windows_major = version->windows_minor = 0;
     }
     regs.x.ax = 0x0000;        /* SoftICE detection function */
     regs.x.si = 0x4647;        /* SoftICE detection function */
@@ -332,12 +319,12 @@ void getdosver(int* DOS_FLAVOR,
     int86(0x03, &regs, &regs); /* Call INT 03h */
     if(regs.x.si != 0x4647)
     {
-        *softice_ma = 1; // SoftICE version detection not yet implemented
-        *softice_mi = 1; // SoftICE version detection not yet implemented
+        version->softice_major = 1; // SoftICE version detection not yet implemented
+        version->softice_minor = 1; // SoftICE version detection not yet implemented
     }
     else
     {
-        *softice_ma = 0; // SoftICE not detected
-        *softice_mi = 0; // SoftICE not detected
+        version->softice_major = 0; // SoftICE not detected
+        version->softice_minor = 0; // SoftICE not detected
     }
 }
