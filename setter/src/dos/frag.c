@@ -31,12 +31,17 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <direct.h>
 #include <dos.h>
-#include <i86.h>
 #include <io.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef __WATCOMC__
+#include <i86.h>
+#elif defined(__DJGPP__)
+#include <unistd.h>
+#endif
 
 #include "../include/consts.h"
 #include "../include/defs.h"

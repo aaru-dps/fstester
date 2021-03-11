@@ -38,7 +38,17 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(__WATCOM__)
+#include <direct.h>
+#elif defined(__DJGPP__)
+#include <unistd.h>
+#endif
+
 #include "../include/consts.h"
+#include "../include/defs.h"
+#include "../include/dosos2.h"
+#include "dos.h"
+
 #include "../include/defs.h"
 #include "../include/dosos2.h"
 #include "dos.h"

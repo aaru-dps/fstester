@@ -31,7 +31,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <direct.h>
 #include <dos.h>
-#include <i86.h>
 #include <io.h>
 #include <malloc.h>
 #include <stdio.h>
