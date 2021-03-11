@@ -27,9 +27,19 @@ Contains 16-bit OS/2 definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__OS2__) || defined(__os2__)) && (defined(__I86__) || defined(__i86__) || defined(_M_I86))
-#ifndef AARU_FSTESTER_SETTER_OS2_16_H
-#define AARU_FSTESTER_SETTER_OS2_16_H
+#if(defined(__OS2__) || defined(__os2__))
+#ifndef AARU_FSTESTER_SETTER_OS2_H
+#define AARU_FSTESTER_SETTER_OS2_H
+
+#include <os2.h>
+
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) // 16 bit
+
+#ifndef APIRET
+#define APIRET USHORT
+#endif
+
+#endif
 
 /* Information level types (defins method of query) */
 #define FSAIL_QUERYNAME 1 /* Return data for a Drive or Device */
@@ -242,11 +252,17 @@ unsigned char IconEA[3516] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00};
 
-const char* archivedAttributeText = "This file has the archived attribute set.\n";
-const char* systemAttributeText   = "This file has the system attribute set.\n";
-const char* hiddenAttributeText   = "This file has the hidden attribute set.\n";
-const char* readonlyAttributeText = "This file has the read-only attribute set.\n";
-const char* noAttributeText       = "This file has no attribute set.\n";
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) // 16 bit
+
+#define __os2_chdir(path) DosChDir(path, 0)
+#define __os2_mkdir(path) DosMkDir(path, 0)
+
+#else // 32 bit
+
+#define __os2_chdir(path) DosSetCurrentDir(path)
+#define __os2_mkdir(path) DosCreateDir(path, NULL)
+
+#endif
 
 #endif
 
