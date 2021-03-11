@@ -50,7 +50,7 @@ void Filenames(const char* path)
     unsigned actionTaken, total;
     int      handle;
     char     message[300];
-    int      pos = 0;
+    int      pos;
 
     if(driveNo > 32) driveNo -= 32;
 

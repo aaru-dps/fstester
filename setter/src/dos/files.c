@@ -47,7 +47,7 @@ void MillionFiles(const char* path)
     char          driveNo = path[0] - '@';
     unsigned int           rc;
     char          filename[9];
-    unsigned long pos = 0;
+    unsigned int pos;
     int           handle;
     unsigned      total;
 
@@ -71,14 +71,14 @@ void MillionFiles(const char* path)
     for(pos = 0; pos < 1000; pos++)
     {
         memset(filename, 0, 9);
-        sprintf(filename, "%08llu", pos);
+        sprintf(filename, "%08d", pos);
         rc = _dos_creatnew(filename, _A_NORMAL, &handle);
         if(rc) break;
 
         _dos_close(handle);
     }
 
-    printf("\tCreated %llu files\n", pos);
+    printf("\tCreated %d files\n", pos);
 }
 
 #endif

@@ -67,7 +67,7 @@ void Timestamps(const char* path)
         return;
     }
 
-    rc = chdir("TIMES");
+    chdir("TIMES");
 
     printf("Creating timestamped files.\n");
 

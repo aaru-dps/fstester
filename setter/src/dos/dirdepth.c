@@ -39,7 +39,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 #endif
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "dos.h"
 
@@ -49,7 +48,7 @@ void DirectoryDepth(const char* path)
     unsigned int      rc      ;
     unsigned total;
     char     filename[9];
-    long     pos = 2;
+    int     pos = 2;
 
     if(driveNo > 32) driveNo -= 32;
 
