@@ -46,14 +46,12 @@ void FileAttributes(const char* path)
     char   drivePath[4];
     APIRET rc = 0, wRc = 0, cRc = 0;
     HFILE  handle;
-    int    i;
+    int        i;
+    ACTION_RET actionTaken = 0;
 
 // 32 bit
 #if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386))
-    ULONG       actionTaken = 0;
     FILESTATUS3 fileStatus  = {{0}};
-#else // 16 bit
-    USHORT actionTaken = 0;
 #endif
 
     drivePath[0] = path[0];

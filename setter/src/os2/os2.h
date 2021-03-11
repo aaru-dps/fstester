@@ -39,6 +39,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define APIRET USHORT
 #endif
 
+#define ACTION_RET USHORT
+
+#else // 32 bit
+
+#define ACTION_RET ULONG
+
 #endif
 
 /* Information level types (defins method of query) */
