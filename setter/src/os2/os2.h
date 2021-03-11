@@ -242,11 +242,11 @@ unsigned char IconEA[3516] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00};
 
-const char *archivedAttributeText = "This file has the archived attribute set.\n";
-const char *systemAttributeText   = "This file has the system attribute set.\n";
-const char *hiddenAttributeText   = "This file has the hidden attribute set.\n";
-const char *readonlyAttributeText = "This file has the read-only attribute set.\n";
-const char *noAttributeText       = "This file has no attribute set.\n";
+const char* archivedAttributeText = "This file has the archived attribute set.\n";
+const char* systemAttributeText   = "This file has the system attribute set.\n";
+const char* hiddenAttributeText   = "This file has the hidden attribute set.\n";
+const char* readonlyAttributeText = "This file has the read-only attribute set.\n";
+const char* noAttributeText       = "This file has no attribute set.\n";
 
 #endif
 
