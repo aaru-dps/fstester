@@ -40,7 +40,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define __dos_mkdir(path) mkdir(path, 0)
 #endif
 
+#if defined(__WATCOM__)
 #pragma pack(__push, 1)
+#else
+#pragma pack(push, 1)
+#endif
 
 typedef struct diskfree_ex_t
 {
@@ -55,11 +59,15 @@ typedef struct diskfree_ex_t
     unsigned long  freeUnits;
     unsigned long  totalUnits;
     unsigned char  reserved[8];
-};
+} diskfree_ex;
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t *diskspace);
 
+#if defined(__WATCOM__)
 #pragma pack(__pop)
+#else
+#pragma pack(pop)
+#endif
 
 #define YEAR(t) (((t & 0xFE00) >> 9) + 1980)
 #define MONTH(t) ((t & 0x01E0) >> 5)
