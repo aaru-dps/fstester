@@ -41,6 +41,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "win32.h"
+
+#include "sparse.h"
+
 #include "../include/consts.h"
 #include "../include/defs.h"
 

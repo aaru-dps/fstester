@@ -205,6 +205,25 @@ unsigned char IconEA[3516] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00};
 
+typedef struct _IO_STATUS_BLOCK
+{
+    union
+    {
+        NTSTATUS Status;
+        PVOID    Pointer;
+    } DUMMYUNIONNAME;
+    PULONG Information;
+} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
+
+typedef struct _FILE_FULL_EA_INFORMATION
+{
+    ULONG  NextEntryOffset;
+    UCHAR  Flags;
+    UCHAR  EaNameLength;
+    USHORT EaValueLength;
+    CHAR   EaName[1];
+} FILE_FULL_EA_INFORMATION, *PFILE_FULL_EA_INFORMATION;
+
 static NTSTATUS(NTAPI* NtSetEaFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG);
 static NTSTATUS(NTAPI* NtQueryEaFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG, BOOLEAN, PVOID, ULONG, PULONG, BOOLEAN);
 

@@ -1,0 +1,29 @@
+//
+// Created by claunia on 11/3/21.
+//
+
+#ifndef SETTER_SRC_WIN32_SPARSE_H_
+#define SETTER_SRC_WIN32_SPARSE_H_
+
+#include <windows.h>
+
+#include "win32.h"
+
+#ifndef FSCTL_SET_SPARSE
+#define FSCTL_SET_SPARSE 0x000900C4
+#endif
+
+#ifndef FSCTL_SET_ZERO_DATA
+#define FSCTL_SET_ZERO_DATA 0x000900C8
+#endif
+
+#define FSCTL_SET_SPARSE_OLD 0x000980C4
+#define FSCTL_SET_ZERO_DATA_OLD 0x000980C8
+
+typedef struct _WINNT_FILE_ZERO_DATA_INFORMATION
+{
+    LARGE_INTEGER FileOffset;
+    LARGE_INTEGER BeyondFinalZero;
+} WINNT_FILE_ZERO_DATA_INFORMATION, *PWINNT_FILE_ZERO_DATA_INFORMATION;
+
+#endif // SETTER_SRC_WIN32_SPARSE_H_

@@ -7,6 +7,8 @@
 
 #include <windows.h>
 
+#include "win32.h"
+
 const char* compressedAttributeText = "This file is compressed.\n";
 
 typedef struct
@@ -371,5 +373,13 @@ static const win32_attr_tests_t encrypted_win32_attrs[KNOWN_WIN32_ATTRS] = {
 };
 
 BOOL(WINAPI* WinNtEncryptFileA)(LPCSTR);
+
+#ifndef FSCTL_SET_COMPRESSION
+#define FSCTL_SET_COMPRESSION 0x9C040
+#endif
+
+#ifndef COMPRESSION_FORMAT_DEFAULT
+#define COMPRESSION_FORMAT_DEFAULT 1
+#endif
 
 #endif // SETTER_SRC_WIN32_ATTR_H_

@@ -40,6 +40,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "win32.h"
+
+#include "os.h"
+
 #include "../include/defs.h"
 
 DWORD oldVersion;
