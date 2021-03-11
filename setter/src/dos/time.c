@@ -42,8 +42,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 #include "dos.h"
-
-#define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"
+#include "time.h"
 
 void Timestamps(const char* path)
 {
@@ -53,11 +52,7 @@ void Timestamps(const char* path)
     int            handle;
     char           message[300];
     union REGS     regs;
-    unsigned short maxtime = 0xBF7D;
-    unsigned short maxdate = 0xFF9F;
-    unsigned short y1kdate = 0x2621;
-    unsigned short y2kdate = 0x2821;
-    unsigned short mindate = 0x0021;
+    int i;
 
     if(driveNo > 32) driveNo -= 32;
 
@@ -76,341 +71,36 @@ void Timestamps(const char* path)
 
     printf("Creating timestamped files.\n");
 
-    rc = _dos_creatnew("MAXCTIME", _A_NORMAL, &handle);
-
-    if(!rc)
+    for(i = 0; i < KNOWN_DOS_TIMES; i++)
     {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(maxdate),
-                MONTH(maxdate),
-                DAY(maxdate),
-                HOUR(maxtime),
-                MINUTE(maxtime),
-                SECOND(maxtime),
-                "creation");
+        rc = _dos_creatnew(dos_times[i].filename, _A_NORMAL, &handle);
 
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = maxtime;
-        regs.w.dx = maxdate;
-        regs.w.ax = 0x5707;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
+        if(!rc)
+        {
+            memset(message, 0, 300);
+            sprintf(message,
+                    DATETIME_FORMAT,
+                    YEAR(dos_times[i].date),
+                    MONTH(dos_times[i].date),
+                    DAY(dos_times[i].date),
+                    HOUR(dos_times[i].time),
+                    MINUTE(dos_times[i].time),
+                    SECOND(dos_times[i].time),
+                    dos_times[i].definition);
+
+            wRc = _dos_write(handle, message, strlen(message), &actionTaken);
+            memset(&regs, 0, sizeof(regs));
+            regs.w.bx = handle;
+            regs.w.cx = dos_times[i].time;
+            regs.w.dx = dos_times[i].date;
+            regs.w.ax = dos_times[i].function;
+            int86(0x21, &regs, &regs);
+            tRc = regs.w.ax;
+            cRc = _dos_close(handle);
+        }
+
+        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", dos_times[i].filename, rc, wRc, cRc, tRc);
     }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("MINCTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(mindate),
-                MONTH(mindate),
-                DAY(mindate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "creation");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = mindate;
-        regs.w.ax = 0x5707;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y19CTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y1kdate),
-                MONTH(y1kdate),
-                DAY(y1kdate),
-                HOUR(maxtime),
-                MINUTE(maxtime),
-                SECOND(maxtime),
-                "creation");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = maxtime;
-        regs.w.dx = y1kdate;
-        regs.w.ax = 0x5707;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y2KCTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y2kdate),
-                MONTH(y2kdate),
-                DAY(y2kdate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "creation");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = y2kdate;
-        regs.w.ax = 0x5707;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("MAXWTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(maxdate),
-                MONTH(maxdate),
-                DAY(maxdate),
-                HOUR(maxtime),
-                MINUTE(maxtime),
-                SECOND(maxtime),
-                "last written");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = maxtime;
-        regs.w.dx = maxdate;
-        regs.w.ax = 0x5701;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXWTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("MINWTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(mindate),
-                MONTH(mindate),
-                DAY(mindate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last written");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = mindate;
-        regs.w.ax = 0x5701;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINWTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y19WTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y1kdate),
-                MONTH(y1kdate),
-                DAY(y1kdate),
-                HOUR(maxtime),
-                MINUTE(maxtime),
-                SECOND(maxtime),
-                "last written");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = maxtime;
-        regs.w.dx = y1kdate;
-        regs.w.ax = 0x5701;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19WTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y2KWTIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y2kdate),
-                MONTH(y2kdate),
-                DAY(y2kdate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last written");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = y2kdate;
-        regs.w.ax = 0x5701;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KWTIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("MAXATIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(maxdate),
-                MONTH(maxdate),
-                DAY(maxdate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last access");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = maxdate;
-        regs.w.ax = 0x5705;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("MINATIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(mindate),
-                MONTH(mindate),
-                DAY(mindate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last access");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = mindate;
-        regs.w.ax = 0x5705;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y19ATIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y1kdate),
-                MONTH(y1kdate),
-                DAY(y1kdate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last access");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = y1kdate;
-        regs.w.ax = 0x5705;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19ATIME", rc, wRc, cRc, tRc);
-
-    rc = _dos_creatnew("Y2KATIME", _A_NORMAL, &handle);
-
-    if(!rc)
-    {
-        memset(&message, 0, 300);
-        sprintf(&message,
-                DATETIME_FORMAT,
-                YEAR(y2kdate),
-                MONTH(y2kdate),
-                DAY(y2kdate),
-                HOUR(0),
-                MINUTE(0),
-                SECOND(0),
-                "last access");
-
-        wRc = _dos_write(handle, &message, strlen(message), &actionTaken);
-        memset(&regs, 0, sizeof(regs));
-        regs.w.bx = handle;
-        regs.w.cx = 0;
-        regs.w.dx = y2kdate;
-        regs.w.ax = 0x5705;
-        int86(0x21, &regs, &regs);
-        tRc = regs.w.ax;
-        cRc = _dos_close(handle);
-    }
-
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 }
 
 #endif
