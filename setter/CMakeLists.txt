@@ -9,5 +9,5 @@ add_subdirectory(src)
 add_subdirectory(src/dos)
 add_subdirectory(src/unix)
 add_subdirectory(src/linux)
-
+add_subdirectory(src/win32)
 
