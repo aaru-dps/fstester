@@ -29,18 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include <direct.h>
-#include <dos.h>
-#include <io.h>
-#include <malloc.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../include/consts.h"
 #include "../include/defs.h"
-#include "../include/dosos2.h"
-#include "dos.h"
 
 void Links(const char* path)
 { /* Do nothing, not supported by target operating system */

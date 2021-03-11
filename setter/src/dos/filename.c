@@ -29,13 +29,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include <direct.h>
 #include <dos.h>
-#include <i86.h>
-#include <io.h>
-#include <malloc.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #if defined(__WATCOM__)

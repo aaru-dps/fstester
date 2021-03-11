@@ -31,7 +31,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <direct.h>
 #include <dos.h>
-#include <i86.h>
 #include <io.h>
 #include <malloc.h>
 #include <stdio.h>
@@ -39,9 +38,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #if defined(__WATCOM__)
-#include <direct.h>
-#elif defined(__DJGPP__)
-#include <unistd.h>
+#include <i86.h>
 #endif
 
 #include "../include/consts.h"
