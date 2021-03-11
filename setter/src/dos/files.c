@@ -45,7 +45,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void MillionFiles(const char* path)
 {
     char          driveNo = path[0] - '@';
-    int           rc      = 0;
+    unsigned int           rc;
     char          filename[9];
     unsigned long pos = 0;
     int           handle;
@@ -64,7 +64,7 @@ void MillionFiles(const char* path)
         return;
     }
 
-    rc = chdir("MILLION");
+    chdir("MILLION");
 
     printf("Creating lots of files.\n");
 

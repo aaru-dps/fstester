@@ -43,20 +43,20 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     char              driveNo = path[0] - '@';
     struct diskfree_t oldFreeSpace;
     struct diskfree_ex_t   freeSpace;
-    unsigned int ret;
+    unsigned int           rc;
 
     memset(&oldFreeSpace, 0, sizeof(struct diskfree_t));
     memset(&freeSpace, 0, sizeof(struct diskfree_ex_t));
 
     if(driveNo > 32) driveNo -= 32;
 
-    ret = _dos_getdiskfree_ex(driveNo, &freeSpace);
+    rc = _dos_getdiskfree_ex(driveNo, &freeSpace);
 
-    if(ret)
+    if(rc)
     {
         if(errno == ENOSYS)
         {
-          ret = _dos_getdiskfree(driveNo, &oldFreeSpace);
+            rc                          = _dos_getdiskfree(driveNo, &oldFreeSpace);
           freeSpace.sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
           freeSpace.freeClusters      = oldFreeSpace.avail_clusters;
           freeSpace.bytesPerSector    = oldFreeSpace.bytes_per_sector;
@@ -69,7 +69,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         }
     }
 
-    if(ret == 0)
+    if(rc == 0)
     {
         printf("\tBytes per sector: %lu\n", freeSpace.bytesPerSector);
         printf("\tSectors per cluster: %lu (%lu bytes)\n",

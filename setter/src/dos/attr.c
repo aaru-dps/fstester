@@ -47,7 +47,8 @@ void FileAttributes(const char* path)
 {
     char     driveNo = path[0] - '@';
     unsigned total, actionTaken;
-    int      rc, wRc, cRc, handle;
+    unsigned int      rc, wRc, cRc;
+    int handle;
     int i;
 
     if(driveNo > 32) driveNo -= 32;

@@ -45,9 +45,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 void DeleteFiles(const char* path)
 {
     char     driveNo = path[0] - '@';
-    int      rc      = 0;
+    unsigned int      rc;
     char     filename[9];
-    short    pos = 0;
+    short    pos;
     unsigned total;
     int      handle;
 
@@ -64,7 +64,7 @@ void DeleteFiles(const char* path)
         return;
     }
 
-    rc = chdir("DELETED");
+    chdir("DELETED");
 
     printf("Creating and deleting files.\n");
 

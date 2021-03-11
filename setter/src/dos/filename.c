@@ -46,7 +46,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void Filenames(const char* path)
 {
     char     driveNo = path[0] - '@';
-    int      rc = 0, wRc = 0, cRc = 0;
+    unsigned int      rc, wRc = 0, cRc = 0;
     unsigned actionTaken, total;
     int      handle;
     char     message[300];
@@ -65,7 +65,7 @@ void Filenames(const char* path)
         return;
     }
 
-    rc = chdir("FILENAME");
+    chdir("FILENAME");
 
     printf("Creating files with different filenames.\n");
 

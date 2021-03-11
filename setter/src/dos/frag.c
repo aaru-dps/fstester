@@ -47,14 +47,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
-    size_t         halfCluster             = clusterSize / 2;
-    size_t         quarterCluster          = clusterSize / 4;
-    size_t         twoCluster              = clusterSize * 2;
-    size_t         threeQuartersCluster    = halfCluster + quarterCluster;
-    size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+    unsigned int         halfCluster             = clusterSize / 2;
+  unsigned int         quarterCluster          = clusterSize / 4;
+  unsigned int         twoCluster              = clusterSize * 2;
+  unsigned int         threeQuartersCluster    = halfCluster + quarterCluster;
+  unsigned int         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
     char           driveNo = path[0] - '@';
-    int            rc = 0, wRc = 0, cRc = 0;
+    unsigned int            rc, wRc = 0, cRc = 0;
     unsigned       total, actionTaken = 0;
     int            handle;
     long           i;
@@ -72,7 +72,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         return;
     }
 
-    rc = chdir("FRAGS");
+    chdir("FRAGS");
 
     rc = _dos_creatnew("HALFCLST", _A_NORMAL, &handle);
     if(!rc)
@@ -221,7 +221,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO1\".\n");
-    rc = unlink("TWO1");
+    unlink("TWO1");
     printf("\tDeleting \"TWO3\".\n");
     rc = unlink("TWO3");
 

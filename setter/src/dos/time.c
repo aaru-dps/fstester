@@ -47,7 +47,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void Timestamps(const char* path)
 {
     char           driveNo = path[0] - '@';
-    int            rc = 0, wRc = 0, cRc = 0, tRc = 0;
+    unsigned int            rc, wRc = 0, cRc = 0, tRc = 0;
     unsigned       actionTaken, total;
     int            handle;
     char           message[300];
