@@ -29,79 +29,61 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include <direct.h>
 #include <dos.h>
 #include <io.h>
-#include <malloc.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
-#if defined(__WATCOM__)
-#include <i86.h>
-#endif
-
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "../include/dosos2.h"
 #include "dos.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
-    union REGS        regs;
-    struct SREGS      sregs;
-    char              drivePath[4];
     char              driveNo = path[0] - '@';
     struct diskfree_t oldFreeSpace;
-    Fat32FreeSpace*   freeSpace = malloc(sizeof(Fat32FreeSpace));
+    struct diskfree_ex_t   freeSpace;
+    unsigned int ret;
 
-    memset(freeSpace, 0, sizeof(Fat32FreeSpace));
+    memset(&oldFreeSpace, 0, sizeof(struct diskfree_t));
+    memset(&freeSpace, 0, sizeof(struct diskfree_ex_t));
 
     if(driveNo > 32) driveNo -= 32;
 
-    drivePath[0] = path[0];
-    drivePath[1] = ':';
-    drivePath[2] = '\\';
-    drivePath[3] = 0;
+    ret = _dos_getdiskfree_ex(driveNo, &freeSpace);
 
-    regs.w.ax = 0x7303;
-    sregs.ds  = FP_SEG(drivePath);
-    regs.w.dx = FP_OFF(drivePath);
-    sregs.es  = FP_SEG(freeSpace);
-    regs.w.di = FP_OFF(freeSpace);
-    regs.w.cx = sizeof(Fat32FreeSpace);
-
-    int86x(0x21, &regs, &regs, &sregs);
-
-    if(regs.h.al == 0 && !regs.w.cflag)
+    if(ret)
     {
-        _dos_getdiskfree(driveNo, &oldFreeSpace);
-        freeSpace->sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
-        freeSpace->freeClusters      = oldFreeSpace.avail_clusters;
-        freeSpace->bytesPerSector    = oldFreeSpace.bytes_per_sector;
-        freeSpace->totalClusters     = oldFreeSpace.total_clusters;
-    }
-    else if(regs.w.cflag)
-    {
-        printf("Error %d requesting volume information.\n", regs.w.ax);
-        free(freeSpace);
-        return;
+        if(errno == ENOSYS)
+        {
+          ret = _dos_getdiskfree(driveNo, &oldFreeSpace);
+          freeSpace.sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
+          freeSpace.freeClusters      = oldFreeSpace.avail_clusters;
+          freeSpace.bytesPerSector    = oldFreeSpace.bytes_per_sector;
+          freeSpace.totalClusters     = oldFreeSpace.total_clusters;
+        }
+        else
+        {
+          printf("Error %d requesting volume information.\n", _doserrno);
+          return;
+        }
     }
 
-    if(!regs.w.cflag)
+    if(ret == 0)
     {
-        printf("\tBytes per sector: %lu\n", freeSpace->bytesPerSector);
+        printf("\tBytes per sector: %lu\n", freeSpace.bytesPerSector);
         printf("\tSectors per cluster: %lu (%lu bytes)\n",
-               freeSpace->sectorsPerCluster,
-               freeSpace->sectorsPerCluster * freeSpace->bytesPerSector);
+               freeSpace.sectorsPerCluster,
+               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector);
         printf("\tClusters: %lu (%lu bytes)\n",
-               freeSpace->totalClusters,
-               freeSpace->sectorsPerCluster * freeSpace->bytesPerSector * freeSpace->totalClusters);
+               freeSpace.totalClusters,
+               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.totalClusters);
         printf("\tFree clusters: %lu (%lu bytes)\n",
-               freeSpace->freeClusters,
-               freeSpace->sectorsPerCluster * freeSpace->bytesPerSector * freeSpace->freeClusters);
+               freeSpace.freeClusters,
+               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.freeClusters);
 
-        *clusterSize = freeSpace->sectorsPerCluster * freeSpace->bytesPerSector;
+        *clusterSize = freeSpace.sectorsPerCluster * freeSpace.bytesPerSector;
     }
 }
 

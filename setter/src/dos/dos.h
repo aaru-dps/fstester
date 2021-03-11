@@ -42,7 +42,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #pragma pack(__push, 1)
 
-typedef struct _Fat32FreeSpace
+typedef struct diskfree_ex_t
 {
     unsigned short size;
     unsigned short version;
@@ -55,7 +55,9 @@ typedef struct _Fat32FreeSpace
     unsigned long  freeUnits;
     unsigned long  totalUnits;
     unsigned char  reserved[8];
-} Fat32FreeSpace;
+};
+
+unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t *diskspace);
 
 #pragma pack(__pop)
 
