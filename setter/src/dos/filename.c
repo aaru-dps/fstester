@@ -45,12 +45,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Filenames(const char* path)
 {
-    char     driveNo = path[0] - '@';
-    unsigned int      rc, wRc = 0, cRc = 0;
-    unsigned actionTaken, total;
-    int      handle;
-    char     message[300];
-    int      pos;
+    char         driveNo = path[0] - '@';
+    unsigned int rc, wRc = 0, cRc = 0;
+    unsigned     actionTaken, total;
+    int          handle;
+    char         message[300];
+    int          pos;
 
     if(driveNo > 32) driveNo -= 32;
 

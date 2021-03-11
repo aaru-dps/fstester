@@ -30,20 +30,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 #if defined(__DOS__) || defined(MSDOS)
 
 #include <dos.h>
+#include <errno.h>
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 
 #include "../include/defs.h"
 #include "dos.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
-    char              driveNo = path[0] - '@';
-    struct diskfree_t oldFreeSpace;
-    struct diskfree_ex_t   freeSpace;
-    unsigned int           rc;
+    char                 driveNo = path[0] - '@';
+    struct diskfree_t    oldFreeSpace;
+    struct diskfree_ex_t freeSpace;
+    unsigned int         rc;
 
     memset(&oldFreeSpace, 0, sizeof(struct diskfree_t));
     memset(&freeSpace, 0, sizeof(struct diskfree_ex_t));
@@ -57,15 +57,15 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         if(errno == ENOSYS)
         {
             rc                          = _dos_getdiskfree(driveNo, &oldFreeSpace);
-          freeSpace.sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
-          freeSpace.freeClusters      = oldFreeSpace.avail_clusters;
-          freeSpace.bytesPerSector    = oldFreeSpace.bytes_per_sector;
-          freeSpace.totalClusters     = oldFreeSpace.total_clusters;
+            freeSpace.sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
+            freeSpace.freeClusters      = oldFreeSpace.avail_clusters;
+            freeSpace.bytesPerSector    = oldFreeSpace.bytes_per_sector;
+            freeSpace.totalClusters     = oldFreeSpace.total_clusters;
         }
         else
         {
-          printf("Error %d requesting volume information.\n", _doserrno);
-          return;
+            printf("Error %d requesting volume information.\n", _doserrno);
+            return;
         }
     }
 

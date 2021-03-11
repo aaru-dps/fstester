@@ -44,12 +44,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void DeleteFiles(const char* path)
 {
-    char     driveNo = path[0] - '@';
-    unsigned int      rc;
-    char     filename[9];
-    short    pos;
-    unsigned total;
-    int      handle;
+    char         driveNo = path[0] - '@';
+    unsigned int rc;
+    char         filename[9];
+    short        pos;
+    unsigned     total;
+    int          handle;
 
     if(driveNo > 32) driveNo -= 32;
 

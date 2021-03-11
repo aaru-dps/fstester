@@ -44,11 +44,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void DirectoryDepth(const char* path)
 {
-    char     driveNo = path[0] - '@';
-    unsigned int      rc      ;
-    unsigned total;
-    char     filename[9];
-    int     pos = 2;
+    char         driveNo = path[0] - '@';
+    unsigned int rc;
+    unsigned     total;
+    char         filename[9];
+    int          pos = 2;
 
     if(driveNo > 32) driveNo -= 32;
 

@@ -47,14 +47,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
-    unsigned int         halfCluster             = clusterSize / 2;
-  unsigned int         quarterCluster          = clusterSize / 4;
-  unsigned int         twoCluster              = clusterSize * 2;
-  unsigned int         threeQuartersCluster    = halfCluster + quarterCluster;
-  unsigned int         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+    unsigned int   halfCluster             = clusterSize / 2;
+    unsigned int   quarterCluster          = clusterSize / 4;
+    unsigned int   twoCluster              = clusterSize * 2;
+    unsigned int   threeQuartersCluster    = halfCluster + quarterCluster;
+    unsigned int   twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
     char           driveNo = path[0] - '@';
-    unsigned int            rc, wRc = 0, cRc = 0;
+    unsigned int   rc, wRc = 0, cRc = 0;
     unsigned       total, actionTaken = 0;
     int            handle;
     long           i;

@@ -61,7 +61,7 @@ typedef struct diskfree_ex_t
     unsigned char  reserved[8];
 } diskfree_ex;
 
-unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t *diskspace);
+unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace);
 
 #if defined(__WATCOM__)
 #pragma pack(__pop)

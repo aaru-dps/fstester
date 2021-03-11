@@ -45,11 +45,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void FileAttributes(const char* path)
 {
-    char     driveNo = path[0] - '@';
-    unsigned total, actionTaken;
-    unsigned int      rc, wRc, cRc;
-    int handle;
-    int i;
+    char         driveNo = path[0] - '@';
+    unsigned     total, actionTaken;
+    unsigned int rc, wRc, cRc;
+    int          handle;
+    int          i;
 
     if(driveNo > 32) driveNo -= 32;
 
@@ -74,12 +74,17 @@ void FileAttributes(const char* path)
 
         if(!rc)
         {
-          wRc = _dos_write(handle, (void*)dos_attrs[i].contents, strlen(dos_attrs[i].contents), &actionTaken);
-          cRc = _dos_close(handle);
-          rc  = _dos_setfileattr(dos_attrs[i].filename, dos_attrs[i].attr);
+            wRc = _dos_write(handle, (void*)dos_attrs[i].contents, strlen(dos_attrs[i].contents), &actionTaken);
+            cRc = _dos_close(handle);
+            rc  = _dos_setfileattr(dos_attrs[i].filename, dos_attrs[i].attr);
         }
 
-        printf("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", dos_attrs[i].description, dos_attrs[i].filename, rc, wRc, cRc);
+        printf("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+               dos_attrs[i].description,
+               dos_attrs[i].filename,
+               rc,
+               wRc,
+               cRc);
     }
 }
 

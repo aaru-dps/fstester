@@ -44,12 +44,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void MillionFiles(const char* path)
 {
-    char          driveNo = path[0] - '@';
-    unsigned int           rc;
-    char          filename[9];
+    char         driveNo = path[0] - '@';
+    unsigned int rc;
+    char         filename[9];
     unsigned int pos;
-    int           handle;
-    unsigned      total;
+    int          handle;
+    unsigned     total;
 
     if(driveNo > 32) driveNo -= 32;
 

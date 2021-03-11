@@ -46,13 +46,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Timestamps(const char* path)
 {
-    char           driveNo = path[0] - '@';
-    unsigned int            rc, wRc = 0, cRc = 0, tRc = 0;
-    unsigned       actionTaken, total;
-    int            handle;
-    char           message[300];
-    union REGS     regs;
-    int i;
+    char         driveNo = path[0] - '@';
+    unsigned int rc, wRc = 0, cRc = 0, tRc = 0;
+    unsigned     actionTaken, total;
+    int          handle;
+    char         message[300];
+    union REGS   regs;
+    int          i;
 
     if(driveNo > 32) driveNo -= 32;
 
@@ -99,7 +99,8 @@ void Timestamps(const char* path)
             cRc = _dos_close(handle);
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", dos_times[i].filename, rc, wRc, cRc, tRc);
+        printf(
+            "\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", dos_times[i].filename, rc, wRc, cRc, tRc);
     }
 }
 
