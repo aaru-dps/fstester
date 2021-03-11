@@ -40,7 +40,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "os2_16.h"
 
-#include "dosos2.h"
 #include "include/consts.h"
 #include "include/defs.h"
 

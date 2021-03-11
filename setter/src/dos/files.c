@@ -40,7 +40,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
-#include "../include/dosos2.h"
 #include "dos.h"
 
 void MillionFiles(const char* path)

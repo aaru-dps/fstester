@@ -29,12 +29,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include <direct.h>
 #include <dos.h>
-#include <io.h>
-#include <malloc.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #if defined(__WATCOM__)
@@ -45,7 +41,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
-#include "../include/dosos2.h"
 #include "dos.h"
 
 void DirectoryDepth(const char* path)

@@ -36,7 +36,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <errno.h>
 
 #include "../include/defs.h"
-#include "../include/dosos2.h"
 #include "dos.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
