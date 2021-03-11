@@ -41,6 +41,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "win32.h"
+
+#include "time.h"
+
 #include "../include/defs.h"
 
 void Timestamps(const char* path)
@@ -50,12 +53,10 @@ void Timestamps(const char* path)
     DWORD    error;
     LPSTR    lpRootPathName;
     size_t   pathSize = strlen(path);
-    FILETIME ftCreationTime;
-    FILETIME ftLastAccessTime;
-    FILETIME ftLastWriteTime;
     HANDLE   h;
     DWORD    rc, wRc, cRc, tRc;
     DWORD    dwNumberOfBytesWritten;
+    int      i;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -99,293 +100,46 @@ void Timestamps(const char* path)
 
     printf("Creating timestamped files.\n");
 
-    h   = CreateFileA("MAXCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
+    for(i = 0; i < KNOWN_WIN32_TIMESTAMPS; i++)
     {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "creation");
-        ftCreationTime.dwHighDateTime = MAXTIMESTAMP;
-        ftCreationTime.dwLowDateTime  = MAXTIMESTAMP;
+        h = CreateFileA(
+            win32_timestamps[i].filename, dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+        tRc = 0;
 
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
+        if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
+        else
+        {
+            memset(message, 0, 300);
+            sprintf(message, DATETIME_FORMAT, win32_timestamps[i].message, win32_timestamps[i].type);
 
-        ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) tRc = GetLastError();
+            ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
+            if(!ret) wRc = GetLastError();
 
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
+            if(strcmp(win32_timestamps[i].type, "creation") == 0)
+                ret = SetFileTime(h, &win32_timestamps[i].ftCreationTime, NULL, NULL);
+            else if(strcmp(win32_timestamps[i].type, "access") == 0)
+                ret = SetFileTime(h, NULL, &win32_timestamps[i].ftLastAccessTime, NULL);
+            else if(strcmp(win32_timestamps[i].type, "modification") == 0)
+                ret = SetFileTime(h, NULL, NULL, &win32_timestamps[i].ftLastWriteTime);
+            else
+                tRc = -1;
+
+            if(!ret) tRc = GetLastError();
+
+            ret = CloseHandle(h);
+            if(!ret) cRc = GetLastError();
+        }
+
+        printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n",
+               win32_timestamps[i].filename,
+               rc,
+               wRc,
+               cRc,
+               tRc);
     }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXCTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("MAXATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "access");
-        ftLastAccessTime.dwHighDateTime = MAXTIMESTAMP;
-        ftLastAccessTime.dwLowDateTime  = MAXTIMESTAMP;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXATIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("MAXMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "modification");
-        ftLastWriteTime.dwHighDateTime = MAXTIMESTAMP;
-        ftLastWriteTime.dwLowDateTime  = MAXTIMESTAMP;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MAXMTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("MINCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MINDATETIME, "creation");
-        ftCreationTime.dwHighDateTime = MINTIMESTAMP;
-        ftCreationTime.dwLowDateTime  = MINTIMESTAMP;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINCTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("MINATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MINDATETIME, "access");
-        ftLastAccessTime.dwHighDateTime = MINTIMESTAMP;
-        ftLastAccessTime.dwLowDateTime  = MINTIMESTAMP;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINATIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("MINMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MINDATETIME, "modification");
-        ftLastWriteTime.dwHighDateTime = MINTIMESTAMP;
-        ftLastWriteTime.dwLowDateTime  = MINTIMESTAMP;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "MINMTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y1KCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "creation");
-        ftCreationTime.dwHighDateTime = TIMESTAMP_HI;
-        ftCreationTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KCTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y1KATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "access");
-        ftLastAccessTime.dwHighDateTime = TIMESTAMP_HI;
-        ftLastAccessTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KATIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y1KMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
-        ftLastWriteTime.dwHighDateTime = TIMESTAMP_HI;
-        ftLastWriteTime.dwLowDateTime  = Y1KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y1KMTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y2KCTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "creation");
-        ftCreationTime.dwHighDateTime = TIMESTAMP_HI;
-        ftCreationTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, &ftCreationTime, NULL, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KCTIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y2KATIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "access");
-        ftLastAccessTime.dwHighDateTime = TIMESTAMP_HI;
-        ftLastAccessTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, &ftLastAccessTime, NULL);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KATIME", rc, wRc, cRc, tRc);
-
-    h   = CreateFileA("Y2KMTIME", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
-        ftLastWriteTime.dwHighDateTime = TIMESTAMP_HI;
-        ftLastWriteTime.dwLowDateTime  = Y2KTIMESTAMP_LO;
-
-        ret = WriteFile(h, message, strlen(message), &dwNumberOfBytesWritten, NULL);
-        if(!ret) wRc = GetLastError();
-
-        ret = SetFileTime(h, NULL, NULL, &ftLastWriteTime);
-        if(!ret) tRc = GetLastError();
-
-        ret = CloseHandle(h);
-        if(!ret) cRc = GetLastError();
-    }
-    printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n", "Y2KMTIME", rc, wRc, cRc, tRc);
 }
 
 #endif
