@@ -87,4 +87,6 @@ struct dosuname_version_t
     int             softice_minor;
 };
 
+void getdosver(struct dosuname_version_t* version);
+
 #endif // DOS_DOSUNAME_H_

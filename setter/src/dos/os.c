@@ -29,7 +29,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#include <dos.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,46 +39,73 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 #include "dos.h"
+#include "dosuname.h"
 
 void GetOsInfo()
 {
-    union REGS    regs;
-    unsigned char major, minor;
+    struct dosuname_version_t dosuname_version;
 
-    regs.w.ax = 0x3306;
+    memset(&dosuname_version, 0, sizeof(struct dosuname_version_t));
 
-    int86(0x21, &regs, &regs);
+    getdosver(&dosuname_version);
 
-    if(regs.h.al == 0xFF || (regs.w.ax == 0x1 && regs.w.cflag))
+    switch(dosuname_version.flavor)
     {
-        memset(&regs, 0, sizeof(regs));
-        regs.w.ax = 0x3000;
-        int86(0x21, &regs, &regs);
-        major = regs.h.al;
-        minor = regs.h.ah;
+        case DOS_FLAVOR_UNKNOWN:
+            printf("OS information:\n");
+            printf("\tRunning under DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_MSDOS:
+            printf("OS information:\n");
+            printf("\tRunning under MS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_PCDOS:
+            printf("OS information:\n");
+            printf("\tRunning under PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_DRDOS:
+            printf("OS information:\n");
+            printf("\tRunning under DR-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_FREEDOS:
+            printf("OS information:\n");
+            printf("\tRunning under FreeDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_WIN95:
+        case DOS_FLAVOR_WIN9X:
+        case DOS_FLAVOR_WINME:
+            printf("Will not run under Windows 9x. Exiting...\n");
+            exit(1);
+            break;
+        case DOS_FLAVOR_WINNT:
+            printf("Will not run under Windows NT. Exiting...\n");
+            exit(1);
+            break;
+        case DOS_FLAVOR_OS2:
+            printf("Will not run under OS/2. Exiting...\n");
+            exit(1);
+            break;
+        case DOS_FLAVOR_PTSDOS:
+            printf("OS information:\n");
+            printf("\tRunning under PTS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_RXDOS:
+            printf("OS information:\n");
+            printf("\tRunning under RxDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_CONCURRENTDOS:
+            printf("OS information:\n");
+            printf("\tRunning under Concurrent DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_NOVELLDOS:
+            printf("OS information:\n");
+            printf("\tRunning under Novell DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
+        case DOS_FLAVOR_MSPCDOS:
+            printf("OS information:\n");
+            printf("\tRunning under MS-DOS or PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            break;
     }
-    else
-    {
-        major = regs.h.bl;
-        minor = regs.h.bh;
-    }
-
-    if(major == 10 || major == 20)
-    {
-        printf("Will not run under OS/2. Exiting...\n");
-        exit(1);
-    }
-
-    if(major == 5 && minor == 50)
-    {
-        printf("Will not run under Windows NT. Exiting...\n");
-        exit(1);
-    }
-
-    if(major == 0) major = 1;
-
-    printf("OS information:\n");
-    printf("\tRunning under DOS %d.%d\n", major, minor);
 }
 
 #endif
