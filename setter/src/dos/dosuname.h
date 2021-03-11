@@ -3,7 +3,7 @@
  ------------------------------------------------------------------------
 
         Filename   : dosuname.h
-        Version    : 0.07
+        Version    : 0.09
         Author(s)  : Natalia Portillo
 
         Component : UNAME for DOS
@@ -46,25 +46,45 @@
 #ifndef DOS_DOSUNAME_H_
 #define DOS_DOSUNAME_H_
 
+typedef enum
+{
+    DOS_FLAVOR_UNKNOWN,
+    DOS_FLAVOR_MSDOS,
+    DOS_FLAVOR_PCDOS,
+    DOS_FLAVOR_DRDOS,
+    DOS_FLAVOR_FREEDOS,
+    DOS_FLAVOR_WIN95,
+    DOS_FLAVOR_WINNT,
+    DOS_FLAVOR_OS2,
+    DOS_FLAVOR_PTSDOS,
+    DOS_FLAVOR_RXDOS,
+    DOS_FLAVOR_CONCURRENTDOS,
+    DOS_FLAVOR_NOVELLDOS,
+    DOS_FLAVOR_MSPCDOS,
+    DOS_FLAVOR_WIN9X,
+    DOS_FLAVOR_WINME,
+
+} dosuname_flavor;
+
 struct dosuname_version_t
 {
-    int flavor;
-    int major;
-    int minor;
-    int simulated_major;
-    int simulated_minor;
-    int dos_oem;
-    int desqview_major;
-    int desqview_minor;
-    int _4dos_major;
-    int _4dos_minor;
-    int ndos_major;
-    int ndos_minor;
-    int windows_major;
-    int windows_minor;
-    int windows_mode;
-    int softice_major;
-    int softice_minor;
+    dosuname_flavor flavor;
+    int             major;
+    int             minor;
+    int             simulated_major;
+    int             simulated_minor;
+    int             dos_oem;
+    int             desqview_major;
+    int             desqview_minor;
+    int             _4dos_major;
+    int             _4dos_minor;
+    int             ndos_major;
+    int             ndos_minor;
+    int             windows_major;
+    int             windows_minor;
+    int             windows_mode;
+    int             softice_major;
+    int             softice_minor;
 };
 
 #endif // DOS_DOSUNAME_H_

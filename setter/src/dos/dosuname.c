@@ -3,7 +3,7 @@
  ------------------------------------------------------------------------
 
         Filename   : dosuname.c
-        Version    : 0.08
+        Version    : 0.09
         Author(s)  : Natalia Portillo
 
         Component : UNAME for DOS
@@ -50,6 +50,7 @@
               easily detected, without exact knowledge of the versions by
               this program.
         0.08: Changed function parameters to use a struct.
+        0.09: Use an enumeration for DOS flavor.
 
  --[ How to compile ]----------------------------------------------------
 
@@ -91,7 +92,7 @@ void getdosver(struct dosuname_version_t* version)
     union REGS regs;
     int        dos_temp, nt_flag;
     nt_flag         = 0;
-    version->flavor = 0;
+    version->flavor = DOS_FLAVOR_UNKNOWN;
 
     regs.x.ax = 0x3306;        /* Set function 3306h */
     int86(0x21, &regs, &regs); /* Call INT 21h */
@@ -130,20 +131,20 @@ void getdosver(struct dosuname_version_t* version)
     }
 
     /* Set DOS to DOS type */
-    if(dos_temp == 0 && version->major <= 3) { version->flavor = 12; }
-    if(dos_temp == 0 && version->major >= 4) { version->flavor = 2; }
-    if(dos_temp == 0 && version->major >= 10) { version->flavor = 7; }
-    if(dos_temp == 0xff && version->major <= 6) { version->flavor = 1; }
+    if(dos_temp == 0 && version->major <= 3) { version->flavor = DOS_FLAVOR_MSPCDOS; }
+    if(dos_temp == 0 && version->major >= 4) { version->flavor = DOS_FLAVOR_PCDOS; }
+    if(dos_temp == 0 && version->major >= 10) { version->flavor = DOS_FLAVOR_OS2; }
+    if(dos_temp == 0xff && version->major <= 6) { version->flavor = DOS_FLAVOR_MSDOS; }
     if(dos_temp == 0xff && version->major == 7)
     {
-        if(version->minor == 0) { version->flavor = 5; }
-        if(version->minor == 10) { version->flavor = 13; }
+        if(version->minor == 0) { version->flavor = DOS_FLAVOR_WIN95; }
+        if(version->minor == 10) { version->flavor = DOS_FLAVOR_WIN9X; }
     }
-    if(dos_temp == 0xff && version->major == 8) { version->flavor = 14; }
-    if(dos_temp == 253) { version->flavor = 4; }
-    if(dos_temp == 0xff && nt_flag == 1) { version->flavor = 6; }
-    if(dos_temp == 0x66) { version->flavor = 8; }
-    if(dos_temp == 0x5E) { version->flavor = 9; }
+    if(dos_temp == 0xff && version->major == 8) { version->flavor = DOS_FLAVOR_WINME; }
+    if(dos_temp == 253) { version->flavor = DOS_FLAVOR_FREEDOS; }
+    if(dos_temp == 0xff && nt_flag == 1) { version->flavor = DOS_FLAVOR_WINNT; }
+    if(dos_temp == 0x66) { version->flavor = DOS_FLAVOR_PTSDOS; }
+    if(dos_temp == 0x5E) { version->flavor = DOS_FLAVOR_RXDOS; }
 
     /* Check for Concurrent DOS versions */
     regs.x.ax = 0x4451;        /* Set function 4451h */
@@ -152,43 +153,43 @@ void getdosver(struct dosuname_version_t* version)
     {
         version->major  = 3;
         version->minor  = 2;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     if(regs.h.al == 0x41)
     {
         version->major  = 4;
         version->minor  = 1;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     if(regs.h.al == 0x50)
     {
         version->major  = 5;
         version->minor  = 0;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     if(regs.h.al == 0x60)
     {
         version->major  = 6;
         version->minor  = 0;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     if(regs.h.al == 0x62)
     {
         version->major  = 6;
         version->minor  = 2;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     if(regs.h.al == 0x66)
     {
         version->major  = 5;
         version->minor  = 1;
-        version->flavor = 6;
+        version->flavor = DOS_FLAVOR_WINNT;
     }
     if(regs.h.al == 0x67)
     {
         version->major  = 5;
         version->minor  = 1;
-        version->flavor = 10;
+        version->flavor = DOS_FLAVOR_CONCURRENTDOS;
     }
     /* End of check for Concurrent DOS versions */
 
@@ -199,55 +200,55 @@ void getdosver(struct dosuname_version_t* version)
     {
         version->major  = 1;
         version->minor  = 2;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x60)
     {
         version->major  = 2;
         version->minor  = 0;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x63)
     {
         version->major  = 3;
         version->minor  = 41;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x64)
     {
         version->major  = 3;
         version->minor  = 42;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x65)
     {
         version->major  = 5;
         version->minor  = 0;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x67)
     {
         version->major  = 6;
         version->minor  = 0;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x71)
     {
         version->major  = 6;
         version->minor  = 0;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     if(regs.h.al == 0x72)
     {
         version->major  = 7;
         version->minor  = 0;
-        version->flavor = 11;
+        version->flavor = DOS_FLAVOR_NOVELLDOS;
     }
     if(regs.h.al == 0x73)
     {
         version->major  = 7;
         version->minor  = 0;
-        version->flavor = 3;
+        version->flavor = DOS_FLAVOR_DRDOS;
     }
     /* End of check for DR-DOS_FLAVOR versions */
     version->dos_oem        = dos_temp;
