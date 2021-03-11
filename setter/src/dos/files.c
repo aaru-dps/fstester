@@ -63,7 +63,7 @@ void MillionFiles(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("MILLION");
+    rc = __dos_mkdir("MILLION");
 
     if(rc)
     {

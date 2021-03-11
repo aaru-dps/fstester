@@ -62,7 +62,7 @@ void DirectoryDepth(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("DEPTH");
+    rc = __dos_mkdir("DEPTH");
 
     if(rc)
     {
@@ -78,7 +78,7 @@ void DirectoryDepth(const char* path)
     {
         memset(&filename, 0, 9);
         sprintf(&filename, "%08d", pos);
-        rc = mkdir(filename);
+        rc = __dos_mkdir(filename);
 
         if(!rc) rc = chdir(filename);
 

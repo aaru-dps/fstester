@@ -67,7 +67,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("FRAGS");
+    rc = __dos_mkdir("FRAGS");
 
     if(rc)
     {

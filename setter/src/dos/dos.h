@@ -32,6 +32,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_DOS_H
 #define AARU_FSTESTER_SETTER_DOS_H
 
+#if defined(__WATCOM__)
+#include <direct.h>
+#define __dos_mkdir(a) mkdir(a)
+#elif defined(__DJGPP__)
+#include <sys/stat.h>
+#define __dos_mkdir(path) mkdir(path, 0)
+#endif
+
 #pragma pack(__push, 1)
 
 typedef struct _Fat32FreeSpace

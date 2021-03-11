@@ -60,7 +60,7 @@ void FileAttributes(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("ATTRS");
+    rc = __dos_mkdir("ATTRS");
 
     if(rc)
     {

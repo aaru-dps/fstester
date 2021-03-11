@@ -63,7 +63,7 @@ void Filenames(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("FILENAME");
+    rc = __dos_mkdir("FILENAME");
 
     if(rc)
     {

@@ -70,7 +70,7 @@ void Timestamps(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("TIMES");
+    rc = __dos_mkdir("TIMES");
 
     if(rc)
     {

@@ -67,7 +67,7 @@ void DeleteFiles(const char* path)
     _dos_setdrive(driveNo, &total);
     chdir("\\");
 
-    rc = mkdir("DELETED");
+    rc = __dos_mkdir("DELETED");
 
     if(rc)
     {
