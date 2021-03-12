@@ -38,27 +38,35 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2.h"
 #include "include/consts.h"
 #include "include/defs.h"
+#include "os2.h"
 
 #define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"
 
 void Timestamps(const char* path)
 {
     char       drivePath[4];
-    USHORT     rc = 0, wRc = 0, cRc = 0, tRc = 0;
-    USHORT     actionTaken = 0;
+    APIRET     rc = 0, wRc = 0, cRc = 0, tRc = 0;
+    ACTION_RET actionTaken = 0;
     HFILE      handle;
     char       message[300];
+
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    USHORT     status_size = sizeof(FILESTATUS);
     FILESTATUS status;
+#else // 32 bit
+    ULONG       status_size = sizeof(FILESTATUS3);
+    FILESTATUS3 status;
+#endif
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
     drivePath[2] = '\\';
     drivePath[3] = 0;
 
-    rc = DosChDir(drivePath, 0);
+    rc = __os2_chdir(drivePath);
 
     if(rc)
     {
@@ -66,7 +74,7 @@ void Timestamps(const char* path)
         return;
     }
 
-    rc = DosMkDir("TIMES", 0);
+    rc = __os2_mkdir("TIMES", 0);
 
     if(rc)
     {
@@ -74,7 +82,7 @@ void Timestamps(const char* path)
         return;
     }
 
-    rc = DosChDir("TIMES", 0);
+    rc = __os2_chdir("TIMES");
 
     printf("Creating timestamped files.\n");
 
@@ -89,7 +97,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 127;
         status.fdateCreation.month   = 12;
         status.fdateCreation.day     = 31;
@@ -108,7 +116,7 @@ void Timestamps(const char* path)
                 "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -125,7 +133,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 0;
         status.fdateCreation.month   = 1;
         status.fdateCreation.day     = 1;
@@ -144,7 +152,7 @@ void Timestamps(const char* path)
                 "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -161,7 +169,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 1999 - 1980;
         status.fdateCreation.month   = 12;
         status.fdateCreation.day     = 31;
@@ -180,7 +188,7 @@ void Timestamps(const char* path)
                 "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -197,7 +205,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 2000 - 1980;
         status.fdateCreation.month   = 1;
         status.fdateCreation.day     = 1;
@@ -216,7 +224,7 @@ void Timestamps(const char* path)
                 "creation");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -233,7 +241,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastWrite.year    = 127;
         status.fdateLastWrite.month   = 12;
         status.fdateLastWrite.day     = 31;
@@ -252,7 +260,7 @@ void Timestamps(const char* path)
                 "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -269,7 +277,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastWrite.year    = 0;
         status.fdateLastWrite.month   = 1;
         status.fdateLastWrite.day     = 1;
@@ -288,7 +296,7 @@ void Timestamps(const char* path)
                 "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -305,7 +313,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastWrite.year    = 1999 - 1980;
         status.fdateLastWrite.month   = 12;
         status.fdateLastWrite.day     = 31;
@@ -324,7 +332,7 @@ void Timestamps(const char* path)
                 "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -341,7 +349,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastWrite.year    = 2000 - 1980;
         status.fdateLastWrite.month   = 1;
         status.fdateLastWrite.day     = 1;
@@ -360,7 +368,7 @@ void Timestamps(const char* path)
                 "last written");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -377,7 +385,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastAccess.year    = 127;
         status.fdateLastAccess.month   = 12;
         status.fdateLastAccess.day     = 31;
@@ -396,7 +404,7 @@ void Timestamps(const char* path)
                 "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -413,7 +421,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastAccess.year    = 0;
         status.fdateLastAccess.month   = 1;
         status.fdateLastAccess.day     = 1;
@@ -432,7 +440,7 @@ void Timestamps(const char* path)
                 "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -449,7 +457,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastAccess.year    = 1999 - 1980;
         status.fdateLastAccess.month   = 12;
         status.fdateLastAccess.day     = 31;
@@ -468,7 +476,7 @@ void Timestamps(const char* path)
                 "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -485,7 +493,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateLastAccess.year    = 2000 - 1980;
         status.fdateLastAccess.month   = 1;
         status.fdateLastAccess.day     = 1;
@@ -504,7 +512,7 @@ void Timestamps(const char* path)
                 "last access");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -521,7 +529,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 127;
         status.fdateCreation.month   = 12;
         status.fdateCreation.day     = 31;
@@ -544,7 +552,7 @@ void Timestamps(const char* path)
                 "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -561,7 +569,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 0;
         status.fdateCreation.month   = 1;
         status.fdateCreation.day     = 1;
@@ -584,7 +592,7 @@ void Timestamps(const char* path)
                 "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -601,7 +609,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 1999 - 1980;
         status.fdateCreation.month   = 12;
         status.fdateCreation.day     = 31;
@@ -624,7 +632,7 @@ void Timestamps(const char* path)
                 "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
@@ -641,7 +649,7 @@ void Timestamps(const char* path)
 
     if(!rc)
     {
-        memset(&status, 0, sizeof(FILESTATUS));
+        memset(&status, 0, status_size);
         status.fdateCreation.year    = 2000 - 1980;
         status.fdateCreation.month   = 1;
         status.fdateCreation.day     = 1;
@@ -664,7 +672,7 @@ void Timestamps(const char* path)
                 "all");
 
         wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
-        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, sizeof(FILESTATUS));
+        tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
 
