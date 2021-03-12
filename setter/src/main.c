@@ -34,7 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "include/defs.h"
 
-#if defined(macintosh)
+#if defined(macintosh) && defined(__MWERKS__)
 #include <SIOUX.h>
 #include <console.h>
 #endif
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 {
     size_t clusterSize = 0;
 
-#if defined(macintosh)
+#if defined(macintosh) && defined(__MWERKS__)
     argc = ccommand(&argv);
 #endif
 
