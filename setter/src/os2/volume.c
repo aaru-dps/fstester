@@ -38,41 +38,64 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2.h"
 #include "include/consts.h"
 #include "include/defs.h"
+#include "os2.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
-    USHORT      rc;
+    APIRET      rc;
     BYTE        bData[64];
-    USHORT      cbData = sizeof(bData);
     PFSALLOCATE pfsAllocateBuffer;
-    USHORT      driveNo = path[0] - '@';
     char*       fsdName;
     PFSINFO     pfsInfo;
+
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    USHORT cbData  = sizeof(bData);
+    USHORT driveNo = path[0] - '@';
+#else // 32 bit
+    ULONG cbData  = sizeof(bData);
+    ULONG driveNo = path[0] - '@';
+#endif
 
     if(driveNo > 32) driveNo -= 32;
 
     *clusterSize = 0;
 
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData, 0);
+#else // 32 bit
+    rc = DosQueryFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData);
+#endif
 
     printf("Volume information:\n");
     printf("\tPath: %s\n", path);
     printf("\tDrive number: %d\n", driveNo - 1);
 
-    if(rc) { printf("Error %d requesting volume information.\n", rc); }
+    if(rc) printf("Error %d requesting volume information.\n", rc);
     else
     {
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
         fsdName = &bData[4 + (USHORT)bData[2] + 1 + 2];
+#else // 32 bit
+        fsdName = &bData[8 + (USHORT)bData[2] + 1];
+#endif
         printf("\tFSD name: %s\n", fsdName);
     }
 
     pfsAllocateBuffer = (PFSALLOCATE)malloc(sizeof(FSALLOCATE));
-    rc                = DosQFSInfo(driveNo, 1, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
 
-    if(rc) { printf("Error %d requesting volume information.\n", rc); }
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    rc = DosQFSInfo(driveNo, 1, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
+#else // 32 bit
+    rc = DosQueryFSInfo(driveNo, FSIL_ALLOC, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
+#endif
+
+    if(rc) printf("Error %d requesting volume information.\n", rc);
     else
     {
         printf("\tBytes per sector: %u\n", pfsAllocateBuffer->cbSector);
@@ -92,9 +115,15 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     free(pfsAllocateBuffer);
 
     pfsInfo = (PFSINFO)malloc(sizeof(FSINFO));
-    rc      = DosQFSInfo(driveNo, 2, (PBYTE)pfsInfo, sizeof(FSINFO));
 
-    if(rc) { printf("Error %d requesting volume information.\n", rc); }
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    rc = DosQFSInfo(driveNo, 2, (PBYTE)pfsInfo, sizeof(FSINFO));
+#else // 32 bit
+    rc = DosQueryFSInfo(driveNo, FSIL_VOLSER, (PBYTE)pfsInfo, sizeof(FSINFO));
+#endif
+
+    if(rc) printf("Error %d requesting volume information.\n", rc);
     else
     {
         printf("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
