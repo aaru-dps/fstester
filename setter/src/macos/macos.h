@@ -34,15 +34,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <MacTypes.h>
 
-const char *noAttributeText   = "This file has all flags bits clear.\r";
-const char *desktopText       = "This file is on desktop.\r";
-const char *color2Text        = "This file is colored brown.\r";
-const char *color4Text        = "This file is colored green.\r";
-const char *color6Text        = "This file is colored lilac.\r";
-const char *color8Text        = "This file is colored blue.\r";
-const char *colorAText        = "This file is colored magenta.\r";
-const char *colorCText        = "This file is colored red.\r";
-const char *colorEText        = "This file is colored orange.\r";
+// Things not included in Retro68
+#if defined(HAVE_MULTIVERSE_H)
+#include "retro68.h"
+#endif
+
+const char* noAttributeText    = "This file has all flags bits clear.\r";
+const char* desktopText        = "This file is on desktop.\r";
+const char* color2Text         = "This file is colored brown.\r";
+const char* color4Text         = "This file is colored green.\r";
+const char* color6Text         = "This file is colored lilac.\r";
+const char* color8Text         = "This file is colored blue.\r";
+const char* colorAText         = "This file is colored magenta.\r";
+const char* colorCText         = "This file is colored red.\r";
+const char* colorEText         = "This file is colored orange.\r";
 const char *requireSwitchText = "This file requires switch launch.\r";
 const char *sharedText        = "This file is shared.\r";
 const char *noInitText        = "This file contains no init.\r";
