@@ -2,12 +2,12 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : os2_32.c
+Filename       : os2_16.c
 Author(s)      : Natalia Portillo
 
 --[ Description ] -----------------------------------------------------------
 
-Contains 32-bit OS/2 code
+Contains 16-bit OS/2 code
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify
@@ -27,23 +27,10 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \
-    (defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
+#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
 
-#define INCL_DOSMISC
-#define INCL_DOSFILEMGR
-
-#include <os2.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../os2.h"
-#include "include/consts.h"
 #include "include/defs.h"
 
-void FilePermissions(const char* path)
-{ /* Do nothing, not supported by target operating system */
-}
+void FilePermissions(const char* path) { /* Do nothing, not supported by target operating system */ }
 
 #endif
