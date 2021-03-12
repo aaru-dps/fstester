@@ -34,7 +34,7 @@ if(NOT HAVE_PBXGETVOLINFO)
     add_definitions(-DNO_PBXGETVOLINFO)
 endif()
 
-set(PLATFORM_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c macos.h macos.r)
+set(PLATFORM_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c macos.h macos.r retro68.h attr.h time.h rsrcfork.h links.h)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Retro68")
     set(PROCESSOR "m68k")

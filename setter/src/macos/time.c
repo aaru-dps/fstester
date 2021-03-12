@@ -50,6 +50,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/consts.h"
 #include "../include/defs.h"
 #include "macos.h"
+#include "time.h"
 
 void Timestamps(const char* path)
 {

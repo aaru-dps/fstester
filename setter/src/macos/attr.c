@@ -49,6 +49,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "attr.h"
 #include "macos.h"
 
 void FileAttributes(const char* path)
