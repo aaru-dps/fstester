@@ -27,8 +27,7 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) && (defined(__OS2__) || defined(__os2__)) &&              \
-    !defined(__DOS__)
+#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
 
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
@@ -38,9 +37,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2.h"
 #include "include/consts.h"
 #include "include/defs.h"
+#include "os2.h"
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
@@ -51,8 +50,8 @@ void Fragmentation(const char* path, size_t clusterSize)
     size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
     char           drivePath[4];
-    USHORT         rc = 0, wRc = 0, cRc = 0;
-    USHORT         actionTaken = 0;
+    APIRET         rc = 0, wRc = 0, cRc = 0;
+    ACTION_RET     actionTaken = 0;
     HFILE          handle;
     long           i;
 
@@ -61,7 +60,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     drivePath[2] = '\\';
     drivePath[3] = 0;
 
-    rc = DosChDir(drivePath, 0);
+    rc = __os2_chdir(drivePath);
 
     if(rc)
     {
@@ -69,7 +68,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         return;
     }
 
-    rc = DosMkDir("FRAGS", 0);
+    rc = __os2_mkdir("FRAGS");
 
     if(rc)
     {
@@ -77,7 +76,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         return;
     }
 
-    rc = DosChDir("FRAGS", 0);
+    rc = __os2_chdir("FRAGS");
 
     rc = DosOpen((PSZ) "HALFCLST",
                  &handle,
@@ -264,7 +263,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO2\".\n");
-    rc = DosDelete((PSZ) "TWO2", 0);
+    rc = __os2_delete((PSZ) "TWO2", 0);
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
@@ -289,9 +288,9 @@ void Fragmentation(const char* path, size_t clusterSize)
     }
 
     printf("\tDeleting \"TWO1\".\n");
-    rc = DosDelete((PSZ) "TWO1", 0);
+    rc = __os2_delete((PSZ) "TWO1", 0);
     printf("\tDeleting \"TWO3\".\n");
-    rc = DosDelete((PSZ) "TWO3", 0);
+    rc = __os2_delete((PSZ) "TWO3", 0);
 
     printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
            "FRAGTHRQ",
