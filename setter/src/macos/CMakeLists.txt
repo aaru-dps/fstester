@@ -13,10 +13,15 @@ add_definitions(-Dmacintosh)
 add_definitions(-DRetro68)
 
 CHECK_INCLUDE_FILES("Aliases.h" HAVE_ALIASES_H)
+CHECK_INCLUDE_FILES("FileTypesAndCreators.h" HAVE_FILE_TYPES_AND_CREATORS_H)
 CHECK_INCLUDE_FILES("Multiverse.h" HAVE_MULTIVERSE_H)
 
 if(HAVE_ALIASES_H)
     add_definitions(-DHAVE_ALIASES_H)
+endif()
+
+if(HAVE_FILE_TYPES_AND_CREATORS_H)
+    add_definitions(-DHAVE_FILE_TYPES_AND_CREATORS_H)
 endif()
 
 if(HAVE_MULTIVERSE_H)

@@ -33,7 +33,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <Aliases.h>
 #endif
 
+#if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
 #include <FileTypesAndCreators.h>
+#endif
+
 #include <Files.h>
 #include <Gestalt.h>
 #include <MacTypes.h>
