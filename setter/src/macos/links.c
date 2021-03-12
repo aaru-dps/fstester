@@ -29,7 +29,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(macintosh)
 
+#if defined(HAVE_ALIASES_H) || !defined(HAVE_MULTIVERSE_H)
 #include <Aliases.h>
+#endif
+
 #include <FileTypesAndCreators.h>
 #include <Files.h>
 #include <Gestalt.h>
