@@ -262,11 +262,13 @@ unsigned char IconEA[3516] = {
 
 #define __os2_chdir(path) DosChDir(path, 0)
 #define __os2_mkdir(path) DosMkDir(path, 0)
+#define __os2_delete(path) DosDelete(path, 0);
 
 #else // 32 bit
 
 #define __os2_chdir(path) DosSetCurrentDir(path)
 #define __os2_mkdir(path) DosCreateDir(path, NULL)
+#define __os2_delete(path) DosDelete(path);
 
 #endif
 

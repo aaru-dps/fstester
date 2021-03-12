@@ -2,12 +2,12 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : os2_32.c
+Filename       : os2_16.c
 Author(s)      : Natalia Portillo
 
 --[ Description ] -----------------------------------------------------------
 
-Contains 32-bit OS/2 code
+Contains 16-bit OS/2 code
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,7 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \
-    (defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
+#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
 
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
@@ -38,25 +37,25 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2.h"
 #include "include/consts.h"
 #include "include/defs.h"
+#include "os2.h"
 
 void DeleteFiles(const char* path)
 {
-    char   drivePath[4];
-    APIRET rc = 0;
-    char   filename[9];
-    short  pos         = 0;
-    ULONG  actionTaken = 0;
-    HFILE  handle;
+    char       drivePath[4];
+    APIRET     rc = 0;
+    char       filename[9];
+    short      pos         = 0;
+    ACTION_RET actionTaken = 0;
+    HFILE      handle;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
     drivePath[2] = '\\';
     drivePath[3] = 0;
 
-    rc = DosSetCurrentDir(drivePath);
+    rc = __os2_chdir(drivePath);
 
     if(rc)
     {
@@ -64,7 +63,7 @@ void DeleteFiles(const char* path)
         return;
     }
 
-    rc = DosCreateDir("DELETED", NULL);
+    rc = __os2_mkdir("DELETED");
 
     if(rc)
     {
@@ -72,7 +71,7 @@ void DeleteFiles(const char* path)
         return;
     }
 
-    rc = DosSetCurrentDir("DELETED");
+    rc = __os2_chdir("DELETED");
 
     printf("Creating and deleting files.\n");
 
@@ -91,7 +90,7 @@ void DeleteFiles(const char* path)
         if(rc) break;
 
         DosClose(handle);
-        DosDelete(&filename);
+        __os2_delete(&filename);
     }
 }
 
