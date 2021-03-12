@@ -29,76 +29,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__NETWARE_386__)
 
+#include "../include/consts.h"
+#include "../include/defs.h"
 #include "netware.h"
-
-#include "include/consts.h"
-#include "include/defs.h"
-
-void GetOsInfo()
-{
-    // TODO: Implement
-}
-
-void GetVolumeInfo(const char* path, size_t* clusterSize)
-{
-    // TODO: Implement
-    *clusterSize = 0;
-}
-
-void FileAttributes(const char* path)
-{
-    // TODO: Implement
-}
-
-void FilePermissions(const char* path)
-{
-    // TODO: Implement
-}
-
-void ExtendedAttributes(const char* path)
-{
-    // TODO: Implement
-}
-
-void ResourceFork(const char* path)
-{
-    // TODO: Implement
-}
-
-void Filenames(const char* path)
-{
-    // TODO: Implement
-}
-
-void Timestamps(const char* path)
-{
-    // TODO: Implement
-}
-
-void DirectoryDepth(const char* path)
-{
-    // TODO: Implement
-}
-
-void Fragmentation(const char* path, size_t clusterSize)
-{
-    // TODO: Implement
-}
-
-void Sparse(const char* path)
-{
-    // TODO: Implement
-}
-
-void Links(const char* path)
-{
-    // TODO: Implement
-}
-
-void MillionFiles(const char* path)
-{
-    // TODO: Implement
-}
 
 void DeleteFiles(const char* path)
 {
