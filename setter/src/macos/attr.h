@@ -5,44 +5,257 @@
 #ifndef SETTER_SRC_MACOS_ATTR_H_
 #define SETTER_SRC_MACOS_ATTR_H_
 
-const char* noAttributeText   = "This file has all flags bits clear.\r";
-const char* desktopText       = "This file is on desktop.\r";
-const char* color2Text        = "This file is colored brown.\r";
-const char* color4Text        = "This file is colored green.\r";
-const char* color6Text        = "This file is colored lilac.\r";
-const char* color8Text        = "This file is colored blue.\r";
-const char* colorAText        = "This file is colored magenta.\r";
-const char* colorCText        = "This file is colored red.\r";
-const char* colorEText        = "This file is colored orange.\r";
-const char* requireSwitchText = "This file requires switch launch.\r";
-const char* sharedText        = "This file is shared.\r";
-const char* noInitText        = "This file contains no init.\r";
-const char* initedText        = "This file has been inited.\r";
-const char* aoceText          = "This file has AOCE bit set.\r";
-const char* customIconText    = "This file has a custom icon.\r";
-const char* stationeryText    = "This is a stationery.\r";
-const char* nameLockText      = "This file has the name locked.\r";
-const char* bundleText        = "This file has a BNDL resource.\r";
-const char* invisibleText     = "This file is invisible.\r";
-const char* aliasText         = "This file is an alias to nowhere.\r";
-const char* simpletextText    = "This file has creator 'ttxt'.\r";
-const char* aaruText          = "This file has creator 'aaru'.\r";
-const char* pos_m32_m32       = "This file position is -32k,-32k.\r";
-const char* pos_32_32         = "This file position is 32k,32k.\r";
-const char* pos_m1_m1         = "This file position is -1k,-1k.\r";
-const char* pos_m1_m32        = "This file position is -1k,-32k.\r";
-const char* pos_m1_32         = "This file position is -1k,32k.\r";
-const char* pos_m1_1          = "This file position is -1k,1k.\r";
-const char* pos_1_m1          = "This file position is 1k,-1k.\r";
-const char* pos_1_m32         = "This file position is 1k,-32k.\r";
-const char* pos_1_32          = "This file position is 1k,32k.\r";
-const char* pos_1_1           = "This file position is 1k,1k.\r";
-const char* allText           = "This file has all flags bits set.\r";
+#include "macos.h"
+
+typedef struct
+{
+    char*    filename;
+    char     contents[170];
+    char     description[63];
+    uint16_t flags;
+    OSType   type;
+    OSType   creator;
+    Point    location;
+} mac_attr_tests_t;
+
+#define KNOWN_MAC_ATTRS 33
 
 enum
 {
     kRequireSwitchLaunch = 0x0020,
     kAOCE                = 0x0200
 };
+
+static const mac_attr_tests_t mac_attrs[KNOWN_MAC_ATTRS] = {"\pNONE",
+                                                            "This file has all flags bits clear.\r",
+                                                            "File with no attributes",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pINDESK",
+                                                            "This file is on desktop.\r",
+                                                            "File is in desktop",
+                                                            kIsOnDesk,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pBROWN",
+                                                            "This file is colored brown.\r",
+                                                            "File is colored brown",
+                                                            0x02,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pGREEN",
+                                                            "This file is colored green.\r",
+                                                            "File is colored green",
+                                                            0x04,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pLILAC",
+                                                            "This file is colored lilac.\r",
+                                                            "File is colored lilac",
+                                                            0x06,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pBLUE",
+                                                            "This file is colored blue.\r",
+                                                            "File is colored blue",
+                                                            0x08,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pMAGENTA",
+                                                            "This file is colored magenta.\r",
+                                                            "File is colored magenta",
+                                                            0x0A,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pRED",
+                                                            "This file is colored red.\r",
+                                                            "File is colored red",
+                                                            0x0C,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pORANGE",
+                                                            "This file is colored orange.\r",
+                                                            "File is colored orange",
+                                                            0x0E,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pSWITCH",
+                                                            "This file requires switch launch.\r",
+                                                            "File require switch launch",
+                                                            kRequireSwitchLaunch,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pSHARED",
+                                                            "This file is shared.\r",
+                                                            "File is shared",
+                                                            kIsShared,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pNOINIT",
+                                                            "This file contains no init.\r",
+                                                            "File has no INITs",
+                                                            kHasNoINITs,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pINITED",
+                                                            "This file has been inited.\r",
+                                                            "File has been INITed",
+                                                            kHasBeenInited,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pAOCE",
+                                                            "This file has AOCE bit set.\r",
+                                                            "File with AOCE set",
+                                                            kAOCE,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pICON",
+                                                            "This file has a custom icon.\r",
+                                                            "File has custom icon (not really)",
+                                                            kHasCustomIcon,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pSTATIONERY",
+                                                            "This is a stationery.\r",
+                                                            "File is stationery",
+                                                            kIsStationery,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pLOCKED",
+                                                            "This file has the name locked.\r",
+                                                            "File is locked",
+                                                            kNameLocked,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pBUNDLE",
+                                                            "This file has a BNDL resource.\r",
+                                                            "File has bundle (not really)",
+                                                            kHasBundle,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pINVISIBLE",
+                                                            "This file is invisible.\r",
+                                                            "File is invisible",
+                                                            kIsInvisible,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pALIAS",
+                                                            "This file is an alias to nowhere.\r",
+                                                            "File is alias to nowhere",
+                                                            kIsAlias,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0},
+                                                            "\pSIMPLE",
+                                                            "This file has creator 'ttxt'.\r",
+                                                            "File with creator SimpleText",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostSimpleText,
+                                                            {0, 0},
+                                                            "\pAARU",
+                                                            "This file has creator 'aaru'.\r",
+                                                            "File with creator 'aaru'",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostAaru,
+                                                            {0, 0},
+                                                            "\pPOS_M32_M32",
+                                                            "This file position is -32k,-32k.\r",
+                                                            "File with position -32768,-32768",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {-32768, -32768},
+                                                            "\pPOS_32_32",
+                                                            "This file position is 32k,32k.\r",
+                                                            "File with position 32767,32767",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {32767, 32767},
+                                                            "\pPOS_M1_M1",
+                                                            "This file position is -1k,-1k.\r",
+                                                            "File with position -1024,-1024",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {-1024, -1024},
+                                                            "\pPOS_M1_M32",
+                                                            "This file position is -1k,-32k.\r",
+                                                            "File with position -1024,-32768",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {-32768, -1024},
+                                                            "\pPOS_M1_32",
+                                                            "This file position is -1k,32k.\r",
+                                                            "File with position -1024,32767",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {32767, -1024},
+                                                            "\pPOS_M1_1",
+                                                            "This file position is -1k,1k.\r",
+                                                            "File with position -1024,1024",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {1024, -1024},
+                                                            "\pPOS_1_M1",
+                                                            "This file position is 1k,-1k.\r",
+                                                            "File with position 1024,-1024",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {-1024, 1024},
+                                                            "\pPOS_1_M32",
+                                                            "This file position is 1k,-32k.\r",
+                                                            "File with position 1024,-32768",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {-32768, 1024},
+                                                            "\pPOS_1_32",
+                                                            "This file position is 1k,32k.\r",
+                                                            "File with position 1024,32767",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {1024, 32767},
+                                                            "\pPOS_1_1",
+                                                            "This file position is 1k,1k.\r",
+                                                            "File with position 1024,1024",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {1024, 1024},
+                                                            "\pALL",
+                                                            "This file has all flags bits set.\r",
+                                                            "File has all flags bits set",
+                                                            0,
+                                                            ftGenericDocumentPC,
+                                                            ostUnknown,
+                                                            {0, 0}};
 
 #endif // SETTER_SRC_MACOS_ATTR_H_
