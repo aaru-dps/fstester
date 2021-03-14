@@ -64,7 +64,8 @@ void Timestamps(const char* path)
     int32_t      count;
     HFileInfo*   fpb;
     CInfoPBRec   cipbr;
-    char         message[300];
+    char           message[300];
+    HParamBlockRec dirPB;
 
     snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
@@ -78,12 +79,22 @@ void Timestamps(const char* path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pTIMES", &dirId);
+    memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+    dirPB.fileParam.ioCompletion = 0;                     // Nothing, sync
+    dirPB.fileParam.ioVRefNum    = refNum;                // Volume specification
+    dirPB.fileParam.ioNamePtr    = (StringPtr) "\pTIMES"; // Directory name to create
+    dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
+
+    rc = PBDirCreate(&dirPB, 0);
+
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
         return;
     }
+
+    dirId = dirPB.fileParam.ioDirID;
 
     printf("Creating timestamped files.\n");
 

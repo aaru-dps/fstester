@@ -67,6 +67,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     int32_t        dirId;
     int32_t        count;
     long           i;
+    HParamBlockRec dirPB;
 
     snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
@@ -80,7 +81,17 @@ void Fragmentation(const char* path, size_t clusterSize)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pFRAGS", &dirId);
+    memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+    dirPB.fileParam.ioCompletion = 0;                     // Nothing, sync
+    dirPB.fileParam.ioVRefNum    = refNum;                // Volume specification
+    dirPB.fileParam.ioNamePtr    = (StringPtr) "\pFRAGS"; // Directory name to create
+    dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
+
+    rc = PBDirCreate(&dirPB, 0);
+
+    dirId = dirPB.fileParam.ioDirID;
+
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);

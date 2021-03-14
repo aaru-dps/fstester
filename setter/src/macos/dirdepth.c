@@ -62,7 +62,8 @@ void DirectoryDepth(const char* path)
     FInfo        finderInfo;
     int32_t      count;
     char         filename[9];
-    int          pos = 0;
+    int            pos = 0;
+    HParamBlockRec dirPB;
 
     snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
@@ -76,12 +77,22 @@ void DirectoryDepth(const char* path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pDEPTH", &dirId);
+    memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+    dirPB.fileParam.ioCompletion = 0;                     // Nothing, sync
+    dirPB.fileParam.ioVRefNum    = refNum;                // Volume specification
+    dirPB.fileParam.ioNamePtr    = (StringPtr) "\pDEPTH"; // Directory name to create
+    dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
+
+    rc = PBDirCreate(&dirPB, 0);
+
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
         return;
     }
+
+    dirId = dirPB.fileParam.ioDirID;
 
     printf("Creating deepest directory tree.\n");
 
@@ -92,7 +103,16 @@ void DirectoryDepth(const char* path)
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 
-        rc = DirCreate(refNum, dirId, str255, &dirId);
+        dirId = dirPB.fileParam.ioDirID;
+
+        memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+        dirPB.fileParam.ioCompletion = 0;      // Nothing, sync
+        dirPB.fileParam.ioVRefNum    = refNum; // Volume specification
+        dirPB.fileParam.ioNamePtr    = str255; // Directory name to create
+        dirPB.fileParam.ioDirID      = dirId;  // ID of parent directory, 0 for root of volume
+
+        rc = PBDirCreate(&dirPB, 0);
 
         pos++;
         /* Mac OS has no limit, but it will crash because the catalog is single threaded */

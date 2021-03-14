@@ -62,7 +62,8 @@ void MillionFiles(const char* path)
     FInfo        finderInfo;
     int32_t      count;
     char         filename[9];
-    int          pos = 0;
+    int            pos = 0;
+    HParamBlockRec dirPB;
 
     snprintf((char*)str255, 255, "%s", path);
     hpb.ioNamePtr  = str255;
@@ -76,7 +77,17 @@ void MillionFiles(const char* path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pMILLION", &dirId);
+    memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+    dirPB.fileParam.ioCompletion = 0;                       // Nothing, sync
+    dirPB.fileParam.ioVRefNum    = refNum;                  // Volume specification
+    dirPB.fileParam.ioNamePtr    = (StringPtr) "\pMILLION"; // Directory name to create
+    dirPB.fileParam.ioDirID      = 0;                       // ID of parent directory, 0 for root of volume
+
+    rc = PBDirCreate(&dirPB, 0);
+
+    dirId = dirPB.fileParam.ioDirID;
+
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);

@@ -99,7 +99,8 @@ void Links(const char* path)
     char         filename[9];
     int          pos = 0;
     FSSpec       targetSpec, aliasSpec;
-    int32_t      count;
+    int32_t        count;
+    HParamBlockRec dirPB;
 
     rc = Gestalt(gestaltAliasMgrAttr, &gestaltResponse);
     if(rc || !(gestaltResponse & (1 << gestaltAliasMgrPresent)))
@@ -120,12 +121,22 @@ void Links(const char* path)
     }
     refNum = hpb.ioVRefNum;
 
-    rc = DirCreate(refNum, fsRtDirID, (unsigned char*)"\pLINKS", &dirId);
+    memset(&dirPB, 0, sizeof(HParamBlockRec));
+
+    dirPB.fileParam.ioCompletion = 0;                     // Nothing, sync
+    dirPB.fileParam.ioVRefNum    = refNum;                // Volume specification
+    dirPB.fileParam.ioNamePtr    = (StringPtr) "\pLINKS"; // Directory name to create
+    dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
+
+    rc = PBDirCreate(&dirPB, 0);
+
     if(rc)
     {
         printf("Error %d creating working directory.\n", rc);
         return;
     }
+
+    dirId = dirPB.fileParam.ioDirID;
 
     printf("Creating aliases.\n");
 
