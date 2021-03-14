@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_OS2_ATTR_H_
-#define SETTER_SRC_OS2_ATTR_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
+#define AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
 
 #include <os2.h>
 
@@ -106,6 +106,6 @@ static const os2_attr_tests_t os2_attrs[KNOWN_OS2_ATTRS] = {
      FILE_ARCHIVED | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY},
 };
 
-#endif // SETTER_SRC_OS2_ATTR_H_
+#endif // AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
 
 #endif

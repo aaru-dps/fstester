@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_DOS_ATTR_H_
-#define SETTER_SRC_DOS_ATTR_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_DOS_ATTR_H_
+#define AARU_FSTESTER_SETTER_SRC_DOS_ATTR_H_
 
 #include <dos.h>
 
@@ -106,4 +106,4 @@ static const dos_attr_tests_t dos_attrs[KNOWN_DOS_ATTRS] = {
      _A_ARCH | _A_SYSTEM | _A_HIDDEN | _A_RDONLY},
 };
 
-#endif // SETTER_SRC_DOS_ATTR_H_
+#endif // AARU_FSTESTER_SETTER_SRC_DOS_ATTR_H_

@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_MACOS_RSRCFORK_H_
-#define SETTER_SRC_MACOS_RSRCFORK_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_RSRCFORK_H_
+#define AARU_FSTESTER_SETTER_SRC_MACOS_RSRCFORK_H_
 
 static OSErr SaveResourceToNewFile(int16_t        vRefNum,
                                    int32_t        dirID,
@@ -861,4 +861,4 @@ const unsigned char PictResource[9874] = {
     0xF1, 0xDE, 0x02, 0xE0, 0xE6, 0xCA, 0xFC, 0xCE, 0x03, 0xCC, 0xC3, 0xD9, 0xF3, 0xF2, 0xEF, 0x81, 0xFF, 0xEF, 0xFF,
     0x02, 0xF5, 0xF7, 0xF7, 0xFE, 0xF8, 0x01, 0xF6, 0xF3, 0xF0, 0xFF, 0x00, 0xFF};
 
-#endif // SETTER_SRC_MACOS_RSRCFORK_H_
+#endif // AARU_FSTESTER_SETTER_SRC_MACOS_RSRCFORK_H_

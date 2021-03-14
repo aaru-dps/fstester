@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_TIME_H_
-#define SETTER_SRC_WIN32_TIME_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_TIME_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_TIME_H_
 
 #include <windows.h>
 
@@ -65,4 +65,4 @@ static const win32_time_tests_t win32_timestamps[KNOWN_WIN32_TIMESTAMPS] = {
     {"Y2KMTIME", {0, 0}, {0, 0}, {Y2KTIMESTAMP_LO, TIMESTAMP_HI}, "modification", Y2KDATETIME},
 };
 
-#endif // SETTER_SRC_WIN32_TIME_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_TIME_H_

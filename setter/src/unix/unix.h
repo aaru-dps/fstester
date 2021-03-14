@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_UNIX_H
-#define SETTER_UNIX_H
+#ifndef AARU_FSTESTER_SETTER_UNIX_H
+#define AARU_FSTESTER_SETTER_UNIX_H
 
 #if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
 
@@ -409,4 +409,4 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #endif
 
-#endif // SETTER_UNIX_H
+#endif // AARU_FSTESTER_SETTER_UNIX_H

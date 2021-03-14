@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_LINUX_ATTR_H_
-#define SETTER_SRC_LINUX_ATTR_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_LINUX_ATTR_H_
+#define AARU_FSTESTER_SETTER_SRC_LINUX_ATTR_H_
 
 typedef struct
 {
@@ -97,4 +97,4 @@ static const linux_attr_tests_t linux_attrs[KNOWN_LINUX_ATTRS] = {
     {"UNREMOVABLE", "This file is now marked for undeletion", "File with undeletion flag", FS_UNRM_FL},
 };
 
-#endif // SETTER_SRC_LINUX_ATTR_H_
+#endif // AARU_FSTESTER_SETTER_SRC_LINUX_ATTR_H_

@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_OS_H_
-#define SETTER_SRC_WIN32_OS_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_OS_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_OS_H_
 
 #include <windows.h>
 
@@ -41,4 +41,4 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define VER_PLATFORM_WIN32_NT 2
 #endif
 
-#endif // SETTER_SRC_WIN32_OS_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_OS_H_

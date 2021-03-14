@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_LINUX_H
-#define SETTER_LINUX_H
+#ifndef AARU_FSTESTER_SETTER_LINUX_H
+#define AARU_FSTESTER_SETTER_LINUX_H
 
 void LinuxExtendedAttributes(const char* path);
 void LinuxSparse(const char* path);

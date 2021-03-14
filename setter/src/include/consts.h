@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_SETTER_CONSTS_H
-#define AARU_FSTESTER_SETTER_CONSTS_H
+#ifndef AARU_FSTESTER_SETTER_SRC_CONSTS_H
+#define AARU_FSTESTER_SETTER_SRC_CONSTS_H
 
 static const char* filenames[] = {
     "FILNAM",

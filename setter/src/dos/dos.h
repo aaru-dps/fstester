@@ -24,8 +24,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__DOS__) || defined(MSDOS)
 
-#ifndef AARU_FSTESTER_SETTER_DOS_H
-#define AARU_FSTESTER_SETTER_DOS_H
+#ifndef AARU_FSTESTER_SETTER_SRC_DOS_H
+#define AARU_FSTESTER_SETTER_SRC_DOS_H
 
 #if defined(__WATCOM__)
 #include <direct.h>

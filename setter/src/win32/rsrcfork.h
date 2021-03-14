@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_RSRCFORK_H_
-#define SETTER_SRC_WIN32_RSRCFORK_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_RSRCFORK_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_RSRCFORK_H_
 
 const char* tinyAdsText         = "This is a tiny Alternate Data Stream.\n";
 const char* smallAdsText        = "This is a small Alternate Data Stream.\n";
@@ -33,4 +33,4 @@ const char* smallAdsRepeatText  = "This message repeats until almost 4KiB.\n";
 const char* mediumAdsRepeatText = "This message repeats until almost 64KiB.\n";
 const char* bigAdsRepeatText    = "This message repeats until more than 64KiB.\n";
 
-#endif // SETTER_SRC_WIN32_RSRCFORK_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_RSRCFORK_H_

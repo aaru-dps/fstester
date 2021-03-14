@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_MACOS_TIME_H_
-#define SETTER_SRC_MACOS_TIME_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_TIME_H_
+#define AARU_FSTESTER_SETTER_SRC_MACOS_TIME_H_
 
 #define DATETIME_FORMAT "This file is dated %s for %s\r"
 #define MAXDATETIME "2040/02/06 06:28:15"
@@ -67,4 +67,4 @@ static const mac_time_tests_t mac_times[KNOWN_MAC_TIMES] = {
     Y2KTIMESTAMP,   Y2KTIMESTAMP,   "all",        Y2KDATETIME,
 };
 
-#endif // SETTER_SRC_MACOS_TIME_H_
+#endif // AARU_FSTESTER_SETTER_SRC_MACOS_TIME_H_

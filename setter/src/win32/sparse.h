@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_SPARSE_H_
-#define SETTER_SRC_WIN32_SPARSE_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_SPARSE_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_SPARSE_H_
 
 #include <windows.h>
 
@@ -46,4 +46,4 @@ typedef struct _WINNT_FILE_ZERO_DATA_INFORMATION
     LARGE_INTEGER BeyondFinalZero;
 } WINNT_FILE_ZERO_DATA_INFORMATION, *PWINNT_FILE_ZERO_DATA_INFORMATION;
 
-#endif // SETTER_SRC_WIN32_SPARSE_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_SPARSE_H_

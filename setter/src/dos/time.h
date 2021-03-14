@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_DOS_TIME_H_
-#define SETTER_SRC_DOS_TIME_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_DOS_TIME_H_
+#define AARU_FSTESTER_SETTER_SRC_DOS_TIME_H_
 
 #include <dos.h>
 
@@ -65,4 +65,4 @@ static const dos_time_tests_t dos_times[KNOWN_DOS_TIMES] = {
     {"Y2KATIME",Y2K_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
 };
 
-#endif // SETTER_SRC_DOS_TIME_H_
+#endif // AARU_FSTESTER_SETTER_SRC_DOS_TIME_H_

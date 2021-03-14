@@ -22,7 +22,7 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_SETTER_NETWARE_H
-#define AARU_FSTESTER_SETTER_NETWARE_H
+#ifndef AARU_FSTESTER_SETTER_SRC_NETWARE_H
+#define AARU_FSTESTER_SETTER_SRC_NETWARE_H
 
 #endif

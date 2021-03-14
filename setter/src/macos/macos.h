@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_SETTER_MACINTOSH_H
-#define AARU_FSTESTER_SETTER_MACINTOSH_H
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_H
+#define AARU_FSTESTER_SETTER_SRC_MACOS_H
 
 #include <MacTypes.h>
 

@@ -25,8 +25,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 
-#ifndef AARU_FSTESTER_SETTER_WIN32_H
-#define AARU_FSTESTER_SETTER_WIN32_H
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_H
+#define AARU_FSTESTER_SETTER_SRC_WIN32_H
 
 #include <windows.h>
 

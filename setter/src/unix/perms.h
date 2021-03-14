@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_UNIX_PERMS_H_
-#define SETTER_SRC_UNIX_PERMS_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_UNIX_PERMS_H_
+#define AARU_FSTESTER_SETTER_SRC_UNIX_PERMS_H_
 
 typedef struct
 {
@@ -50,4 +50,4 @@ static const unix_perms_tests_t unix_perms[KNOWN_UNIX_PERMS] = {
     {"00001", "File with execute by others", 00001},
 };
 
-#endif // SETTER_SRC_UNIX_PERMS_H_
+#endif // AARU_FSTESTER_SETTER_SRC_UNIX_PERMS_H_

@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_MACOS_ATTR_H_
-#define SETTER_SRC_MACOS_ATTR_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_ATTR_H_
+#define AARU_FSTESTER_SETTER_SRC_MACOS_ATTR_H_
 
 #if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
 #include <FileTypesAndCreators.h>
@@ -284,4 +284,4 @@ static const mac_attr_tests_t mac_attrs[KNOWN_MAC_ATTRS] = {"\pNONE",
                                                             ostUnknown,
                                                             {0, 0}};
 
-#endif // SETTER_SRC_MACOS_ATTR_H_
+#endif // AARU_FSTESTER_SETTER_SRC_MACOS_ATTR_H_

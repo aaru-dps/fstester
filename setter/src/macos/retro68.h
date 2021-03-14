@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_MACOS_RETRO68_H_
-#define SETTER_SRC_MACOS_RETRO68_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_RETRO68_H_
+#define AARU_FSTESTER_SETTER_SRC_MACOS_RETRO68_H_
 
 #define FOUR_CHAR_CODE(x) (x)
 
@@ -150,4 +150,4 @@ enum
     rAliasType = FOUR_CHAR_CODE('alis') /* Aliases are stored as resources of this type */
 };
 
-#endif // SETTER_SRC_MACOS_RETRO68_H_
+#endif // AARU_FSTESTER_SETTER_SRC_MACOS_RETRO68_H_

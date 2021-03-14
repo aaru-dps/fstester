@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_VOLUME_H_
-#define SETTER_SRC_WIN32_VOLUME_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_VOLUME_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_VOLUME_H_
 
 #include <windows.h>
 
@@ -159,4 +159,4 @@ BOOL(WINAPI* WinGetDiskFreeSpaceExA)(LPCSTR, PULARGE_INTEGER, PULARGE_INTEGER, P
 #define FS_LFN_APIS 0x00004000
 #endif
 
-#endif // SETTER_SRC_WIN32_VOLUME_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_VOLUME_H_

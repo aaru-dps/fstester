@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_WIN32_XATTR_H_
-#define SETTER_SRC_WIN32_XATTR_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_XATTR_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_XATTR_H_
 
 unsigned char CommentsEA[72] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x33, 0x00, 0x2E, 0x43, 0x4F, 0x4D, 0x4D, 0x45, 0x4E, 0x54, 0x53, 0x00,
@@ -247,4 +247,4 @@ typedef struct _FILE_FULL_EA_INFORMATION
 static NTSTATUS(NTAPI* NtSetEaFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG);
 static NTSTATUS(NTAPI* NtQueryEaFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG, BOOLEAN, PVOID, ULONG, PULONG, BOOLEAN);
 
-#endif // SETTER_SRC_WIN32_XATTR_H_
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_XATTR_H_

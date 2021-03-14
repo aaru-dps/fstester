@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef SETTER_SRC_MACOS_LINKS_H_
-#define SETTER_SRC_MACOS_LINKS_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_MACOS_LINKS_H_
+#define AARU_FSTESTER_SETTER_SRC_MACOS_LINKS_H_
 
 #if defined(HAVE_ALIASES_H) || !defined(HAVE_MULTIVERSE_H)
 #include <Aliases.h>
@@ -36,4 +36,4 @@ static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSTyp
 
 const char* targetText = "This file is the target of an alias.\r";
 
-#endif // SETTER_SRC_MACOS_LINKS_H_
+#endif // AARU_FSTESTER_SETTER_SRC_MACOS_LINKS_H_
