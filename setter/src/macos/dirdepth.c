@@ -40,12 +40,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void DirectoryDepth(const char* path)
 {
-    OSErr        rc;
-    Str255       str255;
-    HVolumeParam hpb;
-    int16_t      refNum;
-    int32_t      dirId;
-    char         filename[9];
+    OSErr          rc;
+    Str255         str255;
+    HVolumeParam   hpb;
+    int16_t        refNum;
+    int32_t        dirId;
+    char           filename[9];
     int            pos = 0;
     HParamBlockRec dirPB;
 

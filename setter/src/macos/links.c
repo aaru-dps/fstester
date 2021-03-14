@@ -85,16 +85,16 @@ static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSTyp
 
 void Links(const char* path)
 {
-    int32_t      gestaltResponse;
-    OSErr        rc, wRc, cRc, oRc, aRc;
-    Str255       str255;
-    HVolumeParam hpb;
-    int16_t      refNum;
-    int16_t      refFile;
-    int32_t      dirId;
-    char         filename[9];
-    int          pos;
-    FSSpec       targetSpec, aliasSpec;
+    int32_t        gestaltResponse;
+    OSErr          rc, wRc, cRc, oRc, aRc;
+    Str255         str255;
+    HVolumeParam   hpb;
+    int16_t        refNum;
+    int16_t        refFile;
+    int32_t        dirId;
+    char           filename[9];
+    int            pos;
+    FSSpec         targetSpec, aliasSpec;
     int32_t        count;
     HParamBlockRec dirPB;
 

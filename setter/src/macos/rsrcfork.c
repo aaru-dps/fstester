@@ -84,13 +84,13 @@ static OSErr SaveResourceToNewFile(int16_t        vRefNum,
 
 void ResourceFork(const char* path)
 {
-    OSErr        rc, wRc, cRc, rRc, rRc2, rRc3;
-    Str255       str255;
-    HVolumeParam hpb;
-    int16_t      refNum;
-    int16_t      refFile;
-    int32_t      dirId;
-    FInfo        finderInfo;
+    OSErr          rc, wRc, cRc, rRc, rRc2, rRc3;
+    Str255         str255;
+    HVolumeParam   hpb;
+    int16_t        refNum;
+    int16_t        refFile;
+    int32_t        dirId;
+    FInfo          finderInfo;
     int32_t        count;
     HParamBlockRec fpb;
     HParamBlockRec dirPB;

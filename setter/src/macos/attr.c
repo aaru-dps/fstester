@@ -45,13 +45,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void FileAttributes(const char* path)
 {
-    OSErr        rc, wRc, cRc;
-    Str255       str255;
-    HVolumeParam hpb;
-    int16_t      refNum;
-    int16_t      refFile;
-    int32_t      dirId;
-    FInfo        finderInfo;
+    OSErr          rc, wRc, cRc;
+    Str255         str255;
+    HVolumeParam   hpb;
+    int16_t        refNum;
+    int16_t        refFile;
+    int32_t        dirId;
+    FInfo          finderInfo;
     int32_t        count;
     HParamBlockRec fpb;
     HParamBlockRec dirPB;

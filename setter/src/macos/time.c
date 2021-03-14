@@ -44,15 +44,15 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Timestamps(const char* path)
 {
-    OSErr        rc, wRc, cRc, tRc;
-    Str255       str255;
-    HVolumeParam hpb;
-    int16_t      refNum;
-    int16_t      refFile;
-    int32_t      dirId;
-    int32_t      count;
-    HFileInfo*   fpb;
-    CInfoPBRec   cipbr;
+    OSErr          rc, wRc, cRc, tRc;
+    Str255         str255;
+    HVolumeParam   hpb;
+    int16_t        refNum;
+    int16_t        refFile;
+    int32_t        dirId;
+    int32_t        count;
+    HFileInfo*     fpb;
+    CInfoPBRec     cipbr;
     char           message[300];
     HParamBlockRec dirPB;
     int            i;

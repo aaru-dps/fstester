@@ -5,12 +5,6 @@
 #ifndef SETTER_SRC_MACOS_RETRO68_H_
 #define SETTER_SRC_MACOS_RETRO68_H_
 
-enum
-{
-    fsRtParID = 1,
-    fsRtDirID = 2
-};
-
 #define FOUR_CHAR_CODE(x) (x)
 
 /************** PC-DOS applications and FileTypes **************/
