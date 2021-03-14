@@ -5,6 +5,12 @@
 #ifndef SETTER_SRC_MACOS_ATTR_H_
 #define SETTER_SRC_MACOS_ATTR_H_
 
+#if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
+#include <FileTypesAndCreators.h>
+#endif
+
+#include <MacTypes.h>
+
 #include "macos.h"
 
 typedef struct

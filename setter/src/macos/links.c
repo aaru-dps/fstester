@@ -41,20 +41,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <Gestalt.h>
 #include <MacTypes.h>
 #include <Resources.h>
-#include <TextUtils.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "links.h"
 #include "macos.h"
 
-static pascal OSErr
-
-    CreateAliasFile(const FSSpec* targetFile, const FSSpec* aliasFile, OSType fileCreator, OSType fileType)
+static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType)
 {
     short       rsrcID;
     short       aliasRefnum;
@@ -97,7 +93,7 @@ void Links(const char* path)
     int16_t      refFile;
     int32_t      dirId;
     char         filename[9];
-    int          pos = 0;
+    int          pos;
     FSSpec       targetSpec, aliasSpec;
     int32_t        count;
     HParamBlockRec dirPB;

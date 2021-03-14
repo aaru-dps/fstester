@@ -29,38 +29,22 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(macintosh)
 
-#if defined(HAVE_ALIASES_H) || !defined(HAVE_MULTIVERSE_H)
-#include <Aliases.h>
-#endif
-
-#if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
-#include <FileTypesAndCreators.h>
-#endif
-
 #include <Files.h>
-#include <Gestalt.h>
 #include <MacTypes.h>
-#include <Resources.h>
-#include <TextUtils.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "macos.h"
 
 void DirectoryDepth(const char* path)
 {
-    OSErr        rc, wRc, cRc;
+    OSErr        rc;
     Str255       str255;
     HVolumeParam hpb;
     int16_t      refNum;
-    int16_t      refFile;
     int32_t      dirId;
-    FInfo        finderInfo;
-    int32_t      count;
     char         filename[9];
     int            pos = 0;
     HParamBlockRec dirPB;
@@ -91,8 +75,6 @@ void DirectoryDepth(const char* path)
         printf("Error %d creating working directory.\n", rc);
         return;
     }
-
-    dirId = dirPB.fileParam.ioDirID;
 
     printf("Creating deepest directory tree.\n");
 

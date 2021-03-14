@@ -5,6 +5,15 @@
 #ifndef SETTER_SRC_MACOS_RSRCFORK_H_
 #define SETTER_SRC_MACOS_RSRCFORK_H_
 
+static OSErr SaveResourceToNewFile(int16_t        vRefNum,
+                                   int32_t        dirID,
+                                   Str255         filename,
+                                   ResType        type,
+                                   int16_t        resId,
+                                   Str255         resName,
+                                   unsigned char* buffer,
+                                   size_t         length);
+
 const char* rsrcText = "This file has a custom icon, a version, and a picture, in the resource fork.\r";
 
 const unsigned char IcnsResource[5618] = {

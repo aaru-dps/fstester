@@ -29,25 +29,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(macintosh)
 
-#if defined(HAVE_ALIASES_H) || !defined(HAVE_MULTIVERSE_H)
-#include <Aliases.h>
-#endif
-
 #if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
 #include <FileTypesAndCreators.h>
 #endif
 
 #include <Files.h>
-#include <Gestalt.h>
 #include <MacTypes.h>
-#include <Resources.h>
-#include <TextUtils.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "attr.h"
 #include "macos.h"
@@ -63,7 +54,6 @@ void FileAttributes(const char* path)
     FInfo        finderInfo;
     int32_t        count;
     HParamBlockRec fpb;
-    CInfoPBRec     cipbr;
     HParamBlockRec dirPB;
     int            i;
 
