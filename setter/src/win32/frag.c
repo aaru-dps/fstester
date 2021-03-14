@@ -118,7 +118,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "HALFCLST", halfCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
     h   = CreateFileA("QUARCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -141,7 +141,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     }
 
     printf(
-        "\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
+        "\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
     h   = CreateFileA("TWOCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -163,7 +163,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWOCLST", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
     h   = CreateFileA("TRQTCLST", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -185,7 +185,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TRQTCLST",
            threeQuartersCluster,
            rc,
@@ -212,7 +212,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n",
            "TWTQCLST",
            twoAndThreeQuartCluster,
            rc,
@@ -239,7 +239,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO1", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "TWO1", twoCluster, rc, wRc, cRc);
 
     h   = CreateFileA("TWO2", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -261,7 +261,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO2", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "TWO2", twoCluster, rc, wRc, cRc);
 
     h   = CreateFileA("TWO3", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -287,7 +287,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     ret = DeleteFileA("TWO2");
     if(!ret) { rc = GetLastError(); }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n", "TWO3", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n", "TWO3", twoCluster, rc, wRc, cRc);
 
     h   = CreateFileA("FRAGTHRQ", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -316,7 +316,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     ret = DeleteFileA("TWO3");
     if(!ret) { rc = GetLastError(); }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n",
            "FRAGTHRQ",
            threeQuartersCluster,
            rc,
@@ -343,7 +343,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu\n",
+    printf("\tFile name = \"%s\", size = "SIZE_T_FORMAT", rc = %lu, wRc = %lu, cRc = %lu\n",
            "FRAGSIXQ",
            twoAndThreeQuartCluster,
            rc,

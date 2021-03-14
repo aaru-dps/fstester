@@ -44,11 +44,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
-    size_t         halfCluster             = clusterSize / 2;
-    size_t         quarterCluster          = clusterSize / 4;
-    size_t         twoCluster              = clusterSize * 2;
-    size_t         threeQuartersCluster    = halfCluster + quarterCluster;
-    size_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+  int32_t         halfCluster             = (int32_t)clusterSize / 2;
+  int32_t         quarterCluster          = (int32_t)clusterSize / 4;
+  int32_t         twoCluster              = (int32_t)clusterSize * 2;
+  int32_t         threeQuartersCluster    = halfCluster + quarterCluster;
+  int32_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
     OSErr          rc, wRc, cRc;
     Str255         str255;
@@ -107,7 +107,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pQUARCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -127,7 +127,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWOCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -147,7 +147,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTRQTCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -167,7 +167,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
            "TRQTCLST",
            threeQuartersCluster,
            rc,
@@ -192,7 +192,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
            "TWTQCLST",
            twoAndThreeQuartCluster,
            rc,
@@ -217,7 +217,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWO2", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -237,7 +237,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWO3", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -260,7 +260,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     printf("\tDeleting \"TWO2\".\n");
     rc = HDelete(refNum, dirId, "\pTWO2");
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pFRAGTHRQ", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -303,7 +303,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
            "FRAGSIXQ",
            twoAndThreeQuartCluster,
            rc,

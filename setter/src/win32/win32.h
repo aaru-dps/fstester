@@ -27,6 +27,9 @@ Contains 32-bit and 64-bit Windows declarations
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
+
 #ifndef AARU_FSTESTER_SETTER_WIN32_H
 #define AARU_FSTESTER_SETTER_WIN32_H
 
@@ -57,4 +60,12 @@ static BOOL(WINAPI* WinGetVersionExA)(WIN_LPOSVERSIONINFOA);
 static DWORD dwMaxNameSize     = MAX_PATH + 1;
 static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
 
+#if defined(__aarch64__) || defined(_M_ARM64) || defined(__ia64__) || defined(_M_IA64) || defined(__x86_64__) || defined(__amd64) || defined(_M_AMD64) || defined(_M_X64)
+#define SIZE_T_FORMAT "%llu"
+#else
+#define SIZE_T_FORMAT "%u"
 #endif
+
+#endif
+
+#pragma clang diagnostic pop

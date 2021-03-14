@@ -62,8 +62,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     rc = Gestalt(gestaltFSAttr, &gestaltResponse);
     if(!rc)
     {
-        hfsPlusApis = gestaltResponse & (1 << gestaltHasHFSPlusAPIs);
-        bigVol      = gestaltResponse & (1 << gestaltFSSupports2TBVols);
+        hfsPlusApis = (gestaltResponse & (1 << gestaltHasHFSPlusAPIs))!= 0;
+        bigVol      = (gestaltResponse & (1 << gestaltFSSupports2TBVols))!=0;
     }
 
     if(!bigVol)
@@ -124,10 +124,10 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     printf("\tVolume name: %#s\n", str255);
     printf("\t%llu allocation blocks in volume, %llu free\n", totalBlocks, freeBlocks);
     printf("\t%llu bytes in volume, %llu free\n", totalBytes, freeBytes);
-    printf("\t%d bytes per allocation block.\n", *clusterSize);
-    printf("\tVolume created on 0x%08X\n", crDate);
-    printf("\tVolume last written on 0x%08X\n", lwDate);
-    printf("\tVolume last backed up on 0x%08X\n", bkDate);
+    printf("\t%lu bytes per allocation block.\n", *clusterSize);
+    printf("\tVolume created on 0x%08lX\n", crDate);
+    printf("\tVolume last written on 0x%08lX\n", lwDate);
+    printf("\tVolume last backed up on 0x%08lX\n", bkDate);
     printf("\tFilesystem type: ");
     switch(fsId)
     {

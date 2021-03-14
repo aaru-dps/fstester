@@ -287,7 +287,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     *clusterSize = dwSectorsPerCluster * dwBytesPerSector;
     printf("\tBytes per sector: %lu\n", dwBytesPerSector);
-    printf("\tSectors per cluster: %lu (%u bytes)\n", dwSectorsPerCluster, *clusterSize);
+    printf("\tSectors per cluster: %lu ("SIZE_T_FORMAT" bytes)\n", dwSectorsPerCluster, *clusterSize);
 
     if(WinGetVersionExA)
     {

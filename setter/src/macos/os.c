@@ -43,14 +43,14 @@ void GetOsInfo()
     printf("OS information:\n");
 
     rc = Gestalt(gestaltAUXVersion, &gestaltResponse);
-    if(!rc) { printf("Running under A/UX version 0x%08X\n", gestaltResponse); }
+    if(!rc) { printf("Running under A/UX version 0x%08lX\n", gestaltResponse); }
     else
     {
         rc = Gestalt(gestaltSystemVersion, &gestaltResponse);
         if(rc) { printf("Could not get Mac OS version.\n"); }
         else
         {
-            printf("Running under Mac OS version %d.%d.%d",
+            printf("Running under Mac OS version %ld.%ld.%ld",
                    (gestaltResponse & 0xF00) >> 8,
                    (gestaltResponse & 0xF0) >> 4,
                    gestaltResponse & 0xF);
@@ -63,7 +63,7 @@ void GetOsInfo()
                     case 1: printf("Motorola 68k architecture."); break;
                     case 2: printf("PowerPC architecture."); break;
                     case 3: printf("x86 architecture."); break;
-                    default: printf("unknown architecture code %d.", gestaltResponse); break;
+                    default: printf("unknown architecture code %ld.", gestaltResponse); break;
                 }
             }
             printf("\n");
