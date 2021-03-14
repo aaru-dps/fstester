@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 
 void MillionFiles(const char* path)
@@ -53,13 +54,13 @@ void MillionFiles(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     chdir("MILLION");
 
-    printf("Creating lots of files.\n");
+    log_write("Creating lots of files.\n");
 
     for(pos = 0; pos < 1000; pos++)
     {
@@ -71,5 +72,5 @@ void MillionFiles(const char* path)
         _dos_close(handle);
     }
 
-    printf("\tCreated %d files\n", pos);
+    log_write("\tCreated %d files\n", pos);
 }

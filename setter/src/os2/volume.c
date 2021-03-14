@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "os2.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
@@ -59,14 +60,14 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData, 0);
 #else // 32 bit
-    rc = DosQueryFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData);
+    rc            = DosQueryFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData);
 #endif
 
-    printf("Volume information:\n");
-    printf("\tPath: %s\n", path);
-    printf("\tDrive number: %d\n", driveNo - 1);
+    log_write("Volume information:\n");
+    log_write("\tPath: %s\n", path);
+    log_write("\tDrive number: %d\n", driveNo - 1);
 
-    if(rc) printf("Error %d requesting volume information.\n", rc);
+    if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
 // 16 bit
@@ -75,7 +76,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 #else // 32 bit
         fsdName = &bData[8 + (USHORT)bData[2] + 1];
 #endif
-        printf("\tFSD name: %s\n", fsdName);
+        log_write("\tFSD name: %s\n", fsdName);
     }
 
     pfsAllocateBuffer = (PFSALLOCATE)malloc(sizeof(FSALLOCATE));
@@ -87,19 +88,19 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     rc = DosQueryFSInfo(driveNo, FSIL_ALLOC, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
 #endif
 
-    if(rc) printf("Error %d requesting volume information.\n", rc);
+    if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
-        printf("\tBytes per sector: %u\n", pfsAllocateBuffer->cbSector);
-        printf("\tSectors per cluster: %lu (%lu bytes)\n",
-               pfsAllocateBuffer->cSectorUnit,
-               pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector);
-        printf("\tClusters: %lu (%lu bytes)\n",
-               pfsAllocateBuffer->cUnit,
-               pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnit);
-        printf("\tFree clusters: %lu (%lu bytes)\n",
-               pfsAllocateBuffer->cUnitAvail,
-               pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnitAvail);
+        log_write("\tBytes per sector: %u\n", pfsAllocateBuffer->cbSector);
+        log_write("\tSectors per cluster: %lu (%lu bytes)\n",
+                  pfsAllocateBuffer->cSectorUnit,
+                  pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector);
+        log_write("\tClusters: %lu (%lu bytes)\n",
+                  pfsAllocateBuffer->cUnit,
+                  pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnit);
+        log_write("\tFree clusters: %lu (%lu bytes)\n",
+                  pfsAllocateBuffer->cUnitAvail,
+                  pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector * pfsAllocateBuffer->cUnitAvail);
 
         *clusterSize = pfsAllocateBuffer->cSectorUnit * pfsAllocateBuffer->cbSector;
     }
@@ -115,17 +116,17 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     rc = DosQueryFSInfo(driveNo, FSIL_VOLSER, (PBYTE)pfsInfo, sizeof(FSINFO));
 #endif
 
-    if(rc) printf("Error %d requesting volume information.\n", rc);
+    if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
-        printf("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
-        printf("\tVolume created on %d/%02d/%02d %02d:%02d:%02d\n",
-               pfsInfo->fdateCreation.year + 1980,
-               pfsInfo->fdateCreation.month - 1,
-               pfsInfo->fdateCreation.day,
-               pfsInfo->ftimeCreation.hours,
-               pfsInfo->ftimeCreation.minutes,
-               pfsInfo->ftimeCreation.twosecs * 2);
+        log_write("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
+        log_write("\tVolume created on %d/%02d/%02d %02d:%02d:%02d\n",
+                  pfsInfo->fdateCreation.year + 1980,
+                  pfsInfo->fdateCreation.month - 1,
+                  pfsInfo->fdateCreation.day,
+                  pfsInfo->ftimeCreation.hours,
+                  pfsInfo->ftimeCreation.minutes,
+                  pfsInfo->ftimeCreation.twosecs * 2);
     }
 
     free(pfsInfo);

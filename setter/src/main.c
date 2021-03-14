@@ -24,10 +24,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "main.h"
 
 #include "include/defs.h"
+#include "log.h"
 
 #if defined(macintosh) && defined(__MWERKS__)
 #include <SIOUX.h>
@@ -37,22 +39,55 @@ Copyright (C) 2011-2021 Natalia Portillo
 int main(int argc, char** argv)
 {
     size_t clusterSize = 0;
+    int    i;
+    int    quiet  = 0;
+    int    log    = 0;
+    char*  target = NULL;
 
 #if defined(macintosh) && defined(__MWERKS__)
     argc = ccommand(&argv);
 #endif
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
-    printf("%s\n", AARU_COPYRIGHT);
+    log_write("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
+    log_write("%s\n", AARU_COPYRIGHT);
 
-    printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
-    printf("\n");
-
-    if(argc != 2)
+    for(i = 1; i < argc; i++)
     {
-        printf("Usage %s <path>\n", argv[0]);
-        return -1;
+        if(strncmp(argv[i], "--log", 5) == 0 || strncmp(argv[i], "-l", 2) == 0) log = 1;
+        else if(strncmp(argv[i], "--quiet", 7) == 0 || strncmp(argv[i], "-q", 2) == 0)
+            quiet = 1;
+        else if(argv[i][0] == '-')
+        {
+            fprintf(stderr, "Unknown parameter %s.\n", argv[i]);
+            fprintf(stderr, "Usage %s [--log] [--quiet] <path>\n", argv[0]);
+            return -1;
+        }
+        else if(target != NULL)
+        {
+            fprintf(stderr, "Cannot set more than one target.\n");
+            fprintf(stderr, "Usage %s [--log] [--quiet] <path>\n", argv[0]);
+            return -2;
+        }
+        else
+            target = argv[i];
     }
+
+    log_set_quiet(quiet);
+
+    if(log)
+    {
+        log = !log_open(quiet);
+
+        if(log)
+        {
+            log_write("Parameters:");
+            for(i = 0; i < argc; i++) log_write(" %s", argv[i]);
+            log_write("\n");
+        }
+    }
+
+    log_write("Running in %s (%s)\n", OS_NAME, OS_ARCH);
+    log_write("\n");
 
     GetOsInfo();
     GetVolumeInfo(argv[1], &clusterSize);
@@ -70,5 +105,6 @@ int main(int argc, char** argv)
     DeleteFiles(argv[1]);
     GetVolumeInfo(argv[1], &clusterSize);
 
+    log_close();
     return 0;
 }

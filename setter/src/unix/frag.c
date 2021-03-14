@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
@@ -50,7 +51,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -58,7 +59,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -66,11 +67,11 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Writing fragmented files:\n");
+    log_write("Writing fragmented files:\n");
 
     h   = fopen("HALFCLST", "w+");
     rc  = 0;
@@ -92,7 +93,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
     h   = fopen("QUARCLST", "w+");
     rc  = 0;
@@ -114,7 +115,8 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
+    log_write(
+        "\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
     h   = fopen("TWOCLST", "w+");
     rc  = 0;
@@ -136,7 +138,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
     h   = fopen("TRQTCLST", "w+");
     rc  = 0;
@@ -158,12 +160,12 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
-           "TRQTCLST",
-           threeQuartersCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+              "TRQTCLST",
+              threeQuartersCluster,
+              rc,
+              wRc,
+              cRc);
 
     h   = fopen("TWTQCLST", "w+");
     rc  = 0;
@@ -185,12 +187,12 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
-           "TWTQCLST",
-           twoAndThreeQuartCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+              "TWTQCLST",
+              twoAndThreeQuartCluster,
+              rc,
+              wRc,
+              cRc);
 
     h   = fopen("TWO1", "w+");
     rc  = 0;
@@ -212,7 +214,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
     h   = fopen("TWO2", "w+");
     rc  = 0;
@@ -234,7 +236,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
     h   = fopen("TWO3", "w+");
     rc  = 0;
@@ -256,11 +258,11 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tDeleting \"TWO2\".\n");
+    log_write("\tDeleting \"TWO2\".\n");
     ret = unlink("TWO2");
     if(!ret) { rc = errno; }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
     h   = fopen("FRAGTHRQ", "w+");
     rc  = 0;
@@ -282,19 +284,19 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tDeleting \"TWO1\".\n");
+    log_write("\tDeleting \"TWO1\".\n");
     ret = unlink("TWO1");
     if(!ret) { rc = errno; }
-    printf("\tDeleting \"TWO3\".\n");
+    log_write("\tDeleting \"TWO3\".\n");
     ret = unlink("TWO3");
     if(!ret) { rc = errno; }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
-           "FRAGTHRQ",
-           threeQuartersCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+              "FRAGTHRQ",
+              threeQuartersCluster,
+              rc,
+              wRc,
+              cRc);
 
     h   = fopen("FRAGSIXQ", "w+");
     rc  = 0;
@@ -316,10 +318,10 @@ void Fragmentation(const char* path, size_t clusterSize)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
-           "FRAGSIXQ",
-           twoAndThreeQuartCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
+              "FRAGSIXQ",
+              twoAndThreeQuartCluster,
+              rc,
+              wRc,
+              cRc);
 }

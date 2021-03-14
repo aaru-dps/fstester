@@ -27,6 +27,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/utsname.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void GetOsInfo()
 {
@@ -37,13 +38,13 @@ void GetOsInfo()
 
     if(ret)
     {
-        printf("Error %d retrieving OS information.\n", errno);
+        log_write("Error %d retrieving OS information.\n", errno);
         return;
     }
 
-    printf("OS information:\n");
-    printf("\tOS name: %s\n", buf.sysname);
-    printf("\tRelease: %s\n", buf.release);
-    printf("\tVersion: %s\n", buf.version);
-    printf("\tMachine: %s\n", buf.machine);
+    log_write("OS information:\n");
+    log_write("\tOS name: %s\n", buf.sysname);
+    log_write("\tRelease: %s\n", buf.release);
+    log_write("\tVersion: %s\n", buf.version);
+    log_write("\tMachine: %s\n", buf.machine);
 }

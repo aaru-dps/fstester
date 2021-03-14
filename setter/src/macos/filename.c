@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void Filenames(const char* path)
@@ -56,7 +57,7 @@ void Filenames(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -72,13 +73,13 @@ void Filenames(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating files with different filenames.\n");
+    log_write("Creating files with different filenames.\n");
 
     for(pos = 0; filenames[pos]; pos++)
     {
@@ -102,6 +103,6 @@ void Filenames(const char* path)
             }
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+        log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }

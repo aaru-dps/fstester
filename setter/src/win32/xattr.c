@@ -37,6 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "xattr.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 extern DWORD oldVersion;
 
@@ -66,7 +67,7 @@ void ExtendedAttributes(const char* path)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying Windows version.\n", error);
+            log_write("Error %lu querying Windows version.\n", error);
             return;
         }
     }
@@ -84,7 +85,7 @@ void ExtendedAttributes(const char* path)
     if(ntdll == NULL)
     {
         error = GetLastError();
-        printf("Error %lu loading NTDLL.DLL.\n", error);
+        log_write("Error %lu loading NTDLL.DLL.\n", error);
         return;
     }
 
@@ -93,7 +94,7 @@ void ExtendedAttributes(const char* path)
     if(func == NULL)
     {
         error = GetLastError();
-        printf("Error %lu finding NtSetEaFile.\n", error);
+        log_write("Error %lu finding NtSetEaFile.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -105,7 +106,7 @@ void ExtendedAttributes(const char* path)
     if(func == NULL)
     {
         error = GetLastError();
-        printf("Error %lu finding NtQueryEaFile.\n", error);
+        log_write("Error %lu finding NtQueryEaFile.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -116,7 +117,7 @@ void ExtendedAttributes(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         FreeLibrary(ntdll);
         return;
     }
@@ -131,7 +132,7 @@ void ExtendedAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -141,7 +142,7 @@ void ExtendedAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         FreeLibrary(ntdll);
         return;
     }
@@ -151,12 +152,12 @@ void ExtendedAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         FreeLibrary(ntdll);
         return;
     }
 
-    printf("Creating files with extended attributes.\n");
+    log_write("Creating files with extended attributes.\n");
 
     rRc = 0;
     cmp = TRUE;
@@ -209,13 +210,13 @@ void ExtendedAttributes(const char* path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
-           "COMMENTS",
-           rc,
-           wRc,
-           cRc,
-           rRc,
-           cmp);
+    log_write("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
+              "COMMENTS",
+              rc,
+              wRc,
+              cRc,
+              rRc,
+              cmp);
 
     rRc = 0;
     cmp = TRUE;
@@ -268,13 +269,13 @@ void ExtendedAttributes(const char* path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
-           "COMMENTS.CRT",
-           rc,
-           wRc,
-           cRc,
-           rRc,
-           cmp);
+    log_write("\tFile with comments = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
+              "COMMENTS.CRT",
+              rc,
+              wRc,
+              cRc,
+              rRc,
+              cmp);
 
     rRc = 0;
     cmp = TRUE;
@@ -327,13 +328,13 @@ void ExtendedAttributes(const char* path)
         if(!ret) cRc = GetLastError();
     }
 
-    printf("\tFile with icon = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
-           "ICON",
-           rc,
-           wRc,
-           cRc,
-           rRc,
-           cmp);
+    log_write("\tFile with icon = \"%s\", rc = 0x%08lx, wRc = %lu, cRc = %lu, rRc = %lu, cmp = %d\n",
+              "ICON",
+              rc,
+              wRc,
+              cRc,
+              rRc,
+              cmp);
 
     FreeLibrary(ntdll);
 }

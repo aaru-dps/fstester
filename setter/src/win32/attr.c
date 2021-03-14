@@ -37,6 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "attr.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 extern DWORD oldVersion;
 
@@ -59,7 +60,7 @@ void FileAttributes(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -73,7 +74,7 @@ void FileAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -82,7 +83,7 @@ void FileAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -91,11 +92,11 @@ void FileAttributes(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating attributes files.\n");
+    log_write("Creating attributes files.\n");
 
     for(i = 0; i < KNOWN_WIN32_ATTRS; i++)
     {
@@ -119,12 +120,12 @@ void FileAttributes(const char* path)
             if(!ret) cRc = GetLastError();
         }
 
-        printf("\t%s: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-               win32_attrs[i].description,
-               win32_attrs[i].filename,
-               rc,
-               wRc,
-               cRc);
+        log_write("\t%s: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+                  win32_attrs[i].description,
+                  win32_attrs[i].filename,
+                  rc,
+                  wRc,
+                  cRc);
     }
 
     if(WinGetVersionExA)
@@ -135,7 +136,7 @@ void FileAttributes(const char* path)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying Windows version.\n", error);
+            log_write("Error %lu querying Windows version.\n", error);
             free(lpRootPathName);
             return;
         }
@@ -164,7 +165,7 @@ void FileAttributes(const char* path)
             ret = CloseHandle(h);
             if(!ret) cRc = GetLastError();
         }
-        printf("\tFile is compressed: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "COMPRESS", rc, wRc, cRc);
+        log_write("\tFile is compressed: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", "COMPRESS", rc, wRc, cRc);
     }
 
     advapi32 = LoadLibraryA("ADVAPI32.DLL");
@@ -205,14 +206,14 @@ void FileAttributes(const char* path)
             ret = SetFileAttributesA(encrypted_win32_attrs[i].filename, encrypted_win32_attrs[i].attr);
             if(!ret) aRc = GetLastError();
         }
-        printf("\t%s: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
-               encrypted_win32_attrs[i].description,
-               encrypted_win32_attrs[i].filename,
-               rc,
-               wRc,
-               cRc,
-               aRc,
-               eRc);
+        log_write("\t%s: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, aRc = %lu, eRc = %lu\n",
+                  encrypted_win32_attrs[i].description,
+                  encrypted_win32_attrs[i].filename,
+                  rc,
+                  wRc,
+                  cRc,
+                  aRc,
+                  eRc);
     }
 
     FreeLibrary(advapi32);

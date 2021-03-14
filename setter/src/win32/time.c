@@ -37,24 +37,25 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "time.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void Timestamps(const char* path)
 {
-    char     message[300];
-    BOOL     ret;
-    DWORD    error;
-    LPSTR    lpRootPathName;
-    size_t   pathSize = strlen(path);
-    HANDLE   h;
-    DWORD    rc, wRc, cRc, tRc;
-    DWORD    dwNumberOfBytesWritten;
-    int      i;
+    char   message[300];
+    BOOL   ret;
+    DWORD  error;
+    LPSTR  lpRootPathName;
+    size_t pathSize = strlen(path);
+    HANDLE h;
+    DWORD  rc, wRc, cRc, tRc;
+    DWORD  dwNumberOfBytesWritten;
+    int    i;
 
     lpRootPathName = malloc(dwMaxNameSize);
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -68,7 +69,7 @@ void Timestamps(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -77,7 +78,7 @@ void Timestamps(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -86,11 +87,11 @@ void Timestamps(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating timestamped files.\n");
+    log_write("Creating timestamped files.\n");
 
     for(i = 0; i < KNOWN_WIN32_TIMESTAMPS; i++)
     {
@@ -125,11 +126,11 @@ void Timestamps(const char* path)
             if(!ret) cRc = GetLastError();
         }
 
-        printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n",
-               win32_timestamps[i].filename,
-               rc,
-               wRc,
-               cRc,
-               tRc);
+        log_write("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu, tRc = %lu\n",
+                  win32_timestamps[i].filename,
+                  rc,
+                  wRc,
+                  cRc,
+                  tRc);
     }
 }

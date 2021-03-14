@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "attr.h"
 #include "macos.h"
 
@@ -57,7 +58,7 @@ void FileAttributes(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -73,13 +74,13 @@ void FileAttributes(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating attribute files.\n");
+    log_write("Creating attribute files.\n");
 
     for(i = 0; i < KNOWN_MAC_ATTRS; i++)
     {
@@ -115,11 +116,11 @@ void FileAttributes(const char* path)
             }
         }
 
-        printf("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-               mac_attrs[i].description,
-               mac_attrs[i].filename,
-               rc,
-               wRc,
-               cRc);
+        log_write("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+                  mac_attrs[i].description,
+                  mac_attrs[i].filename,
+                  rc,
+                  wRc,
+                  cRc);
     }
 }

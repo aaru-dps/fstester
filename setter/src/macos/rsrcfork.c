@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 #include "rsrcfork.h"
 
@@ -95,7 +96,7 @@ void ResourceFork(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -111,13 +112,13 @@ void ResourceFork(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating resource forks.\n");
+    log_write("Creating resource forks.\n");
 
     memset(&finderInfo, 0, sizeof(FInfo));
     rc = HCreate(refNum, dirId, "\pICON", ostUnknown, ftGenericDocumentPC);
@@ -150,12 +151,12 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
-           "ICON",
-           rc,
-           wRc,
-           cRc,
-           rRc);
+    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+              "ICON",
+              rc,
+              wRc,
+              cRc,
+              rRc);
 
     memset(&finderInfo, 0, sizeof(FInfo));
     rc = HCreate(refNum, dirId, "\pPICT", ostUnknown, ftGenericDocumentPC);
@@ -189,12 +190,12 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
-           "PICT",
-           rc,
-           wRc,
-           cRc,
-           rRc);
+    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+              "PICT",
+              rc,
+              wRc,
+              cRc,
+              rRc);
 
     memset(&finderInfo, 0, sizeof(FInfo));
     rc = HCreate(refNum, dirId, "\pVERSION", ostUnknown, ftGenericDocumentPC);
@@ -226,12 +227,12 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
-           "VERSION",
-           rc,
-           wRc,
-           cRc,
-           rRc);
+    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+              "VERSION",
+              rc,
+              wRc,
+              cRc,
+              rRc);
 
     memset(&finderInfo, 0, sizeof(FInfo));
     rc = HCreate(refNum, dirId, "\pALL", ostUnknown, ftGenericDocumentPC);
@@ -280,13 +281,14 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d, rRc2 = "
-           "%d, rRc3 = %d\n",
-           "ALL",
-           rc,
-           wRc,
-           cRc,
-           rRc,
-           rRc2,
-           rRc3);
+    log_write(
+        "\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d, rRc2 = "
+        "%d, rRc3 = %d\n",
+        "ALL",
+        rc,
+        wRc,
+        cRc,
+        rRc,
+        rRc2,
+        rRc3);
 }

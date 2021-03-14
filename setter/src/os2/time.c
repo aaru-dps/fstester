@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "os2.h"
 
 #define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"
@@ -62,7 +63,7 @@ void Timestamps(const char* path)
 
     if(rc)
     {
-        printf("Cannot change to specified path, not continuing.\n");
+        log_write("Cannot change to specified path, not continuing.\n");
         return;
     }
 
@@ -70,13 +71,13 @@ void Timestamps(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = __os2_chdir("TIMES");
 
-    printf("Creating timestamped files.\n");
+    log_write("Creating timestamped files.\n");
 
     rc = DosOpen((PSZ) "MAXCTIME",
                  &handle,
@@ -112,7 +113,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXCTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MINCTIME",
                  &handle,
@@ -148,7 +149,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINCTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y19CTIME",
                  &handle,
@@ -184,7 +185,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y2KCTIME",
                  &handle,
@@ -220,7 +221,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19CTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MAXWTIME",
                  &handle,
@@ -256,7 +257,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXWTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXWTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MINWTIME",
                  &handle,
@@ -292,7 +293,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINWTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINWTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y19WTIME",
                  &handle,
@@ -328,7 +329,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19WTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19WTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y2KWTIME",
                  &handle,
@@ -364,7 +365,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KWTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KWTIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MAXATIME",
                  &handle,
@@ -400,7 +401,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MINATIME",
                  &handle,
@@ -436,7 +437,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y19ATIME",
                  &handle,
@@ -472,7 +473,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19ATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19ATIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y2KATIME",
                  &handle,
@@ -508,7 +509,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MAX_TIME",
                  &handle,
@@ -548,7 +549,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAX_TIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAX_TIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "MIN_TIME",
                  &handle,
@@ -588,7 +589,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MIN_TIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MIN_TIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y19_TIME",
                  &handle,
@@ -628,7 +629,7 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19_TIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y19_TIME", rc, wRc, cRc, tRc);
 
     rc = DosOpen((PSZ) "Y2K_TIME",
                  &handle,
@@ -668,5 +669,5 @@ void Timestamps(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2K_TIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2K_TIME", rc, wRc, cRc, tRc);
 }

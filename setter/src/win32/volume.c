@@ -37,6 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "volume.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 extern DWORD oldVersion;
 
@@ -63,14 +64,14 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     *clusterSize = 0;
 
-    printf("Volume information:\n");
-    printf("\tPath: %s\n", path);
+    log_write("Volume information:\n");
+    log_write("\tPath: %s\n", path);
 
     lpVolumeNameBuffer = malloc(dwMaxNameSize);
 
     if(lpVolumeNameBuffer == NULL)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -78,7 +79,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(lpFileSystemNameBuffer == NULL)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
         return;
     }
@@ -87,7 +88,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         return;
@@ -110,160 +111,160 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu querying volume information.\n", error);
+        log_write("Error %lu querying volume information.\n", error);
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         free(lpRootPathName);
         return;
     }
 
-    printf("\tFilesystem: %s\n", lpFileSystemNameBuffer);
-    printf("\tVolume name: %s\n", lpVolumeNameBuffer);
-    printf("\tMaximum component size: %lu\n", dwMaximumComponentLength);
+    log_write("\tFilesystem: %s\n", lpFileSystemNameBuffer);
+    log_write("\tVolume name: %s\n", lpVolumeNameBuffer);
+    log_write("\tMaximum component size: %lu\n", dwMaximumComponentLength);
 
     if(dwFileSystemFlags > 0)
     {
-        printf("\tFlags:\n");
+        log_write("\tFlags:\n");
 
         if(dwFileSystemFlags & (DWORD)FILE_CASE_PRESERVED_NAMES)
         {
-            printf("\t\tVolume preserves file name case.\n");
+            log_write("\t\tVolume preserves file name case.\n");
             dwFileSystemFlags -= FILE_CASE_PRESERVED_NAMES;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_CASE_SENSITIVE_SEARCH)
         {
-            printf("\t\tVolume supports case sensitiveness.\n");
+            log_write("\t\tVolume supports case sensitiveness.\n");
             dwFileSystemFlags -= FILE_CASE_SENSITIVE_SEARCH;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_DAX_VOLUME)
         {
-            printf("\t\tDirect access volume.\n");
+            log_write("\t\tDirect access volume.\n");
             dwFileSystemFlags -= FILE_DAX_VOLUME;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_FILE_COMPRESSION)
         {
-            printf("\t\tVolume supports per-file compression.\n");
+            log_write("\t\tVolume supports per-file compression.\n");
             dwFileSystemFlags -= FILE_FILE_COMPRESSION;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_NAMED_STREAMS)
         {
-            printf("\t\tVolume supports Alternate Data Streams.\n");
+            log_write("\t\tVolume supports Alternate Data Streams.\n");
             dwFileSystemFlags -= FILE_NAMED_STREAMS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_PERSISTENT_ACLS)
         {
-            printf("\t\tVolume supports persistent Access Control Lists.\n");
+            log_write("\t\tVolume supports persistent Access Control Lists.\n");
             dwFileSystemFlags -= FILE_PERSISTENT_ACLS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_READ_ONLY_VOLUME)
         {
-            printf("\t\tVolume is read-only.\n");
+            log_write("\t\tVolume is read-only.\n");
             dwFileSystemFlags -= FILE_READ_ONLY_VOLUME;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SEQUENTIAL_WRITE_ONCE)
         {
-            printf("\t\tVolume supports a single sequential write.\n");
+            log_write("\t\tVolume supports a single sequential write.\n");
             dwFileSystemFlags -= FILE_SEQUENTIAL_WRITE_ONCE;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_ENCRYPTION)
         {
-            printf("\t\tVolume supports per-file encryption.\n");
+            log_write("\t\tVolume supports per-file encryption.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_ENCRYPTION;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_EXTENDED_ATTRIBUTES)
         {
-            printf("\t\tVolume supports extended attributes.\n");
+            log_write("\t\tVolume supports extended attributes.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_EXTENDED_ATTRIBUTES;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_HARD_LINKS)
         {
-            printf("\t\tVolume supports hard links.\n");
+            log_write("\t\tVolume supports hard links.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_HARD_LINKS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_OBJECT_IDS)
         {
-            printf("\t\tVolume supports object IDs.\n");
+            log_write("\t\tVolume supports object IDs.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_OBJECT_IDS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_OPEN_BY_FILE_ID)
         {
-            printf("\t\tVolume can open files by ID.\n");
+            log_write("\t\tVolume can open files by ID.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_OPEN_BY_FILE_ID;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_REPARSE_POINTS)
         {
-            printf("\t\tVolume supports reparse points.\n");
+            log_write("\t\tVolume supports reparse points.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_REPARSE_POINTS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_SPARSE_FILES)
         {
-            printf("\t\tVolume supports sparse files.\n");
+            log_write("\t\tVolume supports sparse files.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_SPARSE_FILES;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_TRANSACTIONS)
         {
-            printf("\t\tVolume supports transactions.\n");
+            log_write("\t\tVolume supports transactions.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_TRANSACTIONS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_USN_JOURNAL)
         {
-            printf("\t\tVolume has an USN journal.\n");
+            log_write("\t\tVolume has an USN journal.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_USN_JOURNAL;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_UNICODE_ON_DISK)
         {
-            printf("\t\tVolume stores filenames as Unicode.\n");
+            log_write("\t\tVolume stores filenames as Unicode.\n");
             dwFileSystemFlags -= FILE_UNICODE_ON_DISK;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_VOLUME_IS_COMPRESSED)
         {
-            printf("\t\tVolume is compressed.\n");
+            log_write("\t\tVolume is compressed.\n");
             dwFileSystemFlags -= FILE_VOLUME_IS_COMPRESSED;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_VOLUME_QUOTAS)
         {
-            printf("\t\tVolume supports user quotas.\n");
+            log_write("\t\tVolume supports user quotas.\n");
             dwFileSystemFlags -= FILE_VOLUME_QUOTAS;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_RETURNS_CLEANUP_RESULT_INFO)
         {
-            printf("\t\tOn a clean operation, volume returns additional information.\n");
+            log_write("\t\tOn a clean operation, volume returns additional information.\n");
             dwFileSystemFlags -= FILE_RETURNS_CLEANUP_RESULT_INFO;
         }
 
         if(dwFileSystemFlags & (DWORD)FILE_SUPPORTS_POSIX_UNLINK_RENAME)
         {
-            printf("\t\tVolume supports POSIX-style delete and rename operations.\n");
+            log_write("\t\tVolume supports POSIX-style delete and rename operations.\n");
             dwFileSystemFlags -= FILE_SUPPORTS_POSIX_UNLINK_RENAME;
         }
 
         if(dwFileSystemFlags & (DWORD)FS_LFN_APIS)
         {
-            printf("\t\tVolume supports LFN API.\n");
+            log_write("\t\tVolume supports LFN API.\n");
             dwFileSystemFlags -= FS_LFN_APIS;
         }
 
-        if(dwFileSystemFlags > 0) printf("Unknown flags: 0x%08lx.\n", dwFileSystemFlags);
+        if(dwFileSystemFlags > 0) log_write("Unknown flags: 0x%08lx.\n", dwFileSystemFlags);
     }
 
     free(lpVolumeNameBuffer);
@@ -275,14 +276,14 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu querying volume space.\n", error);
+        log_write("Error %lu querying volume space.\n", error);
         free(lpRootPathName);
         return;
     }
 
     *clusterSize = dwSectorsPerCluster * dwBytesPerSector;
-    printf("\tBytes per sector: %lu\n", dwBytesPerSector);
-    printf("\tSectors per cluster: %lu ("SIZE_T_FORMAT" bytes)\n", dwSectorsPerCluster, *clusterSize);
+    log_write("\tBytes per sector: %lu\n", dwBytesPerSector);
+    log_write("\tSectors per cluster: %lu (" SIZE_T_FORMAT " bytes)\n", dwSectorsPerCluster, *clusterSize);
 
     if(WinGetVersionExA)
     {
@@ -292,7 +293,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying Windows version.\n", error);
+            log_write("Error %lu querying Windows version.\n", error);
             free(lpRootPathName);
             return;
         }
@@ -320,13 +321,13 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying extended volume space.\n", error);
+            log_write("Error %lu querying extended volume space.\n", error);
             free(lpRootPathName);
             return;
         }
 
-        printf("\tVolume size: %I64d bytes\n", qwTotalNumberOfBytes.QuadPart);
-        printf("\tVolume free: %I64d bytes\n", qwTotalNumberOfFreeBytes.QuadPart);
+        log_write("\tVolume size: %I64d bytes\n", qwTotalNumberOfBytes.QuadPart);
+        log_write("\tVolume free: %I64d bytes\n", qwTotalNumberOfFreeBytes.QuadPart);
     }
     else
     {
@@ -335,8 +336,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         qwTotalNumberOfBytes.QuadPart *= *clusterSize;
         qwTotalNumberOfFreeBytes.QuadPart *= *clusterSize;
 
-        printf("\tClusters: %lu (%I64d bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes.QuadPart);
-        printf("\tFree clusters: %lu (%I64d bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes.QuadPart);
+        log_write("\tClusters: %lu (%I64d bytes)\n", dwTotalNumberOfClusters, qwTotalNumberOfBytes.QuadPart);
+        log_write("\tFree clusters: %lu (%I64d bytes)\n", dwNumberOfFreeClusters, qwTotalNumberOfFreeBytes.QuadPart);
     }
 
     free(lpRootPathName);

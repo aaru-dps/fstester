@@ -38,6 +38,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "win32.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void DeleteFiles(const char* path)
 {
@@ -53,7 +54,7 @@ void DeleteFiles(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -67,7 +68,7 @@ void DeleteFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -76,7 +77,7 @@ void DeleteFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -85,11 +86,11 @@ void DeleteFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating and deleting files.\n");
+    log_write("Creating and deleting files.\n");
 
     for(pos = 0; pos < 64; pos++)
     {

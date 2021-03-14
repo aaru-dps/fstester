@@ -38,6 +38,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void Sparse(const char* path)
 {
@@ -60,7 +61,7 @@ void Sparse(const char* path)
 
     if(lpVolumeNameBuffer == NULL)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -68,7 +69,7 @@ void Sparse(const char* path)
 
     if(lpFileSystemNameBuffer == NULL)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
         return;
     }
@@ -77,7 +78,7 @@ void Sparse(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         return;
@@ -100,7 +101,7 @@ void Sparse(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu querying volume information.\n", error);
+        log_write("Error %lu querying volume information.\n", error);
         free(lpVolumeNameBuffer);
         free(lpFileSystemNameBuffer);
         free(lpRootPathName);
@@ -121,7 +122,7 @@ void Sparse(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -130,7 +131,7 @@ void Sparse(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -139,13 +140,13 @@ void Sparse(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
     free(lpRootPathName);
 
-    printf("Creating sparse files.\n");
+    log_write("Creating sparse files.\n");
 
     h   = CreateFileA("SMALL", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -213,14 +214,14 @@ void Sparse(const char* path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
-           "SMALL",
-           4096 * 3,
-           rc,
-           wRc,
-           cRc,
-           sRc,
-           zRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
+              "SMALL",
+              4096 * 3,
+              rc,
+              wRc,
+              cRc,
+              sRc,
+              zRc);
 
     h   = CreateFileA("BIG", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -288,12 +289,12 @@ void Sparse(const char* path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
-           "BIG",
-           4096 * 30,
-           rc,
-           wRc,
-           cRc,
-           sRc,
-           zRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %lu, wRc = %lu, cRc = %lu, sRc = %lu, zRc = %lu\n",
+              "BIG",
+              4096 * 30,
+              rc,
+              wRc,
+              cRc,
+              sRc,
+              zRc);
 }

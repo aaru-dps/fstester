@@ -34,19 +34,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "os2.h"
 
 void FileAttributes(const char* path)
 {
-    char   drivePath[4];
-    APIRET rc = 0, wRc = 0, cRc = 0;
-    HFILE  handle;
+    char       drivePath[4];
+    APIRET     rc = 0, wRc = 0, cRc = 0;
+    HFILE      handle;
     int        i;
     ACTION_RET actionTaken = 0;
 
 // 32 bit
 #if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386))
-    FILESTATUS3 fileStatus  = {{0}};
+    FILESTATUS3 fileStatus = {{0}};
 #endif
 
     drivePath[0] = path[0];
@@ -58,7 +59,7 @@ void FileAttributes(const char* path)
 
     if(rc)
     {
-        printf("Cannot change to specified path, not continuing.\n");
+        log_write("Cannot change to specified path, not continuing.\n");
         return;
     }
 
@@ -66,13 +67,13 @@ void FileAttributes(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = __os2_chdir("ATTRS");
 
-    printf("Creating attributes files.\n");
+    log_write("Creating attributes files.\n");
 
     for(i = 0; i < KNOWN_OS2_ATTRS; i++)
     {
@@ -102,11 +103,11 @@ void FileAttributes(const char* path)
 #endif
         }
 
-        printf("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-               os2_attrs[i].description,
-               os2_attrs[i].filename,
-               rc,
-               wRc,
-               cRc);
+        log_write("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+                  os2_attrs[i].description,
+                  os2_attrs[i].filename,
+                  rc,
+                  wRc,
+                  cRc);
     }
 }

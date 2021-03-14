@@ -31,6 +31,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <utime.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "unix.h"
 
 void Timestamps(const char* path)
@@ -47,7 +48,7 @@ void Timestamps(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -55,7 +56,7 @@ void Timestamps(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -63,11 +64,11 @@ void Timestamps(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating timestamped files.\n");
+    log_write("Creating timestamped files.\n");
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("MAXATIME", "w+");
@@ -91,7 +92,7 @@ void Timestamps(const char* path)
         ret = utime("MAXATIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("MAXMTIME", "w+");
@@ -115,7 +116,7 @@ void Timestamps(const char* path)
         ret = utime("MAXMTIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("MINATIME", "w+");
@@ -139,7 +140,7 @@ void Timestamps(const char* path)
         ret = utime("MINATIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("MINMTIME", "w+");
@@ -163,7 +164,7 @@ void Timestamps(const char* path)
         ret = utime("MINMTIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("Y1KATIME", "w+");
@@ -187,7 +188,7 @@ void Timestamps(const char* path)
         ret = utime("Y1KATIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("Y1KMTIME", "w+");
@@ -211,7 +212,7 @@ void Timestamps(const char* path)
         ret = utime("Y1KMTIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("Y2KATIME", "w+");
@@ -235,7 +236,7 @@ void Timestamps(const char* path)
         ret = utime("Y2KATIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("Y2KMTIME", "w+");
@@ -259,7 +260,7 @@ void Timestamps(const char* path)
         ret = utime("Y2KMTIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KMTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KMTIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("LESSATIME", "w+");
@@ -283,7 +284,7 @@ void Timestamps(const char* path)
         ret = utime("LESSATIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSATIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSATIME", rc, wRc, cRc, tRc);
 
     memset(&times, 0, sizeof(struct utimbuf));
     h   = fopen("LESSMTIME", "w+");
@@ -307,5 +308,5 @@ void Timestamps(const char* path)
         ret = utime("LESSMTIME", &times);
         if(ret) { tRc = errno; }
     }
-    printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSMTIME", rc, wRc, cRc, tRc);
+    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSMTIME", rc, wRc, cRc, tRc);
 }

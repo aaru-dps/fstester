@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "attr.h"
 
+#include "../log.h"
 #include "linux.h"
 
 void LinuxFileAttributes(const char* path)
@@ -50,7 +51,7 @@ void LinuxFileAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -58,7 +59,7 @@ void LinuxFileAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -66,11 +67,11 @@ void LinuxFileAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating files with different flags (attributes).\n");
+    log_write("Creating files with different flags (attributes).\n");
 
     for(i = 0; i < KNOWN_LINUX_ATTRS; i++)
     {
@@ -105,6 +106,6 @@ void LinuxFileAttributes(const char* path)
             ret = fclose(h);
             if(ret) { cRc = errno; }
         }
-        printf("\t%s, rc = %d, wRc = %d, sRc = %d, cRc = %d\n", linux_attrs[i].description, rc, wRc, sRc, cRc);
+        log_write("\t%s, rc = %d, wRc = %d, sRc = %d, cRc = %d\n", linux_attrs[i].description, rc, wRc, sRc, cRc);
     }
 }

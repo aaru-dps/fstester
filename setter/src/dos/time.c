@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 #include "time.h"
 
@@ -56,13 +57,13 @@ void Timestamps(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     chdir("TIMES");
 
-    printf("Creating timestamped files.\n");
+    log_write("Creating timestamped files.\n");
 
     for(i = 0; i < KNOWN_DOS_TIMES; i++)
     {
@@ -92,7 +93,7 @@ void Timestamps(const char* path)
             cRc = _dos_close(handle);
         }
 
-        printf(
+        log_write(
             "\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", dos_times[i].filename, rc, wRc, cRc, tRc);
     }
 }

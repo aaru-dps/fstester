@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void Links(const char* path)
 {
@@ -39,7 +40,7 @@ void Links(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -47,7 +48,7 @@ void Links(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -55,17 +56,17 @@ void Links(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating links.\n");
+    log_write("Creating links.\n");
 
     h = fopen("TARGET", "w+");
 
     if(h == NULL)
     {
-        printf("Error %d creating target file.\n", errno);
+        log_write("Error %d creating target file.\n", errno);
         return;
     }
 
@@ -75,9 +76,9 @@ void Links(const char* path)
 
     ret = link("TARGET", "HARD");
 
-    if(ret) { printf("Error %d creating hard link.\n", errno); }
+    if(ret) { log_write("Error %d creating hard link.\n", errno); }
 
     ret = symlink("TARGET", "SYMBOLIC");
 
-    if(ret) { printf("Error %d creating symbolic link.\n", errno); }
+    if(ret) { log_write("Error %d creating symbolic link.\n", errno); }
 }

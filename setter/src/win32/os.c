@@ -36,6 +36,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "os.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 DWORD oldVersion;
 
@@ -59,9 +60,10 @@ void GetOsInfo()
         oldVersion &= 0x80000000;
 
         if(oldVersion == 0)
-            printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+            log_write(
+                "\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         else
-            printf("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+            log_write("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
 
         return;
     }
@@ -77,9 +79,10 @@ void GetOsInfo()
         oldVersion &= 0x80000000;
 
         if(oldVersion == 0)
-            printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+            log_write(
+                "\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         else
-            printf("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+            log_write("\tRunning under Windows NT %lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
 
         FreeLibrary(kernel32);
 
@@ -94,49 +97,49 @@ void GetOsInfo()
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu querying Windows version.\n", error);
+        log_write("Error %lu querying Windows version.\n", error);
         FreeLibrary(kernel32);
         return;
     }
 
-    printf("OS information:\n");
+    log_write("OS information:\n");
 
     if(verInfo.dwPlatformId == VER_PLATFORM_WIN32s)
-        printf("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+        log_write("\tRunning under Windows %lu.%lu using Win32s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
     {
         if(verInfo.dwMinorVersion == 10)
         {
-            if(verInfo.dwBuildNumber == 2222) printf("\tRunning under Windows 98 SE");
+            if(verInfo.dwBuildNumber == 2222) log_write("\tRunning under Windows 98 SE");
             else
-                printf("\tRunning under Windows 98");
+                log_write("\tRunning under Windows 98");
         }
         else if(verInfo.dwMinorVersion == 90)
-            printf("\tRunning under Windows Me");
+            log_write("\tRunning under Windows Me");
         else if(verInfo.dwMinorVersion < 10)
-            printf("\tRunning under Windows 95");
+            log_write("\tRunning under Windows 95");
         else
-            printf("\tRunning under Windows");
+            log_write("\tRunning under Windows");
 
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %lu.%02lu.%lu%ss.\n",
-                       verInfo.dwMajorVersion,
-                       verInfo.dwMinorVersion,
-                       verInfo.dwBuildNumber,
-                       verInfo.szCSDVersion);
+                log_write(" version %lu.%02lu.%lu%ss.\n",
+                          verInfo.dwMajorVersion,
+                          verInfo.dwMinorVersion,
+                          verInfo.dwBuildNumber,
+                          verInfo.szCSDVersion);
             else
-                printf(
+                log_write(
                     " version %lu.%02lu%lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(
+                log_write(
                     " version %lu.%02lu %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             else
-                printf(" version %lu.%02lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+                log_write(" version %lu.%02lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         }
     }
     else if(verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
@@ -146,24 +149,24 @@ void GetOsInfo()
             case 5:
                 switch(verInfo.dwMinorVersion)
                 {
-                    case 0: printf("\tRunning under Windows 2000"); break;
-                    case 1: printf("\tRunning under Windows XP"); break;
-                    case 2: printf("\tRunning under Windows Server 2003"); break;
-                    default: printf("\tRunning under Windows NT");
+                    case 0: log_write("\tRunning under Windows 2000"); break;
+                    case 1: log_write("\tRunning under Windows XP"); break;
+                    case 2: log_write("\tRunning under Windows Server 2003"); break;
+                    default: log_write("\tRunning under Windows NT");
                 }
                 break;
             case 6:
                 switch(verInfo.dwMinorVersion)
                 {
-                    case 0: printf("\tRunning under Windows Vista"); break;
-                    case 1: printf("\tRunning under Windows 7"); break;
-                    case 2: printf("\tRunning under Windows 8"); break;
-                    case 3: printf("\tRunning under Windows 8.1"); break;
-                    default: printf("\tRunning under Windows NT"); break;
+                    case 0: log_write("\tRunning under Windows Vista"); break;
+                    case 1: log_write("\tRunning under Windows 7"); break;
+                    case 2: log_write("\tRunning under Windows 8"); break;
+                    case 3: log_write("\tRunning under Windows 8.1"); break;
+                    default: log_write("\tRunning under Windows NT"); break;
                 }
                 break;
-            case 10: printf("\tRunning under Windows 10"); break;
-            default: printf("\tRunning under Windows NT"); break;
+            case 10: log_write("\tRunning under Windows 10"); break;
+            default: log_write("\tRunning under Windows NT"); break;
         }
 
         if(verInfo.dwMinorVersion < 10) verInfo.dwMinorVersion = verInfo.dwMinorVersion * 10;
@@ -171,22 +174,22 @@ void GetOsInfo()
         if(verInfo.dwBuildNumber > 0)
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(" version %lu.%02lu.%lu %s.\n",
-                       verInfo.dwMajorVersion,
-                       verInfo.dwMinorVersion,
-                       verInfo.dwBuildNumber,
-                       verInfo.szCSDVersion);
+                log_write(" version %lu.%02lu.%lu %s.\n",
+                          verInfo.dwMajorVersion,
+                          verInfo.dwMinorVersion,
+                          verInfo.dwBuildNumber,
+                          verInfo.szCSDVersion);
             else
-                printf(
+                log_write(
                     " version %lu.%02lu.%lu.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
         }
         else
         {
             if(strlen(verInfo.szCSDVersion) > 0)
-                printf(
+                log_write(
                     " version %lu.%02lu %s.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.szCSDVersion);
             else
-                printf(" version %lu%02lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
+                log_write(" version %lu%02lud.\n", verInfo.dwMajorVersion, verInfo.dwMinorVersion);
         }
     }
 

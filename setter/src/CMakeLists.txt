@@ -22,6 +22,6 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-set(MAIN_SOURCES main.c main.h)
+set(MAIN_SOURCES main.c main.h log.c log.h)
 
 add_library(core ${MAIN_SOURCES})

@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void MillionFiles(const char* path)
@@ -54,7 +55,7 @@ void MillionFiles(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -72,11 +73,11 @@ void MillionFiles(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
-    printf("Creating lots of files.\n");
+    log_write("Creating lots of files.\n");
 
     for(pos = 0; pos < 5000; pos++)
     {
@@ -90,5 +91,5 @@ void MillionFiles(const char* path)
         if(rc) break;
     }
 
-    printf("\tCreated %d files\n", pos);
+    log_write("\tCreated %d files\n", pos);
 }

@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "../log.h"
 #include "linux.h"
 
 void LinuxSparse(const char* path)
@@ -47,7 +48,7 @@ void LinuxSparse(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -55,7 +56,7 @@ void LinuxSparse(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -63,11 +64,11 @@ void LinuxSparse(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating sparse files.\n");
+    log_write("Creating sparse files.\n");
 
     h   = fopen("SMALL", "w+");
     rc  = 0;
@@ -99,13 +100,13 @@ void LinuxSparse(const char* path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
-           "SMALL",
-           4096 * 3,
-           rc,
-           wRc,
-           cRc,
-           zRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
+              "SMALL",
+              4096 * 3,
+              rc,
+              wRc,
+              cRc,
+              zRc);
 
     h   = fopen("BIG", "w+");
     rc  = 0;
@@ -137,11 +138,11 @@ void LinuxSparse(const char* path)
         free(buffer);
     }
 
-    printf("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
-           "BIG",
-           4096 * 30,
-           rc,
-           wRc,
-           cRc,
-           zRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
+              "BIG",
+              4096 * 30,
+              rc,
+              wRc,
+              cRc,
+              zRc);
 }

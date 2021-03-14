@@ -22,53 +22,12 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#define INCL_DOSMISC
-#define INCL_DOSFILEMGR
+#ifndef AARU_FSTESTER_ETTER_SRC_LOG_H_
+#define AARU_FSTESTER_SETTER_SRC_LOG_H_
 
-#include <os2.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+int  log_open(int quiet);
+void log_write(const char* fmt, ...);
+void log_set_quiet(int quiet);
+void log_close();
 
-#include "../../include/consts.h"
-#include "../../include/defs.h"
-#include "../../log.h"
-#include "../os2.h"
-
-void GetOsInfo()
-{
-    ULONG  aulBuffer[3];
-    APIRET rc;
-    ULONG  MajorVer;
-    ULONG  MinorVer;
-    ULONG  pathLen[1];
-
-    rc = DosQuerySysInfo(QSV_VERSION_MAJOR, QSV_VERSION_REVISION, (PVOID)aulBuffer, 3 * sizeof(ULONG));
-
-    if(rc)
-    {
-        log_write("Error %d querying OS/2 version.\n", rc);
-        return;
-    }
-
-    if(aulBuffer[0] == 20)
-    {
-        MajorVer = aulBuffer[1] / 10;
-        MinorVer = aulBuffer[1] % 10;
-    }
-    else
-    {
-        MajorVer = aulBuffer[0];
-        MinorVer = aulBuffer[1];
-    }
-
-    log_write("OS information:\n");
-
-    if(aulBuffer[2] > 0x20) log_write("\tRunning under OS/2 %d.%d revision %c.\n", MajorVer, MinorVer, aulBuffer[2]);
-    else
-        log_write("\tRunning under OS/2 %d.%d\n", MajorVer, MinorVer);
-
-    rc = DosQuerySysInfo(QSV_MAX_PATH_LENGTH, QSV_MAX_PATH_LENGTH, (PVOID)pathLen, sizeof(ULONG));
-
-    log_write("\tMaximum path is %lu bytes.\n", pathLen[0]);
-}
+#endif // AARU_FSTESTER_SETTER_SRC_LOG_H_

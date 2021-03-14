@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "win32.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void DirectoryDepth(const char* path)
 {
@@ -48,7 +49,7 @@ void DirectoryDepth(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -62,7 +63,7 @@ void DirectoryDepth(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -71,7 +72,7 @@ void DirectoryDepth(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -80,11 +81,11 @@ void DirectoryDepth(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating deepest directory tree.\n");
+    log_write("Creating deepest directory tree.\n");
 
     while(ret)
     {
@@ -97,5 +98,5 @@ void DirectoryDepth(const char* path)
         pos++;
     }
 
-    printf("\tCreated %ld levels of directory hierarchy\n", pos);
+    log_write("\tCreated %ld levels of directory hierarchy\n", pos);
 }

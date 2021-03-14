@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void DirectoryDepth(const char* path)
@@ -49,7 +50,7 @@ void DirectoryDepth(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -65,11 +66,11 @@ void DirectoryDepth(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
-    printf("Creating deepest directory tree.\n");
+    log_write("Creating deepest directory tree.\n");
 
     while(!rc)
     {
@@ -94,5 +95,5 @@ void DirectoryDepth(const char* path)
         if(pos == 500) break;
     }
 
-    printf("\tCreated %d levels of directory hierarchy\n", pos);
+    log_write("\tCreated %d levels of directory hierarchy\n", pos);
 }

@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 
 void DirectoryDepth(const char* path)
@@ -52,13 +53,13 @@ void DirectoryDepth(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = chdir("DEPTH");
 
-    printf("Creating deepest directory tree.\n");
+    log_write("Creating deepest directory tree.\n");
 
     while(!rc)
     {
@@ -71,5 +72,5 @@ void DirectoryDepth(const char* path)
         pos++;
     }
 
-    printf("\tCreated %d levels of directory hierarchy\n", pos);
+    log_write("\tCreated %d levels of directory hierarchy\n", pos);
 }

@@ -35,15 +35,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void Fragmentation(const char* path, size_t clusterSize)
 {
-  int32_t         halfCluster             = (int32_t)clusterSize / 2;
-  int32_t         quarterCluster          = (int32_t)clusterSize / 4;
-  int32_t         twoCluster              = (int32_t)clusterSize * 2;
-  int32_t         threeQuartersCluster    = halfCluster + quarterCluster;
-  int32_t         twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
+    int32_t        halfCluster             = (int32_t)clusterSize / 2;
+    int32_t        quarterCluster          = (int32_t)clusterSize / 4;
+    int32_t        twoCluster              = (int32_t)clusterSize * 2;
+    int32_t        threeQuartersCluster    = halfCluster + quarterCluster;
+    int32_t        twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
     OSErr          rc, wRc, cRc;
     Str255         str255;
@@ -62,7 +63,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -80,7 +81,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
@@ -102,7 +103,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pQUARCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -122,7 +123,8 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
+    log_write(
+        "\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWOCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -142,7 +144,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTRQTCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -162,12 +164,12 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
-           "TRQTCLST",
-           threeQuartersCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
+              "TRQTCLST",
+              threeQuartersCluster,
+              rc,
+              wRc,
+              cRc);
 
     rc = HCreate(refNum, dirId, "\pTWOQCLST", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -187,12 +189,12 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
-           "TWTQCLST",
-           twoAndThreeQuartCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
+              "TWTQCLST",
+              twoAndThreeQuartCluster,
+              rc,
+              wRc,
+              cRc);
 
     rc = HCreate(refNum, dirId, "\pTWO1", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -212,7 +214,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWO2", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -232,7 +234,7 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pTWO3", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -252,10 +254,10 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tDeleting \"TWO2\".\n");
+    log_write("\tDeleting \"TWO2\".\n");
     rc = HDelete(refNum, dirId, "\pTWO2");
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
     rc = HCreate(refNum, dirId, "\pFRAGTHRQ", ostUnknown, ftGenericDocumentPC);
     if(!rc)
@@ -275,9 +277,9 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tDeleting \"TWO1\".\n");
+    log_write("\tDeleting \"TWO1\".\n");
     rc = HDelete(refNum, dirId, "\pTWO1");
-    printf("\tDeleting \"TWO3\".\n");
+    log_write("\tDeleting \"TWO3\".\n");
     rc = HDelete(refNum, dirId, "\pTWO3");
 
     rc = HCreate(refNum, dirId, "\pFRAGSIXQ", ostUnknown, ftGenericDocumentPC);
@@ -298,10 +300,10 @@ void Fragmentation(const char* path, size_t clusterSize)
         }
     }
 
-    printf("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
-           "FRAGSIXQ",
-           twoAndThreeQuartCluster,
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile name = \"%s\", size = %ld, rc = %d, wRc = %d, cRc = %d\n",
+              "FRAGSIXQ",
+              twoAndThreeQuartCluster,
+              rc,
+              wRc,
+              cRc);
 }

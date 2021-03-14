@@ -30,9 +30,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2.h"
 #include "../../include/consts.h"
 #include "../../include/defs.h"
+#include "../../log.h"
+#include "../os2.h"
 
 void GetOsInfo()
 {
@@ -46,7 +47,7 @@ void GetOsInfo()
 
     if(rc)
     {
-        printf("Error %d querying OS/2 version.\n", rc);
+        log_write("Error %d querying OS/2 version.\n", rc);
         return;
     }
 
@@ -59,10 +60,10 @@ void GetOsInfo()
         MinorVer = 0;
     }
 
-    printf("OS information:\n");
-    printf("\tRunning under OS/2 %d.%d\n", MajorVer, MinorVer);
+    log_write("OS information:\n");
+    log_write("\tRunning under OS/2 %d.%d\n", MajorVer, MinorVer);
 
     rc = DosQSysInfo(0, (PBYTE)pathLen, sizeof(USHORT));
 
-    printf("\tMaximum path is %d bytes.\n", pathLen[0]);
+    log_write("\tMaximum path is %d bytes.\n", pathLen[0]);
 }

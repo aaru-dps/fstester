@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void DirectoryDepth(const char* path)
 {
@@ -40,7 +41,7 @@ void DirectoryDepth(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -48,7 +49,7 @@ void DirectoryDepth(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -56,11 +57,11 @@ void DirectoryDepth(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating deepest directory tree.\n");
+    log_write("Creating deepest directory tree.\n");
 
     while(!ret)
     {
@@ -76,5 +77,5 @@ void DirectoryDepth(const char* path)
         if(pos >= 1000) break;
     }
 
-    printf("\tCreated %ld levels of directory hierarchy\n", pos);
+    log_write("\tCreated %ld levels of directory hierarchy\n", pos);
 }

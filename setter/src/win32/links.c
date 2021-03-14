@@ -37,6 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "links.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 extern DWORD oldVersion;
 
@@ -62,7 +63,7 @@ void Links(const char* path)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying Windows version.\n", error);
+            log_write("Error %lu querying Windows version.\n", error);
             return;
         }
     }
@@ -79,7 +80,7 @@ void Links(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -93,7 +94,7 @@ void Links(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -102,7 +103,7 @@ void Links(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -111,7 +112,7 @@ void Links(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
@@ -120,7 +121,7 @@ void Links(const char* path)
     if(!kernel32)
     {
         error = GetLastError();
-        printf("Error %lu loading KERNEL32.DLL.\n", error);
+        log_write("Error %lu loading KERNEL32.DLL.\n", error);
         return;
     }
 
@@ -129,12 +130,12 @@ void Links(const char* path)
     if(!func)
     {
         error = GetLastError();
-        printf("Error %lu finding CreateSymbolicLinkA.\n", error);
+        log_write("Error %lu finding CreateSymbolicLinkA.\n", error);
     }
     else
     {
         WinNtCreateSymbolicLinkA = func;
-        printf("Creating symbolic links.\n");
+        log_write("Creating symbolic links.\n");
 
         h   = CreateFileA("TARGET",
                         dwFilePermissions,
@@ -162,7 +163,7 @@ void Links(const char* path)
             if(!ret) lRc = GetLastError();
         }
 
-        printf("\tSymbolic link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
+        log_write("\tSymbolic link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
 
     func = GetProcAddress(kernel32, "CreateHardLinkA");
@@ -170,12 +171,12 @@ void Links(const char* path)
     if(!func)
     {
         error = GetLastError();
-        printf("Error %lu finding CreateHardLinkA.\n", error);
+        log_write("Error %lu finding CreateHardLinkA.\n", error);
     }
     else
     {
         WinNtCreateHardLinkA = func;
-        printf("Creating hard links.\n");
+        log_write("Creating hard links.\n");
 
         h   = CreateFileA("HARDTRGT",
                         dwFilePermissions,
@@ -203,7 +204,7 @@ void Links(const char* path)
             if(!ret) lRc = GetLastError();
         }
 
-        printf("\tHard link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
+        log_write("\tHard link, rc = 0x%08lx, wRc = %lu, cRc = %lu, lRc = %lu\n", rc, wRc, cRc, lRc);
     }
 
     FreeLibrary(kernel32);

@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
@@ -57,23 +58,23 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         }
         else
         {
-            printf("Error %d requesting volume information.\n", _doserrno);
+            log_write("Error %d requesting volume information.\n", _doserrno);
             return;
         }
     }
 
     if(rc == 0)
     {
-        printf("\tBytes per sector: %lu\n", freeSpace.bytesPerSector);
-        printf("\tSectors per cluster: %lu (%lu bytes)\n",
-               freeSpace.sectorsPerCluster,
-               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector);
-        printf("\tClusters: %lu (%lu bytes)\n",
-               freeSpace.totalClusters,
-               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.totalClusters);
-        printf("\tFree clusters: %lu (%lu bytes)\n",
-               freeSpace.freeClusters,
-               freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.freeClusters);
+        log_write("\tBytes per sector: %lu\n", freeSpace.bytesPerSector);
+        log_write("\tSectors per cluster: %lu (%lu bytes)\n",
+                  freeSpace.sectorsPerCluster,
+                  freeSpace.sectorsPerCluster * freeSpace.bytesPerSector);
+        log_write("\tClusters: %lu (%lu bytes)\n",
+                  freeSpace.totalClusters,
+                  freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.totalClusters);
+        log_write("\tFree clusters: %lu (%lu bytes)\n",
+                  freeSpace.freeClusters,
+                  freeSpace.sectorsPerCluster * freeSpace.bytesPerSector * freeSpace.freeClusters);
 
         *clusterSize = freeSpace.sectorsPerCluster * freeSpace.bytesPerSector;
     }

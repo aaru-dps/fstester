@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 #include "time.h"
 
@@ -57,7 +58,7 @@ void Timestamps(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -73,13 +74,13 @@ void Timestamps(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating timestamped files.\n");
+    log_write("Creating timestamped files.\n");
 
     for(i = 0; i < KNOWN_MAC_TIMES; i++)
     {
@@ -116,6 +117,6 @@ void Timestamps(const char* path)
             tRc            = PBSetCatInfoSync(&cipbr);
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", str255, rc, wRc, cRc, tRc);
+        log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", str255, rc, wRc, cRc, tRc);
     }
 }

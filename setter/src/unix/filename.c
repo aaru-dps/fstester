@@ -30,6 +30,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void Filenames(const char* path)
 {
@@ -43,7 +44,7 @@ void Filenames(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -51,7 +52,7 @@ void Filenames(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -59,11 +60,11 @@ void Filenames(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating files with different filenames.\n");
+    log_write("Creating files with different filenames.\n");
 
     for(pos = 0; filenames[pos]; pos++)
     {
@@ -85,6 +86,6 @@ void Filenames(const char* path)
             if(ret) { cRc = errno; }
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+        log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }

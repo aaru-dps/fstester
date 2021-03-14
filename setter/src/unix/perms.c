@@ -30,6 +30,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "perms.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void FilePermissions(const char* path)
 {
@@ -43,7 +44,7 @@ void FilePermissions(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -51,7 +52,7 @@ void FilePermissions(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -59,11 +60,11 @@ void FilePermissions(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating attributes files.\n");
+    log_write("Creating attributes files.\n");
 
     for(i = 0; i < KNOWN_UNIX_PERMS; i++)
     {
@@ -79,6 +80,7 @@ void FilePermissions(const char* path)
             cRc = chmod(unix_perms[i].filename, unix_perms[i].mode);
         }
 
-        printf("\t%s: name = \"%s\", rc = %d, cRc = %d\n", unix_perms[i].description, unix_perms[i].filename, rc, cRc);
+        log_write(
+            "\t%s: name = \"%s\", rc = %d, cRc = %d\n", unix_perms[i].description, unix_perms[i].filename, rc, cRc);
     }
 }

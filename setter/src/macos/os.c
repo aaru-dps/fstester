@@ -28,6 +28,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdio.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void GetOsInfo()
@@ -35,35 +36,35 @@ void GetOsInfo()
     int32_t gestaltResponse;
     OSErr   rc;
 
-    printf("OS information:\n");
+    log_write("OS information:\n");
 
     rc = Gestalt(gestaltAUXVersion, &gestaltResponse);
-    if(!rc) { printf("Running under A/UX version 0x%08lX\n", gestaltResponse); }
+    if(!rc) { log_write("Running under A/UX version 0x%08lX\n", gestaltResponse); }
     else
     {
         rc = Gestalt(gestaltSystemVersion, &gestaltResponse);
-        if(rc) { printf("Could not get Mac OS version.\n"); }
+        if(rc) { log_write("Could not get Mac OS version.\n"); }
         else
         {
-            printf("Running under Mac OS version %ld.%ld.%ld",
-                   (gestaltResponse & 0xF00) >> 8,
-                   (gestaltResponse & 0xF0) >> 4,
-                   gestaltResponse & 0xF);
+            log_write("Running under Mac OS version %ld.%ld.%ld",
+                      (gestaltResponse & 0xF00) >> 8,
+                      (gestaltResponse & 0xF0) >> 4,
+                      gestaltResponse & 0xF);
             rc = Gestalt(gestaltSysArchitecture, &gestaltResponse);
             if(!rc)
             {
-                printf(" for ");
+                log_write(" for ");
                 switch(gestaltResponse)
                 {
-                    case 1: printf("Motorola 68k architecture."); break;
-                    case 2: printf("PowerPC architecture."); break;
-                    case 3: printf("x86 architecture."); break;
-                    default: printf("unknown architecture code %ld.", gestaltResponse); break;
+                    case 1: log_write("Motorola 68k architecture."); break;
+                    case 2: log_write("PowerPC architecture."); break;
+                    case 3: log_write("x86 architecture."); break;
+                    default: log_write("unknown architecture code %ld.", gestaltResponse); break;
                 }
             }
-            printf("\n");
+            log_write("\n");
         }
         rc = Gestalt(gestaltMacOSCompatibilityBoxAttr, &gestaltResponse);
-        if(!rc) { printf("Running under Classic.\n"); }
+        if(!rc) { log_write("Running under Classic.\n"); }
     }
 }

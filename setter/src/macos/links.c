@@ -40,6 +40,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "links.h"
 #include "macos.h"
 
@@ -94,7 +95,7 @@ void Links(const char* path)
     rc = Gestalt(gestaltAliasMgrAttr, &gestaltResponse);
     if(rc || !(gestaltResponse & (1 << gestaltAliasMgrPresent)))
     {
-        printf("Alias Manager not present, cannot create aliases.\n");
+        log_write("Alias Manager not present, cannot create aliases.\n");
         return;
     }
 
@@ -105,7 +106,7 @@ void Links(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -121,13 +122,13 @@ void Links(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating aliases.\n");
+    log_write("Creating aliases.\n");
 
     for(pos = 0; pos < 64; pos++)
     {
@@ -166,5 +167,5 @@ void Links(const char* path)
         if(aRc) break;
     }
 
-    printf("pos = %d, rc = %d, wRc = %d, cRc = %d, oRc = %d, aRc = %d\n", pos, rc, wRc, cRc, oRc, aRc);
+    log_write("pos = %d, rc = %d, wRc = %d, cRc = %d, oRc = %d, aRc = %d\n", pos, rc, wRc, cRc, oRc, aRc);
 }

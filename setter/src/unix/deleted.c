@@ -30,6 +30,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 
 void DeleteFiles(const char* path)
 {
@@ -42,7 +43,7 @@ void DeleteFiles(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -50,7 +51,7 @@ void DeleteFiles(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -58,11 +59,11 @@ void DeleteFiles(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating and deleting files.\n");
+    log_write("Creating and deleting files.\n");
 
     for(pos = 0; pos < 64; pos++)
     {

@@ -35,6 +35,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "win32.h"
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void Filenames(const char* path)
 {
@@ -52,7 +53,7 @@ void Filenames(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -66,7 +67,7 @@ void Filenames(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -75,7 +76,7 @@ void Filenames(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -84,11 +85,11 @@ void Filenames(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating files with different filenames.\n");
+    log_write("Creating files with different filenames.\n");
 
     for(pos = 0; filenames[pos]; pos++)
     {
@@ -110,6 +111,6 @@ void Filenames(const char* path)
             if(!ret) cRc = GetLastError();
         }
 
-        printf("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", filenames[pos], rc, wRc, cRc);
+        log_write("\tFile name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n", filenames[pos], rc, wRc, cRc);
     }
 }

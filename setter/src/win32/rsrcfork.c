@@ -37,6 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "rsrcfork.h"
 
 #include "../include/defs.h"
+#include "../log.h"
 
 extern DWORD oldVersion;
 
@@ -60,7 +61,7 @@ void ResourceFork(const char* path)
         if(!ret)
         {
             error = GetLastError();
-            printf("Error %lu querying Windows version.\n", error);
+            log_write("Error %lu querying Windows version.\n", error);
             return;
         }
     }
@@ -77,7 +78,7 @@ void ResourceFork(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -91,7 +92,7 @@ void ResourceFork(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -100,7 +101,7 @@ void ResourceFork(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -109,11 +110,11 @@ void ResourceFork(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating alternate data streams.\n");
+    log_write("Creating alternate data streams.\n");
 
     h   = CreateFileA("TINY:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -128,11 +129,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "TINY:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "TINY:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
     h       = CreateFileA("SMALL:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -158,11 +159,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "SMALL:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "SMALL:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
     h       = CreateFileA("MEDIUM:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -189,11 +190,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "MEDIUM:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "MEDIUM:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
     h       = CreateFileA("BIG:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -219,11 +220,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with big alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "BIG:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with big alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "BIG:ADS",
+              rc,
+              wRc,
+              cRc);
 
     h   = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     rc  = 0;
@@ -238,11 +239,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "MULTIPLE:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with tiny alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "MULTIPLE:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (4095 - strlen(smallAdsText)) / strlen(smallAdsRepeatText);
     h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -269,11 +270,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "MULTIPLE:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with small alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "MULTIPLE:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (65535 - strlen(mediumAdsText)) / strlen(mediumAdsRepeatText);
     h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -301,11 +302,11 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "MULTIPLE:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "MULTIPLE:ADS",
+              rc,
+              wRc,
+              cRc);
 
     maxLoop = (67584 - strlen(bigAdsText)) / strlen(bigAdsRepeatText);
     h       = CreateFileA("MULTIPLE:ADS", dwFilePermissions, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -332,9 +333,9 @@ void ResourceFork(const char* path)
         ret = CloseHandle(h);
         if(!ret) cRc = GetLastError();
     }
-    printf("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
-           "MULTIPLE:ADS",
-           rc,
-           wRc,
-           cRc);
+    log_write("\tFile with medium alternate data stream: name = \"%s\", rc = %lu, wRc = %lu, cRc = %lu\n",
+              "MULTIPLE:ADS",
+              rc,
+              wRc,
+              cRc);
 }

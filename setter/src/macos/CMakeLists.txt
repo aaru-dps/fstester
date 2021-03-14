@@ -72,4 +72,4 @@ set(EXECUTABLE_NAME "fssetter-macos-${PROCESSOR}")
 
 #target_link_libraries(${EXECUTABLE_NAME} core)
 
-add_application(${EXECUTABLE_NAME} ../main.c ${PLATFORM_SOURCES})
+add_application(${EXECUTABLE_NAME} ../main.c ../log.c ${PLATFORM_SOURCES})

@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void DeleteFiles(const char* path)
@@ -53,7 +54,7 @@ void DeleteFiles(const char* path)
     rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
-        printf("Could not get volume information.\n");
+        log_write("Could not get volume information.\n");
         return;
     }
     refNum = hpb.ioVRefNum;
@@ -69,13 +70,13 @@ void DeleteFiles(const char* path)
 
     if(rc)
     {
-        printf("Error %d creating working directory.\n", rc);
+        log_write("Error %d creating working directory.\n", rc);
         return;
     }
 
     dirId = dirPB.fileParam.ioDirID;
 
-    printf("Creating and deleting files.\n");
+    log_write("Creating and deleting files.\n");
 
     for(pos = 0; pos < 64; pos++)
     {

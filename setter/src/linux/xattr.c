@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "../log.h"
 #include "linux.h"
 
 #if((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)) || (__GLIBC__ > 2)
@@ -47,7 +48,7 @@ void LinuxExtendedAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to specified path.\n", errno);
+        log_write("Error %d changing to specified path.\n", errno);
         return;
     }
 
@@ -55,7 +56,7 @@ void LinuxExtendedAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d creating working directory.\n", errno);
+        log_write("Error %d creating working directory.\n", errno);
         return;
     }
 
@@ -63,11 +64,11 @@ void LinuxExtendedAttributes(const char* path)
 
     if(ret)
     {
-        printf("Error %d changing to working directory.\n", errno);
+        log_write("Error %d changing to working directory.\n", errno);
         return;
     }
 
-    printf("Creating files with extended attributes.\n");
+    log_write("Creating files with extended attributes.\n");
 
     rc   = 0;
     cRc  = 0;
@@ -81,7 +82,7 @@ void LinuxExtendedAttributes(const char* path)
 
         if(ret) cRc = errno;
     }
-    printf("\tFile with an extended attribute called \"com.ibm.os2.comment\", rc = %d, cRc = %d\n", rc, cRc);
+    log_write("\tFile with an extended attribute called \"com.ibm.os2.comment\", rc = %d, cRc = %d\n", rc, cRc);
 
     rc   = 0;
     cRc  = 0;
@@ -95,6 +96,6 @@ void LinuxExtendedAttributes(const char* path)
 
         if(ret) cRc = errno;
     }
-    printf("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
+    log_write("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
 #endif
 }

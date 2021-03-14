@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "attr.h"
 #include "dos.h"
 
@@ -53,13 +54,13 @@ void FileAttributes(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     chdir("ATTRS");
 
-    printf("Creating attributes files.\n");
+    log_write("Creating attributes files.\n");
 
     for(i = 0; i < KNOWN_DOS_ATTRS; i++)
     {
@@ -72,11 +73,11 @@ void FileAttributes(const char* path)
             rc  = _dos_setfileattr(dos_attrs[i].filename, dos_attrs[i].attr);
         }
 
-        printf("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
-               dos_attrs[i].description,
-               dos_attrs[i].filename,
-               rc,
-               wRc,
-               cRc);
+        log_write("\t%s: name = \"%s\", rc = %d, wRc = %d, cRc = %d\n",
+                  dos_attrs[i].description,
+                  dos_attrs[i].filename,
+                  rc,
+                  wRc,
+                  cRc);
     }
 }

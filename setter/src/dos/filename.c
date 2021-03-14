@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 
 void Filenames(const char* path)
@@ -54,13 +55,13 @@ void Filenames(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     chdir("FILENAME");
 
-    printf("Creating files with different filenames.\n");
+    log_write("Creating files with different filenames.\n");
 
     for(pos = 0; filenames[pos]; pos++)
     {
@@ -74,6 +75,6 @@ void Filenames(const char* path)
             cRc = _dos_close(handle);
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+        log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }

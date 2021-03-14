@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "os2.h"
 
 void Filenames(const char* path)
@@ -52,7 +53,7 @@ void Filenames(const char* path)
 
     if(rc)
     {
-        printf("Cannot change to specified path, not continuing.\n");
+        log_write("Cannot change to specified path, not continuing.\n");
         return;
     }
 
@@ -60,13 +61,13 @@ void Filenames(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = __os2_chdir("FILENAME");
 
-    printf("Creating files with different filenames.\n");
+    log_write("Creating files with different filenames.\n");
 
     for(pos = 0; filenames[pos]; pos++)
     {
@@ -87,6 +88,6 @@ void Filenames(const char* path)
             cRc = DosClose(handle);
         }
 
-        printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
+        log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }

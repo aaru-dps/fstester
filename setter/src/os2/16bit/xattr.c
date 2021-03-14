@@ -32,9 +32,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "xattr.h"
 
-#include "../os2.h"
 #include "../../include/consts.h"
 #include "../../include/defs.h"
+#include "../../log.h"
+#include "../os2.h"
 
 void ExtendedAttributes(const char* path)
 {
@@ -54,7 +55,7 @@ void ExtendedAttributes(const char* path)
 
     if(rc)
     {
-        printf("Cannot change to specified path, not continuing.\n");
+        log_write("Cannot change to specified path, not continuing.\n");
         return;
     }
 
@@ -62,13 +63,13 @@ void ExtendedAttributes(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = DosChDir("XATTRS", 0);
 
-    printf("Creating files with extended attributes.\n");
+    log_write("Creating files with extended attributes.\n");
 
     rc = DosOpen("COMMENTS",
                  &handle,
@@ -91,7 +92,7 @@ void ExtendedAttributes(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS", rc, wRc, cRc);
+    log_write("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS", rc, wRc, cRc);
 
     rc = DosOpen("COMMENTS.CRT",
                  &handle,
@@ -114,7 +115,7 @@ void ExtendedAttributes(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS.CRT", rc, wRc, cRc);
+    log_write("\tFile with comments = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "COMMENTS.CRT", rc, wRc, cRc);
 
     rc = DosOpen("ICON",
                  &handle,
@@ -137,5 +138,5 @@ void ExtendedAttributes(const char* path)
         cRc = DosClose(handle);
     }
 
-    printf("\tFile with icon = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ICON", rc, wRc, cRc);
+    log_write("\tFile with icon = \"%s\", rc = %d, wRc = %d, cRc = %d\n", "ICON", rc, wRc, cRc);
 }

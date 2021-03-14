@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "win32.h"
 #include "../include/defs.h"
+#include "../log.h"
 
 void MillionFiles(const char* path)
 {
@@ -49,7 +50,7 @@ void MillionFiles(const char* path)
 
     if(!lpRootPathName)
     {
-        printf("Could not allocate memory.\n");
+        log_write("Could not allocate memory.\n");
         return;
     }
 
@@ -63,7 +64,7 @@ void MillionFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to specified path.\n", error);
+        log_write("Error %lu changing to specified path.\n", error);
         return;
     }
 
@@ -72,7 +73,7 @@ void MillionFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu creating working directory.\n", error);
+        log_write("Error %lu creating working directory.\n", error);
         return;
     }
 
@@ -81,11 +82,11 @@ void MillionFiles(const char* path)
     if(!ret)
     {
         error = GetLastError();
-        printf("Error %lu changing to working directory.\n", error);
+        log_write("Error %lu changing to working directory.\n", error);
         return;
     }
 
-    printf("Creating lots of files.\n");
+    log_write("Creating lots of files.\n");
 
     for(pos = 0; pos < 1000; pos++)
     {
@@ -98,5 +99,5 @@ void MillionFiles(const char* path)
         CloseHandle(h);
     }
 
-    printf("\tCreated %lu files\n", pos);
+    log_write("\tCreated %lu files\n", pos);
 }

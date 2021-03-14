@@ -33,6 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 
 void DeleteFiles(const char* path)
@@ -53,13 +54,13 @@ void DeleteFiles(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     chdir("DELETED");
 
-    printf("Creating and deleting files.\n");
+    log_write("Creating and deleting files.\n");
 
     for(pos = 0; pos < 64; pos++)
     {

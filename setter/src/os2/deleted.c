@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "../log.h"
 #include "os2.h"
 
 void DeleteFiles(const char* path)
@@ -52,7 +53,7 @@ void DeleteFiles(const char* path)
 
     if(rc)
     {
-        printf("Cannot change to specified path, not continuing.\n");
+        log_write("Cannot change to specified path, not continuing.\n");
         return;
     }
 
@@ -60,13 +61,13 @@ void DeleteFiles(const char* path)
 
     if(rc)
     {
-        printf("Cannot create working directory.\n");
+        log_write("Cannot create working directory.\n");
         return;
     }
 
     rc = __os2_chdir("DELETED");
 
-    printf("Creating and deleting files.\n");
+    log_write("Creating and deleting files.\n");
 
     for(pos = 0; pos < 64; pos++)
     {

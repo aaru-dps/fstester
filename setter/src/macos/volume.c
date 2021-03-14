@@ -29,6 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdio.h>
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "macos.h"
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
@@ -57,8 +58,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     rc = Gestalt(gestaltFSAttr, &gestaltResponse);
     if(!rc)
     {
-        hfsPlusApis = (gestaltResponse & (1 << gestaltHasHFSPlusAPIs))!= 0;
-        bigVol      = (gestaltResponse & (1 << gestaltFSSupports2TBVols))!=0;
+        hfsPlusApis = (gestaltResponse & (1 << gestaltHasHFSPlusAPIs)) != 0;
+        bigVol      = (gestaltResponse & (1 << gestaltFSSupports2TBVols)) != 0;
     }
 
     if(!bigVol)
@@ -69,7 +70,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
         if(rc)
         {
-            printf("Could not get volume information.\n");
+            log_write("Could not get volume information.\n");
             return;
         }
         drvInfo      = hpb.ioVDrvInfo;
@@ -93,7 +94,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         rc             = PBXGetVolInfo((XVolumeParamPtr)&xpb, 0);
         if(rc)
         {
-            printf("Could not get volume information.\n");
+            log_write("Could not get volume information.\n");
             return;
         }
         drvInfo      = xpb.ioVDrvInfo;
@@ -110,31 +111,31 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         if(xpb.ioVFSID != 0) { fsId = xpb.ioVFSID; }
     }
 
-    printf("Volume information:\n");
-    printf("\tPath: %s\n", path);
-    if(bigVol) { printf("\tVolume supports up to 2Tb disks.\n"); }
-    if(hfsPlusApis) { printf("\tVolume supports HFS Plus APIs.\n"); }
-    printf("\tDrive number: %d\n", drvInfo);
-    printf("\tVolume number: %d\n", refNum);
-    printf("\tVolume name: %#s\n", str255);
-    printf("\t%llu allocation blocks in volume, %llu free\n", totalBlocks, freeBlocks);
-    printf("\t%llu bytes in volume, %llu free\n", totalBytes, freeBytes);
-    printf("\t%lu bytes per allocation block.\n", *clusterSize);
-    printf("\tVolume created on 0x%08lX\n", crDate);
-    printf("\tVolume last written on 0x%08lX\n", lwDate);
-    printf("\tVolume last backed up on 0x%08lX\n", bkDate);
-    printf("\tFilesystem type: ");
+    log_write("Volume information:\n");
+    log_write("\tPath: %s\n", path);
+    if(bigVol) { log_write("\tVolume supports up to 2Tb disks.\n"); }
+    if(hfsPlusApis) { log_write("\tVolume supports HFS Plus APIs.\n"); }
+    log_write("\tDrive number: %d\n", drvInfo);
+    log_write("\tVolume number: %d\n", refNum);
+    log_write("\tVolume name: %#s\n", str255);
+    log_write("\t%llu allocation blocks in volume, %llu free\n", totalBlocks, freeBlocks);
+    log_write("\t%llu bytes in volume, %llu free\n", totalBytes, freeBytes);
+    log_write("\t%lu bytes per allocation block.\n", *clusterSize);
+    log_write("\tVolume created on 0x%08lX\n", crDate);
+    log_write("\tVolume last written on 0x%08lX\n", lwDate);
+    log_write("\tVolume last backed up on 0x%08lX\n", bkDate);
+    log_write("\tFilesystem type: ");
     switch(fsId)
     {
-        case 0xD2D7: printf("MFS\n"); break;
-        case 0x4244: printf("HFS\n"); break;
-        case 0x482B: printf("HFS Plus\n"); break;
-        case 0x4147: printf("ISO9660\n"); break;
-        case 0x55DF: printf("UDF\n"); break;
-        case 0x4242: printf("High Sierra\n"); break;
-        case 0x4A48: printf("Audio CD\n"); break;
-        case 0x0100: printf("ProDOS\n"); break;
-        case 0x4953: printf("FAT\n"); break;
-        default: printf("unknown id 0x%04X\n", fsId); break;
+        case 0xD2D7: log_write("MFS\n"); break;
+        case 0x4244: log_write("HFS\n"); break;
+        case 0x482B: log_write("HFS Plus\n"); break;
+        case 0x4147: log_write("ISO9660\n"); break;
+        case 0x55DF: log_write("UDF\n"); break;
+        case 0x4242: log_write("High Sierra\n"); break;
+        case 0x4A48: log_write("Audio CD\n"); break;
+        case 0x0100: log_write("ProDOS\n"); break;
+        case 0x4953: log_write("FAT\n"); break;
+        default: log_write("unknown id 0x%04X\n", fsId); break;
     }
 }

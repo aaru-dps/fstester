@@ -31,6 +31,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include "../include/defs.h"
+#include "../log.h"
 #include "dos.h"
 #include "dosuname.h"
 
@@ -45,55 +46,49 @@ void GetOsInfo()
     switch(dosuname_version.flavor)
     {
         case DOS_FLAVOR_UNKNOWN:
-            printf("OS information:\n");
-            printf("\tRunning under DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_MSDOS:
-            printf("OS information:\n");
-            printf("\tRunning under MS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under MS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_PCDOS:
-            printf("OS information:\n");
-            printf("\tRunning under PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_DRDOS:
-            printf("OS information:\n");
-            printf("\tRunning under DR-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under DR-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_FREEDOS:
-            printf("OS information:\n");
-            printf("\tRunning under FreeDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under FreeDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_WIN95:
         case DOS_FLAVOR_WIN9X:
-        case DOS_FLAVOR_WINME:
-            printf("Will not run under Windows 9x. Exiting...\n");
-            exit(1);
-        case DOS_FLAVOR_WINNT:
-            printf("Will not run under Windows NT. Exiting...\n");
-            exit(1);
-        case DOS_FLAVOR_OS2:
-            printf("Will not run under OS/2. Exiting...\n");
-            exit(1);
+        case DOS_FLAVOR_WINME: log_write("Will not run under Windows 9x. Exiting...\n"); exit(1);
+        case DOS_FLAVOR_WINNT: log_write("Will not run under Windows NT. Exiting...\n"); exit(1);
+        case DOS_FLAVOR_OS2: log_write("Will not run under OS/2. Exiting...\n"); exit(1);
         case DOS_FLAVOR_PTSDOS:
-            printf("OS information:\n");
-            printf("\tRunning under PTS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under PTS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_RXDOS:
-            printf("OS information:\n");
-            printf("\tRunning under RxDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under RxDOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_CONCURRENTDOS:
-            printf("OS information:\n");
-            printf("\tRunning under Concurrent DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under Concurrent DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_NOVELLDOS:
-            printf("OS information:\n");
-            printf("\tRunning under Novell DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under Novell DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
         case DOS_FLAVOR_MSPCDOS:
-            printf("OS information:\n");
-            printf("\tRunning under MS-DOS or PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
+            log_write("OS information:\n");
+            log_write("\tRunning under MS-DOS or PC-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);
             break;
     }
 }
