@@ -4,8 +4,8 @@ project(setter C)
 
 set(CMAKE_C_STANDARD 90)
 
-message(${CMAKE_SYSTEM_NAME})
-message("${CMAKE_SYSTEM_PROCESSOR}")
+message("Detected system name: ${CMAKE_SYSTEM_NAME}")
+message("Detected system processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
 add_subdirectory(src)
 
