@@ -27,8 +27,6 @@ Contains Linux implementations
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-
 #include "../include/consts.h"
 #define _GNU_SOURCE
 #include <errno.h>
@@ -152,5 +150,3 @@ void LinuxSparse(const char* path)
            cRc,
            zRc);
 }
-
-#endif

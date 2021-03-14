@@ -27,10 +27,7 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #include "include/defs.h"
 
 void FilePermissions(const char* path) { /* Do nothing, not supported by target operating system */ }
 
-#endif

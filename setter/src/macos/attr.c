@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
 #include <FileTypesAndCreators.h>
 #endif
@@ -130,4 +128,3 @@ void FileAttributes(const char* path)
                cRc);
     }
 }
-#endif

@@ -27,8 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,5 +105,3 @@ void GetOsInfo()
             break;
     }
 }
-
-#endif

@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -85,5 +83,3 @@ void DirectoryDepth(const char* path)
 
     printf("\tCreated %ld levels of directory hierarchy\n", pos);
 }
-
-#endif

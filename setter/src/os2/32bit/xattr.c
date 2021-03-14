@@ -27,9 +27,6 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \
-    (defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
@@ -45,5 +42,3 @@ Copyright (C) 2011-2021 Natalia Portillo
 void ExtendedAttributes(const char* path)
 { /* TODO: Implement */
 }
-
-#endif

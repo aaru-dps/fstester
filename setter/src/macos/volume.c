@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #include <Files.h>
 #include <Gestalt.h>
 #include <MacTypes.h>
@@ -145,5 +143,3 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         default: printf("unknown id 0x%04X\n", fsId); break;
     }
 }
-
-#endif

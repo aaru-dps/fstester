@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #include <Files.h>
 #include <MacTypes.h>
 #include <stdint.h>
@@ -103,4 +101,3 @@ void DirectoryDepth(const char* path)
 
     printf("\tCreated %d levels of directory hierarchy\n", pos);
 }
-#endif

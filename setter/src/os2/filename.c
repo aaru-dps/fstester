@@ -27,8 +27,6 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
@@ -97,5 +95,3 @@ void Filenames(const char* path)
         printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }
-
-#endif

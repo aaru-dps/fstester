@@ -27,8 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include <dos.h>
 #include <errno.h>
 #include <io.h>
@@ -85,5 +83,3 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         *clusterSize = freeSpace.sectorsPerCluster * freeSpace.bytesPerSector;
     }
 }
-
-#endif

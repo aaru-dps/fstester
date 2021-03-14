@@ -27,12 +27,8 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include "../include/defs.h"
 
 void ExtendedAttributes(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
-
-#endif

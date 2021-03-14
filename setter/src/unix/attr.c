@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include "../include/defs.h"
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
@@ -41,5 +39,3 @@ void FileAttributes(const char* path)
     LinuxFileAttributes(path);
 #endif
 }
-
-#endif

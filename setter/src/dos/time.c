@@ -27,8 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include <dos.h>
 #include <stdio.h>
 #include <string.h>
@@ -103,5 +101,3 @@ void Timestamps(const char* path)
             "\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", dos_times[i].filename, rc, wRc, cRc, tRc);
     }
 }
-
-#endif

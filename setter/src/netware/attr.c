@@ -27,9 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__NETWARE_386__)
-
-#include "../include/consts.h"
 #include "../include/defs.h"
 #include "netware.h"
 
@@ -37,5 +34,3 @@ void FileAttributes(const char* path)
 {
     // TODO: Implement
 }
-
-#endif

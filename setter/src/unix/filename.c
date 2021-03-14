@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -95,5 +93,3 @@ void Filenames(const char* path)
         printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }
-
-#endif

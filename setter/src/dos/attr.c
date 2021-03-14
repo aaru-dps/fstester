@@ -27,8 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include <dos.h>
 #include <stdio.h>
 #include <string.h>
@@ -87,5 +85,3 @@ void FileAttributes(const char* path)
                cRc);
     }
 }
-
-#endif

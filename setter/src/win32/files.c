@@ -29,9 +29,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 // ReSharper disable CppJoinDeclarationAndAssignment
 // ReSharper disable CppDeprecatedEntity
-#if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \
-    defined(__NT__)
-
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include <windows.h>
@@ -108,5 +105,3 @@ void MillionFiles(const char* path)
 
     printf("\tCreated %lu files\n", pos);
 }
-
-#endif

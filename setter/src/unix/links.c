@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -88,5 +86,3 @@ void Links(const char* path)
 
     if(ret) { printf("Error %d creating symbolic link.\n", errno); }
 }
-
-#endif

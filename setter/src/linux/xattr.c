@@ -27,8 +27,6 @@ Contains Linux implementations
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-
 #include <errno.h>
 #include <features.h>
 #include <stdio.h>
@@ -105,5 +103,3 @@ void LinuxExtendedAttributes(const char* path)
     printf("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
 #endif
 }
-
-#endif

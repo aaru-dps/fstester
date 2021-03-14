@@ -27,9 +27,6 @@ Contains 32-bit and 64-bit Windows declarations
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__WINDOWS__) || defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) ||        \
-    defined(__NT__)
-
 #ifndef AARU_FSTESTER_SETTER_WIN32_H
 #define AARU_FSTESTER_SETTER_WIN32_H
 
@@ -59,7 +56,5 @@ static BOOL(WINAPI* WinGetVersionExA)(WIN_LPOSVERSIONINFOA);
 
 static DWORD dwMaxNameSize     = MAX_PATH + 1;
 static DWORD dwFilePermissions = GENERIC_READ | GENERIC_WRITE;
-
-#endif
 
 #endif

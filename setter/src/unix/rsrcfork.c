@@ -27,13 +27,9 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include "../include/defs.h"
 
 void ResourceFork(const char* path)
 {
     // Not supported
 }
-
-#endif

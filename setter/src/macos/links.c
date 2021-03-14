@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #if defined(HAVE_ALIASES_H) || !defined(HAVE_MULTIVERSE_H)
 #include <Aliases.h>
 #endif
@@ -175,4 +173,3 @@ void Links(const char* path)
 
     printf("pos = %d, rc = %d, wRc = %d, cRc = %d, oRc = %d, aRc = %d\n", pos, rc, wRc, cRc, oRc, aRc);
 }
-#endif

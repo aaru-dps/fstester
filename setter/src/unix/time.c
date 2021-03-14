@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -316,5 +314,3 @@ void Timestamps(const char* path)
     }
     printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSMTIME", rc, wRc, cRc, tRc);
 }
-
-#endif

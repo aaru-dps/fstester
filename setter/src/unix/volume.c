@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -221,5 +219,3 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     *clusterSize = buf.f_bsize;
 }
-
-#endif

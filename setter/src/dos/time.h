@@ -27,8 +27,6 @@ Contains DOS definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #ifndef SETTER_SRC_DOS_TIME_H_
 #define SETTER_SRC_DOS_TIME_H_
 
@@ -73,5 +71,3 @@ static const dos_time_tests_t dos_times[KNOWN_DOS_TIMES] = {
 };
 
 #endif // SETTER_SRC_DOS_TIME_H_
-
-#endif

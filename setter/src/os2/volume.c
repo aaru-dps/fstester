@@ -27,9 +27,6 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) && (defined(__OS2__) || defined(__os2__)) &&              \
-    !defined(__DOS__)
-
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
@@ -138,5 +135,3 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     free(pfsInfo);
 }
-
-#endif

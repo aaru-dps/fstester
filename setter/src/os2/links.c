@@ -27,9 +27,6 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386)) &&                             \
-    (defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #include "include/defs.h"
 
 void Links(const char* path)
@@ -37,5 +34,3 @@ void Links(const char* path)
     /* Do nothing, not supported by target operating system */
     // TODO: Check if can ask WPS to make Shadow
 }
-
-#endif

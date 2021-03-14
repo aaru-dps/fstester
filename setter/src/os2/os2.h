@@ -27,7 +27,6 @@ Contains 16-bit OS/2 definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if(defined(__OS2__) || defined(__os2__))
 #ifndef AARU_FSTESTER_SETTER_OS2_H
 #define AARU_FSTESTER_SETTER_OS2_H
 
@@ -88,8 +87,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define __os2_chdir(path) DosSetCurrentDir(path)
 #define __os2_mkdir(path) DosCreateDir(path, NULL)
 #define __os2_delete(path) DosDelete(path);
-
-#endif
 
 #endif
 

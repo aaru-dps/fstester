@@ -27,8 +27,6 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
@@ -93,5 +91,3 @@ void DeleteFiles(const char* path)
         __os2_delete(&filename);
     }
 }
-
-#endif

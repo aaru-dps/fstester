@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
 #include <FileTypesAndCreators.h>
 #endif
@@ -126,4 +124,3 @@ void Timestamps(const char* path)
         printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", str255, rc, wRc, cRc, tRc);
     }
 }
-#endif

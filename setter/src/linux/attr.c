@@ -27,8 +27,6 @@ Contains Linux implementations
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-
 #include <errno.h>
 #include <linux/fs.h>
 #include <stdio.h>
@@ -115,5 +113,3 @@ void LinuxFileAttributes(const char* path)
         printf("\t%s, rc = %d, wRc = %d, sRc = %d, cRc = %d\n", linux_attrs[i].description, rc, wRc, sRc, cRc);
     }
 }
-
-#endif

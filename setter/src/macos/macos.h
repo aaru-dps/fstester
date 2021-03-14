@@ -27,8 +27,6 @@ Contains Mac OS definitions.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #ifndef AARU_FSTESTER_SETTER_MACINTOSH_H
 #define AARU_FSTESTER_SETTER_MACINTOSH_H
 
@@ -48,7 +46,5 @@ enum
     rtIcons                          = FOUR_CHAR_CODE('icns'),
     rtVersion                        = FOUR_CHAR_CODE('vers'),
 };
-
-#endif
 
 #endif

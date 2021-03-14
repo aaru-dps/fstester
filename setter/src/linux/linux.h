@@ -30,8 +30,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef SETTER_LINUX_H
 #define SETTER_LINUX_H
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-
 void LinuxExtendedAttributes(const char* path);
 void LinuxSparse(const char* path);
 void LinuxFileAttributes(const char* path);
@@ -231,5 +229,3 @@ static unsigned char IconEA[3516] = {
     0x00};
 
 #endif
-
-#endif // SETTER_LINUX_H

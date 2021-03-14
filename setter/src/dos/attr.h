@@ -27,8 +27,6 @@ Contains DOS definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #ifndef SETTER_SRC_DOS_ATTR_H_
 #define SETTER_SRC_DOS_ATTR_H_
 
@@ -114,5 +112,3 @@ static const dos_attr_tests_t dos_attrs[KNOWN_DOS_ATTRS] = {
 };
 
 #endif // SETTER_SRC_DOS_ATTR_H_
-
-#endif

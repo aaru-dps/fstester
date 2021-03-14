@@ -27,8 +27,6 @@ Contains common implementations for UNIX family and compatibles
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -89,5 +87,3 @@ void FilePermissions(const char* path)
         printf("\t%s: name = \"%s\", rc = %d, cRc = %d\n", unix_perms[i].description, unix_perms[i].filename, rc, cRc);
     }
 }
-
-#endif

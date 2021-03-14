@@ -27,11 +27,8 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #include "../include/defs.h"
 
 void FilePermissions(const char* path)
 { /* Do nothing, not supported by target operating system */
 }
-#endif

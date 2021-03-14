@@ -27,8 +27,6 @@ Contains 16-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if((defined(__OS2__) || defined(__os2__)) && !defined(__DOS__)
-
 #define INCL_DOSMISC
 #define INCL_DOSFILEMGR
 
@@ -86,5 +84,3 @@ void DirectoryDepth(const char* path)
 
     printf("\tCreated %d levels of directory hierarchy\n", pos);
 }
-
-#endif

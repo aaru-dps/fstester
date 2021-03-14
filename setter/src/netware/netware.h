@@ -27,11 +27,7 @@ Contains DOS definitions
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__NETWARE_386__)
-
 #ifndef AARU_FSTESTER_SETTER_NETWARE_H
 #define AARU_FSTESTER_SETTER_NETWARE_H
-
-#endif
 
 #endif

@@ -27,8 +27,6 @@ Contains DOS code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__DOS__) || defined(MSDOS)
-
 #include <dos.h>
 #include <stdio.h>
 #include <string.h>
@@ -84,5 +82,3 @@ void Filenames(const char* path)
         printf("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d\n", filenames[pos], rc, wRc, cRc);
     }
 }
-
-#endif

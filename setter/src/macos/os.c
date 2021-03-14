@@ -27,8 +27,6 @@ Contains Mac OS code.
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(macintosh)
-
 #include <Gestalt.h>
 #include <MacTypes.h>
 #include <stdint.h>
@@ -74,4 +72,3 @@ void GetOsInfo()
         if(!rc) { printf("Running under Classic.\n"); }
     }
 }
-#endif
