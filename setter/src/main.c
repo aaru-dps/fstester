@@ -2,12 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : main.c
-Author(s)      : Natalia Portillo
-
---[ Description ] -----------------------------------------------------------
-
-Contains global definitions
+    Author(s)      : Natalia Portillo
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify

@@ -2,12 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : win32.c
-Author(s)      : Natalia Portillo
-
---[ Description ] -----------------------------------------------------------
-
-Contains 32-bit and 64-bit Windows code
+    Author(s)      : Natalia Portillo
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify

@@ -2,12 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : attr.h
-Author(s)      : Natalia Portillo
-
---[ Description ] -----------------------------------------------------------
-
-Contains common implementations for UNIX family and compatibles
+    Author(s)      : Natalia Portillo
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify

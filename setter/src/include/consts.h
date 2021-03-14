@@ -2,12 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : consts.h
-Author(s)      : Natalia Portillo
-
---[ Description ] -----------------------------------------------------------
-
-Constants
+    Author(s)      : Natalia Portillo
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify

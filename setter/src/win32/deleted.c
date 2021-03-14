@@ -2,8 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : win32.c
-Author(s)      : Natalia Portillo
+    Author(s)      : Natalia Portillo
 
 --[ Description ] -----------------------------------------------------------
 

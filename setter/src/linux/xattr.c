@@ -2,12 +2,7 @@
 Aaru Data Preservation Suite
 -----------------------------------------------------------------------------
 
-Filename       : xattr.c
-Author(s)      : Natalia Portillo
-
---[ Description ] -----------------------------------------------------------
-
-Contains Linux implementations
+    Author(s)      : Natalia Portillo
 
 --[ License ] ---------------------------------------------------------------
      This program is free software: you can redistribute it and/or modify

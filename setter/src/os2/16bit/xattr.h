@@ -1,3 +1,27 @@
+/****************************************************************************
+Aaru Data Preservation Suite
+-----------------------------------------------------------------------------
+
+    Author(s)      : Natalia Portillo
+
+--[ License ] ---------------------------------------------------------------
+     This program is free software: you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as
+     published by the Free Software Foundation, either version 3 of the
+     License, or (at your option) any later version.
+
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-----------------------------------------------------------------------------
+Copyright (C) 2011-2021 Natalia Portillo
+*****************************************************************************/
+
 unsigned char CommentsEA[72] = {
     0x45, 0x00, 0x00, 0x00, 0x00, 0x09, 0x33, 0x00, 0x2E, 0x43, 0x4F, 0x4D, 0x4D, 0x45, 0x4E, 0x54, 0x53, 0x00,
     0xFD, 0xFF, 0x2E, 0x00, 0x54, 0x68, 0x69, 0x73, 0x20, 0x45, 0x41, 0x20, 0x63, 0x6F, 0x6E, 0x74, 0x61, 0x69,
