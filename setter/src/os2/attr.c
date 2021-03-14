@@ -37,8 +37,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "attr.h"
 
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../include/consts.h"
+#include "../include/defs.h"
 #include "os2.h"
 
 void FileAttributes(const char* path)

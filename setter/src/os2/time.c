@@ -35,8 +35,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../include/consts.h"
+#include "../include/defs.h"
 #include "os2.h"
 
 #define DATETIME_FORMAT "This file is dated %04d/%02d/%02d %02d:%02d:%02d for %s\n"

@@ -27,7 +27,7 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include "include/defs.h"
+#include "../include/defs.h"
 
 void Links(const char* path)
 {

@@ -36,8 +36,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "../os2.h"
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../../include/consts.h"
+#include "../../include/defs.h"
 
 void GetOsInfo()
 {

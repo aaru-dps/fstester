@@ -35,8 +35,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../include/consts.h"
+#include "../include/defs.h"
 #include "os2.h"
 
 void DirectoryDepth(const char* path)
@@ -44,7 +44,7 @@ void DirectoryDepth(const char* path)
     char   drivePath[4];
     APIRET rc = 0;
     char   filename[9];
-    long   pos = 2;
+    int    pos = 2;
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
