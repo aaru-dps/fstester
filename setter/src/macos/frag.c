@@ -73,7 +73,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
-    rc             = PBHGetVInfo((HParmBlkPtr)&hpb, 0);
+    rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
         printf("Could not get volume information.\n");
@@ -88,7 +88,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     dirPB.fileParam.ioNamePtr    = (StringPtr) "\pFRAGS"; // Directory name to create
     dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
 
-    rc = PBDirCreate(&dirPB, 0);
+    rc = PBDirCreateSync(&dirPB);
 
     dirId = dirPB.fileParam.ioDirID;
 

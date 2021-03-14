@@ -71,7 +71,7 @@ void Timestamps(const char* path)
     hpb.ioNamePtr  = str255;
     hpb.ioVRefNum  = 0;
     hpb.ioVolIndex = -1;
-    rc             = PBHGetVInfo((HParmBlkPtr)&hpb, 0);
+    rc             = PBHGetVInfoSync((HParmBlkPtr)&hpb);
     if(rc)
     {
         printf("Could not get volume information.\n");
@@ -86,7 +86,7 @@ void Timestamps(const char* path)
     dirPB.fileParam.ioNamePtr    = (StringPtr) "\pTIMES"; // Directory name to create
     dirPB.fileParam.ioDirID      = 0;                     // ID of parent directory, 0 for root of volume
 
-    rc = PBDirCreate(&dirPB, 0);
+    rc = PBDirCreateSync(&dirPB);
 
     if(rc)
     {

@@ -11,9 +11,6 @@ enum
     fsRtDirID = 2
 };
 
-#define PBHGetVInfo(pb, async) ((async) ? PBHGetVInfoAsync(pb) : PBHGetVInfoSync(pb))
-#define PBDirCreate(pb, async) ((async) ? PBDirCreateAsync(pb) : PBDirCreateSync(pb))
-
 #define FOUR_CHAR_CODE(x) (x)
 
 /************** PC-DOS applications and FileTypes **************/
