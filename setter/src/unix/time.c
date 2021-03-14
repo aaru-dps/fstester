@@ -83,8 +83,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "access");
         times.actime = MAXTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -107,8 +107,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, MAXDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "modification");
         times.modtime = MAXTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -131,8 +131,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MINDATETIME, "access");
         times.actime = MINTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -155,8 +155,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, MINDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, MINDATETIME, "modification");
         times.modtime = MINTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -179,8 +179,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "access");
         times.actime = Y1KTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -203,8 +203,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
         times.modtime = Y1KTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -227,8 +227,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, Y2KDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "access");
         times.actime = Y2KTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -251,8 +251,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, Y1KDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
         times.modtime = Y2KTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -275,8 +275,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, LESSDATETIME, "access");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, LESSDATETIME, "access");
         times.actime = LESSTIMESTAMP;
 
         ret = fprintf(h, message);
@@ -299,8 +299,8 @@ void Timestamps(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        memset(&message, 0, 300);
-        sprintf((char*)message, DATETIME_FORMAT, LESSDATETIME, "modification");
+        memset(message, 0, 300);
+        sprintf(message, DATETIME_FORMAT, LESSDATETIME, "modification");
         times.modtime = LESSTIMESTAMP;
 
         ret = fprintf(h, message);

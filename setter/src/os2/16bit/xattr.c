@@ -89,9 +89,9 @@ void ExtendedAttributes(const char* path)
         eap.fpGEAList = NULL;
         eap.fpFEAList = (PFEALIST)&CommentsEA;
         eap.oError    = 0;
-        memset(&message, 0, 300);
-        sprintf(&message, "This files has an optional .COMMENTS EA\n");
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        memset(message, 0, 300);
+        sprintf(message, "This files has an optional .COMMENTS EA\n");
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }
@@ -112,9 +112,9 @@ void ExtendedAttributes(const char* path)
         eap.fpGEAList = NULL;
         eap.fpFEAList = (PFEALIST)&CommentsEACritical;
         eap.oError    = 0;
-        memset(&message, 0, 300);
-        sprintf(&message, "This files has a critical .COMMENTS EA\n");
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        memset(message, 0, 300);
+        sprintf(message, "This files has a critical .COMMENTS EA\n");
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }
@@ -135,9 +135,9 @@ void ExtendedAttributes(const char* path)
         eap.fpGEAList = NULL;
         eap.fpFEAList = (PFEALIST)&IconEA;
         eap.oError    = 0;
-        memset(&message, 0, 300);
-        sprintf(&message, "This files has an optional .ICON EA\n");
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        memset(message, 0, 300);
+        sprintf(message, "This files has an optional .ICON EA\n");
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         rc  = DosSetFileInfo(handle, 2, (PBYTE)&eap, sizeof(EAOP));
         cRc = DosClose(handle);
     }

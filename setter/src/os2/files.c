@@ -75,9 +75,9 @@ void MillionFiles(const char* path)
 
     for(pos = 0; pos < 1000; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%08llu", pos);
-        rc = DosOpen(&filename,
+        memset(filename, 0, 9);
+        sprintf(filename, "%08llu", pos);
+        rc = DosOpen(filename,
                      &handle,
                      &actionTaken,
                      0,

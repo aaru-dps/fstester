@@ -80,10 +80,10 @@ void Filenames(const char* path)
         if(!h) { rc = errno; }
         else
         {
-            memset(&message, 0, 300);
-            sprintf((char*)&message, FILENAME_FORMAT, filenames[pos]);
+            memset(message, 0, 300);
+            sprintf(message, FILENAME_FORMAT, filenames[pos]);
 
-            ret = fprintf(h, (const char*)&message);
+            ret = fprintf(h, message);
             if(ret < 0) { wRc = errno; }
 
             ret = fclose(h);

@@ -69,8 +69,8 @@ void DirectoryDepth(const char* path)
 
     while(!ret)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%08ld", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "%08ld", pos);
         ret = mkdir(filename, 0755);
 
         if(!ret) ret = chdir(filename);

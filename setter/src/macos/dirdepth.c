@@ -78,8 +78,8 @@ void DirectoryDepth(const char* path)
 
     while(!rc)
     {
-        memset(&filename, 0, 9);
-        sprintf((char*)filename, "%08d", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "%08d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 

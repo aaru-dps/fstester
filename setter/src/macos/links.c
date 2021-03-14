@@ -136,8 +136,8 @@ void Links(const char* path)
 
     for(pos = 0; pos < 64; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf((char*)filename, "TARGET%02d", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "TARGET%02d", pos);
         str255[0] = 8;
         memcpy(str255 + 1, filename, 8);
 
@@ -158,8 +158,8 @@ void Links(const char* path)
         targetSpec.name[0] = 8;
         memcpy(targetSpec.name + 1, filename, 8);
 
-        memset(&filename, 0, 9);
-        sprintf((char*)filename, "ALIAS_%02d", pos);
+        memset(filename, 0, 9);
+        sprintf(filename, "ALIAS_%02d", pos);
         memset(&aliasSpec, 0, sizeof(FSSpec));
         aliasSpec.vRefNum = refNum;
         aliasSpec.parID   = dirId;

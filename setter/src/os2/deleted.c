@@ -75,9 +75,9 @@ void DeleteFiles(const char* path)
 
     for(pos = 0; pos < 64; pos++)
     {
-        memset(&filename, 0, 9);
-        sprintf(&filename, "%X", pos);
-        rc = DosOpen(&filename,
+        memset(filename, 0, 9);
+        sprintf(filename, "%X", pos);
+        rc = DosOpen(filename,
                      &handle,
                      &actionTaken,
                      0,
@@ -88,6 +88,6 @@ void DeleteFiles(const char* path)
         if(rc) break;
 
         DosClose(handle);
-        __os2_delete(&filename);
+        __os2_delete(filename);
     }
 }

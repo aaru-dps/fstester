@@ -71,7 +71,7 @@ void MillionFiles(const char* path)
 
     for(pos = 0; pos < 1000; pos++)
     {
-        memset(&filename, 0, 9);
+        memset(filename, 0, 9);
         sprintf(filename, "%08ld", pos);
 
         h = fopen(filename, "w+");

@@ -100,8 +100,8 @@ void Filenames(const char* path)
             rc = HOpenDF(refNum, dirId, str255, 0, &refFile);
             if(!rc)
             {
-                memset(&message, 0, 300);
-                sprintf((char*)message, FILENAME_FORMAT, filenames[pos]);
+                memset(message, 0, 300);
+                sprintf(message, FILENAME_FORMAT, filenames[pos]);
                 count = strlen(message);
                 wRc   = FSWrite(refFile, &count, message);
                 cRc   = FSClose(refFile);

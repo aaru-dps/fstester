@@ -99,8 +99,8 @@ void Timestamps(const char* path)
 
             if(!rc)
             {
-                memset(&message, 0, 300);
-                sprintf((char*)message, DATETIME_FORMAT, mac_times[i].message, mac_times[i].type);
+                memset(message, 0, 300);
+                sprintf(message, DATETIME_FORMAT, mac_times[i].message, mac_times[i].type);
                 count = strlen(message);
                 wRc   = FSWrite(refFile, &count, message);
                 cRc   = FSClose(refFile);

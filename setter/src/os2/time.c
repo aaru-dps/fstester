@@ -101,8 +101,8 @@ void Timestamps(const char* path)
         status.ftimeCreation.hours   = 23;
         status.ftimeCreation.minutes = 59;
         status.ftimeCreation.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -112,7 +112,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "creation");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -137,8 +137,8 @@ void Timestamps(const char* path)
         status.ftimeCreation.hours   = 0;
         status.ftimeCreation.minutes = 0;
         status.ftimeCreation.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -148,7 +148,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "creation");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -173,8 +173,8 @@ void Timestamps(const char* path)
         status.ftimeCreation.hours   = 23;
         status.ftimeCreation.minutes = 59;
         status.ftimeCreation.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -184,7 +184,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "creation");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -209,8 +209,8 @@ void Timestamps(const char* path)
         status.ftimeCreation.hours   = 0;
         status.ftimeCreation.minutes = 0;
         status.ftimeCreation.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -220,7 +220,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "creation");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -245,8 +245,8 @@ void Timestamps(const char* path)
         status.ftimeLastWrite.hours   = 23;
         status.ftimeLastWrite.minutes = 59;
         status.ftimeLastWrite.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastWrite.year + 1980,
                 status.fdateLastWrite.month,
@@ -256,7 +256,7 @@ void Timestamps(const char* path)
                 status.ftimeLastWrite.twosecs * 2,
                 "last written");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -281,8 +281,8 @@ void Timestamps(const char* path)
         status.ftimeLastWrite.hours   = 0;
         status.ftimeLastWrite.minutes = 0;
         status.ftimeLastWrite.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastWrite.year + 1980,
                 status.fdateLastWrite.month,
@@ -292,7 +292,7 @@ void Timestamps(const char* path)
                 status.ftimeLastWrite.twosecs * 2,
                 "last written");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -317,8 +317,8 @@ void Timestamps(const char* path)
         status.ftimeLastWrite.hours   = 23;
         status.ftimeLastWrite.minutes = 59;
         status.ftimeLastWrite.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastWrite.year + 1980,
                 status.fdateLastWrite.month,
@@ -328,7 +328,7 @@ void Timestamps(const char* path)
                 status.ftimeLastWrite.twosecs * 2,
                 "last written");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -353,8 +353,8 @@ void Timestamps(const char* path)
         status.ftimeLastWrite.hours   = 0;
         status.ftimeLastWrite.minutes = 0;
         status.ftimeLastWrite.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastWrite.year + 1980,
                 status.fdateLastWrite.month,
@@ -364,7 +364,7 @@ void Timestamps(const char* path)
                 status.ftimeLastWrite.twosecs * 2,
                 "last written");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -389,8 +389,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess.hours   = 23;
         status.ftimeLastAccess.minutes = 59;
         status.ftimeLastAccess.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastAccess.year + 1980,
                 status.fdateLastAccess.month,
@@ -400,7 +400,7 @@ void Timestamps(const char* path)
                 status.ftimeLastAccess.twosecs * 2,
                 "last access");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -425,8 +425,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess.hours   = 0;
         status.ftimeLastAccess.minutes = 0;
         status.ftimeLastAccess.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastAccess.year + 1980,
                 status.fdateLastAccess.month,
@@ -436,7 +436,7 @@ void Timestamps(const char* path)
                 status.ftimeLastAccess.twosecs * 2,
                 "last access");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -461,8 +461,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess.hours   = 23;
         status.ftimeLastAccess.minutes = 59;
         status.ftimeLastAccess.twosecs = 29;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastAccess.year + 1980,
                 status.fdateLastAccess.month,
@@ -472,7 +472,7 @@ void Timestamps(const char* path)
                 status.ftimeLastAccess.twosecs * 2,
                 "last access");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -497,8 +497,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess.hours   = 0;
         status.ftimeLastAccess.minutes = 0;
         status.ftimeLastAccess.twosecs = 0;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateLastAccess.year + 1980,
                 status.fdateLastAccess.month,
@@ -508,7 +508,7 @@ void Timestamps(const char* path)
                 status.ftimeLastAccess.twosecs * 2,
                 "last access");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -537,8 +537,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess       = status.ftimeCreation;
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -548,7 +548,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "all");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -577,8 +577,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess       = status.ftimeCreation;
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -588,7 +588,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "all");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -617,8 +617,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess       = status.ftimeCreation;
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -628,7 +628,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "all");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
@@ -657,8 +657,8 @@ void Timestamps(const char* path)
         status.ftimeLastAccess       = status.ftimeCreation;
         status.fdateLastWrite        = status.fdateCreation;
         status.ftimeLastWrite        = status.ftimeCreation;
-        memset(&message, 0, 300);
-        sprintf(&message,
+        memset(message, 0, 300);
+        sprintf(message,
                 DATETIME_FORMAT,
                 status.fdateCreation.year + 1980,
                 status.fdateCreation.month,
@@ -668,7 +668,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "all");
 
-        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, &essage, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
