@@ -99,8 +99,8 @@ void ResourceFork(const char* path)
     int16_t      refFile;
     int32_t      dirId;
     FInfo        finderInfo;
-    int32_t      count;
-    HFileInfo*   fpb;
+    int32_t        count;
+    HParamBlockRec fpb;
     CInfoPBRec     cipbr;
     HParamBlockRec dirPB;
 
@@ -150,13 +150,20 @@ void ResourceFork(const char* path)
         rc  = HOpenDF(refNum, dirId, "\pICON", 0, &refFile);
         if(!rc)
         {
-            count                = strlen(rsrcText);
-            wRc                  = FSWrite(refFile, &count, rsrcText);
-            cRc                  = FSClose(refFile);
-            finderInfo.fdType    = ftGenericDocumentPC;
-            finderInfo.fdCreator = ostAaru;
-            finderInfo.fdFlags   = kHasCustomIcon;
-            rc                   = HSetFInfo(refNum, dirId, "\pICON", &finderInfo);
+            memset(&fpb, 0, sizeof(HParamBlockRec));
+
+            count = strlen(rsrcText);
+            wRc   = FSWrite(refFile, &count, rsrcText);
+            cRc   = FSClose(refFile);
+
+            fpb.fileParam.ioVRefNum              = refNum;
+            fpb.fileParam.ioNamePtr              = "\pICON";
+            fpb.fileParam.ioDirID                = dirId;
+            fpb.fileParam.ioFlFndrInfo.fdType    = ftGenericDocumentPC;
+            fpb.fileParam.ioFlFndrInfo.fdCreator = ostAaru;
+            fpb.fileParam.ioFlFndrInfo.fdFlags   = kHasCustomIcon;
+
+            rc = PBHSetFInfoSync(&fpb);
         }
     }
     printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
@@ -181,12 +188,21 @@ void ResourceFork(const char* path)
         rc  = HOpenDF(refNum, dirId, "\pPICT", 0, &refFile);
         if(!rc)
         {
+            memset(&fpb, 0, sizeof(HParamBlockRec));
+
             count                = strlen(rsrcText);
             wRc                  = FSWrite(refFile, &count, rsrcText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftPICTFile;
             finderInfo.fdCreator = ostAaru;
-            rc                   = HSetFInfo(refNum, dirId, "\pPICT", &finderInfo);
+
+            fpb.fileParam.ioVRefNum              = refNum;
+            fpb.fileParam.ioNamePtr              = "\pPICT";
+            fpb.fileParam.ioDirID                = dirId;
+            fpb.fileParam.ioFlFndrInfo.fdType    = ftPICTFile;
+            fpb.fileParam.ioFlFndrInfo.fdCreator = ostAaru;
+
+            rc = PBHSetFInfoSync(&fpb);
         }
     }
     printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
@@ -211,12 +227,19 @@ void ResourceFork(const char* path)
         rc  = HOpenDF(refNum, dirId, "\pVERSION", 0, &refFile);
         if(!rc)
         {
-            count                = strlen(rsrcText);
-            wRc                  = FSWrite(refFile, &count, rsrcText);
-            cRc                  = FSClose(refFile);
-            finderInfo.fdType    = ftGenericDocumentPC;
-            finderInfo.fdCreator = ostAaru;
-            rc                   = HSetFInfo(refNum, dirId, "\pVERSION", &finderInfo);
+            memset(&fpb, 0, sizeof(HParamBlockRec));
+
+            count = strlen(rsrcText);
+            wRc   = FSWrite(refFile, &count, rsrcText);
+            cRc   = FSClose(refFile);
+
+            fpb.fileParam.ioVRefNum              = refNum;
+            fpb.fileParam.ioNamePtr              = "\pVERSION";
+            fpb.fileParam.ioDirID                = dirId;
+            fpb.fileParam.ioFlFndrInfo.fdType    = ftGenericDocumentPC;
+            fpb.fileParam.ioFlFndrInfo.fdCreator = ostAaru;
+
+            rc = PBHSetFInfoSync(&fpb);
         }
     }
     printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
@@ -257,13 +280,20 @@ void ResourceFork(const char* path)
         rc   = HOpenDF(refNum, dirId, "\pALL", 0, &refFile);
         if(!rc)
         {
-            count                = strlen(rsrcText);
-            wRc                  = FSWrite(refFile, &count, rsrcText);
-            cRc                  = FSClose(refFile);
-            finderInfo.fdType    = ftPICTFile;
-            finderInfo.fdCreator = ostAaru;
-            finderInfo.fdFlags   = kHasCustomIcon;
-            rc                   = HSetFInfo(refNum, dirId, "\pALL", &finderInfo);
+            memset(&fpb, 0, sizeof(HParamBlockRec));
+
+            count = strlen(rsrcText);
+            wRc   = FSWrite(refFile, &count, rsrcText);
+            cRc   = FSClose(refFile);
+
+            fpb.fileParam.ioVRefNum              = refNum;
+            fpb.fileParam.ioNamePtr              = "\pALL";
+            fpb.fileParam.ioDirID                = dirId;
+            fpb.fileParam.ioFlFndrInfo.fdType    = ftPICTFile;
+            fpb.fileParam.ioFlFndrInfo.fdCreator = ostAaru;
+            fpb.fileParam.ioFlFndrInfo.fdFlags   = kHasCustomIcon;
+
+            rc = PBHSetFInfoSync(&fpb);
         }
     }
     printf("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d, rRc2 = "

@@ -61,8 +61,8 @@ void FileAttributes(const char* path)
     int16_t      refFile;
     int32_t      dirId;
     FInfo        finderInfo;
-    int32_t      count;
-    HFileInfo*   fpb;
+    int32_t        count;
+    HParamBlockRec fpb;
     CInfoPBRec     cipbr;
     HParamBlockRec dirPB;
     int            i;
@@ -112,15 +112,23 @@ void FileAttributes(const char* path)
 
             if(!rc)
             {
-                count                   = strlen(mac_attrs[i].contents);
-                wRc                     = FSWrite(refFile, &count, mac_attrs[i].contents);
-                cRc                     = FSClose(refFile);
-                finderInfo.fdType       = mac_attrs[i].type;
-                finderInfo.fdCreator    = mac_attrs[i].creator;
-                finderInfo.fdFlags      = mac_attrs[i].flags;
-                finderInfo.fdLocation.h = mac_attrs[i].location.h;
-                finderInfo.fdLocation.v = mac_attrs[i].location.v;
-                rc                      = HSetFInfo(refNum, dirId, mac_attrs[i].filename, &finderInfo);
+                memset(&fpb, 0, sizeof(HParamBlockRec));
+
+                count = strlen(mac_attrs[i].contents);
+                wRc   = FSWrite(refFile, &count, mac_attrs[i].contents);
+                cRc   = FSClose(refFile);
+
+                fpb.fileParam.ioVRefNum                 = refNum;
+                fpb.fileParam.ioNamePtr                 = str255;
+                fpb.fileParam.ioDirID                   = dirId;
+                fpb.fileParam.ioFDirIndex               = 0;
+                fpb.fileParam.ioFlFndrInfo.fdType       = mac_attrs[i].type;
+                fpb.fileParam.ioFlFndrInfo.fdCreator    = mac_attrs[i].creator;
+                fpb.fileParam.ioFlFndrInfo.fdFlags      = mac_attrs[i].flags;
+                fpb.fileParam.ioFlFndrInfo.fdLocation.h = mac_attrs[i].location.h;
+                fpb.fileParam.ioFlFndrInfo.fdLocation.v = mac_attrs[i].location.v;
+
+                rc = PBHSetFInfoSync(&fpb);
             }
         }
 
