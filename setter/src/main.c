@@ -72,6 +72,13 @@ int main(int argc, char** argv)
             target = argv[i];
     }
 
+    if(target == NULL)
+    {
+        fprintf(stderr, "Please specify a target path.\n");
+        fprintf(stderr, "Usage %s [--log] [--quiet] <path>\n", argv[0]);
+        return -3;
+    }
+
     log_set_quiet(quiet);
 
     if(log)
