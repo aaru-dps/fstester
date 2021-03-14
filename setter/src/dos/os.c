@@ -74,15 +74,12 @@ void GetOsInfo()
         case DOS_FLAVOR_WINME:
             printf("Will not run under Windows 9x. Exiting...\n");
             exit(1);
-            break;
         case DOS_FLAVOR_WINNT:
             printf("Will not run under Windows NT. Exiting...\n");
             exit(1);
-            break;
         case DOS_FLAVOR_OS2:
             printf("Will not run under OS/2. Exiting...\n");
             exit(1);
-            break;
         case DOS_FLAVOR_PTSDOS:
             printf("OS information:\n");
             printf("\tRunning under PTS-DOS %d.%d\n", dosuname_version.major, dosuname_version.minor);

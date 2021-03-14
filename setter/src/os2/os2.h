@@ -86,7 +86,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #define __os2_chdir(path) DosSetCurrentDir(path)
 #define __os2_mkdir(path) DosCreateDir(path, NULL)
-#define __os2_delete(path) DosDelete(path);
+#define __os2_delete(path) DosDelete(path)
 
 #endif
 

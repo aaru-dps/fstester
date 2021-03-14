@@ -27,17 +27,7 @@ Contains 32-bit OS/2 code
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#define INCL_DOSMISC
-#define INCL_DOSFILEMGR
-
-#include <os2.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../os2.h"
-#include "include/consts.h"
-#include "include/defs.h"
+#include "../../include/defs.h"
 
 void ExtendedAttributes(const char* path)
 { /* TODO: Implement */

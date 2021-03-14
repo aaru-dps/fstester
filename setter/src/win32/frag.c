@@ -55,7 +55,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     LPSTR          lpRootPathName;
     const size_t   pathSize = strlen(path);
     HANDLE         h;
-    DWORD          rc, wRc, cRc, tRc;
+    DWORD          rc, wRc, cRc;
     DWORD          dwNumberOfBytesWritten;
 
     lpRootPathName = malloc(dwMaxNameSize);
@@ -102,7 +102,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -125,7 +124,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -149,7 +147,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -172,7 +169,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -200,7 +196,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -228,7 +223,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -251,7 +245,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -274,7 +267,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -301,7 +293,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {
@@ -336,7 +327,6 @@ void Fragmentation(const char* path, size_t clusterSize)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    tRc = 0;
     if(h == INVALID_HANDLE_VALUE) rc = GetLastError();
     else
     {

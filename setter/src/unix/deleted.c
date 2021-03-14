@@ -39,7 +39,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void DeleteFiles(const char* path)
 {
     char  filename[9];
-    long  pos = 0;
+    long  pos;
     FILE* h;
     int   ret;
 

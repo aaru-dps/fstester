@@ -43,7 +43,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void MillionFiles(const char* path)
 {
     char         filename[9];
-    DWORD        pos = 0;
+    DWORD        pos;
     HANDLE       h;
     BOOL         ret;
     DWORD        error;

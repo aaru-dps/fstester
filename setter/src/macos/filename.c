@@ -49,10 +49,9 @@ void Filenames(const char* path)
     int16_t        refNum;
     int16_t        refFile;
     int32_t        dirId;
-    FInfo          finderInfo;
     int32_t        count;
     char           message[300];
-    int            pos = 0;
+    int            pos;
     HParamBlockRec dirPB;
 
     snprintf((char*)str255, 255, "%s", path);

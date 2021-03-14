@@ -163,9 +163,6 @@ void ExtendedAttributes(const char* path)
 
     printf("Creating files with extended attributes.\n");
 
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("COMMENTS",
@@ -225,9 +222,6 @@ void ExtendedAttributes(const char* path)
            rRc,
            cmp);
 
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("COMMENTS.CRT",
@@ -287,9 +281,6 @@ void ExtendedAttributes(const char* path)
            rRc,
            cmp);
 
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
     rRc = 0;
     cmp = TRUE;
     h   = CreateFileA("ICON",

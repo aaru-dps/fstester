@@ -42,7 +42,7 @@ void Filenames(const char* path)
     FILE* h;
     int   rc, wRc, cRc;
     char  message[300];
-    int   pos = 0;
+    int   pos;
 
     ret = chdir(path);
 

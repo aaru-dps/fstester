@@ -51,7 +51,7 @@ void Filenames(const char* path)
     DWORD        dwNumberOfBytesWritten;
     DWORD        rc, wRc, cRc;
     char         message[300];
-    int          pos = 0;
+    int          pos;
 
     lpRootPathName = malloc(dwMaxNameSize);
 

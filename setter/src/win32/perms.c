@@ -29,7 +29,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 // ReSharper disable CppJoinDeclarationAndAssignment
 // ReSharper disable CppDeprecatedEntity
-#define _CRT_SECURE_NO_WARNINGS 1
 
 #include "../include/defs.h"
 
