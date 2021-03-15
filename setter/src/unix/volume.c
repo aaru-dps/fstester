@@ -22,9 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include <stddef.h>
-
 #include <errno.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #ifdef HAVE_SYS_STAT_H
@@ -32,8 +31,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #if defined(HAVE_SYS_MOUNT_H)
-#include <sys/param.h>
 #include <sys/mount.h>
+#include <sys/param.h>
 #endif
 
 #include "../include/defs.h"
@@ -56,6 +55,9 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     log_write("Volume information:\n");
     log_write("\tPath: %s\n", path);
 
+#ifdef USE_STATFS_FTYPENAME
+    log_write("\tFilesystem: %s\n", buf.f_fstypename);
+#else
     log_write("\tFilesystem: ");
     switch(buf.f_type)
     {
@@ -143,6 +145,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         default: log_write("unknown type -> 0x%lX", buf.f_type);
     }
     log_write("\n");
+#endif
 
     log_write("\tBytes per block: %ld\n", buf.f_bsize);
     log_write("\tVolume size: %llu bytes\n", ((unsigned long long)buf.f_blocks) * buf.f_bsize);
