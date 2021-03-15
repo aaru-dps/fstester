@@ -29,8 +29,8 @@ endif()
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 
-CHECK_SYMBOL_EXISTS("struct statfs" "sys/statfs.h" HAVE_SYS_STATFS)
-CHECK_SYMBOL_EXISTS("struct statfs" "sys/mount.h" HAVE_SYS_MOUNT)
+CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
+CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
 
 # Linux and FreeBSD
 if(HAVE_SYS_STATFS)
@@ -38,6 +38,7 @@ if(HAVE_SYS_STATFS)
     add_definitions(-DHAVE_SYS_STATFS_H)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_fstypename" "sys/statfs.h" HAVE_STATFS_FTYPENAME)
+    CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/statfs.h" HAVE_STATFS_NAMEMAX)
 endif()
 
 # Darwin and most other BSDs
@@ -46,6 +47,7 @@ if(HAVE_SYS_MOUNT)
     add_definitions(-DHAVE_SYS_MOUNT_H)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namelen" "sys/mount.h" HAVE_STATFS_FNAMELEN)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_fstypename" "sys/mount.h" HAVE_STATFS_FTYPENAME)
+    CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/mount.h" HAVE_STATFS_NAMEMAX)
 endif()
 
 if(HAVE_STATFS_FNAMELEN)
@@ -56,6 +58,11 @@ endif()
 if(HAVE_STATFS_FTYPENAME)
     message("-- statfs has f_fstypename member")
     add_definitions(-DUSE_STATFS_FTYPENAME)
+endif()
+
+if(HAVE_STATFS_NAMEMAX)
+    message("-- statfs has f_namemax member")
+    add_definitions(-DUSE_STATFS_NAMEMAX)
 endif()
 
 set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c)

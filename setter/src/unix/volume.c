@@ -151,8 +151,10 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     log_write("\tVolume size: %llu bytes\n", ((unsigned long long)buf.f_blocks) * buf.f_bsize);
     log_write("\tVolume free: %llu bytes\n", ((unsigned long long)buf.f_bfree) * buf.f_bsize);
 
-#if defined(USE_STATFS_FNAMELEN)
+#ifdef USE_STATFS_FNAMELEN
     log_write("\tMaximum component length: %ld\n", buf.f_namelen);
+#elif USE_STATFS_NAMEMAX
+    log_write("\tMaximum component length: %ld\n", buf.f_namemax);
 #endif
 
     if(buf.f_flags)
