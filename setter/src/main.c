@@ -97,20 +97,20 @@ int main(int argc, char** argv)
     log_write("\n");
 
     GetOsInfo();
-    GetVolumeInfo(argv[1], &clusterSize);
-    FileAttributes(argv[1]);
-    FilePermissions(argv[1]);
-    ExtendedAttributes(argv[1]);
-    ResourceFork(argv[1]);
-    Filenames(argv[1]);
-    Timestamps(argv[1]);
-    Links(argv[1]);
-    DirectoryDepth(argv[1]);
-    Fragmentation(argv[1], clusterSize);
-    Sparse(argv[1]);
-    MillionFiles(argv[1]);
-    DeleteFiles(argv[1]);
-    GetVolumeInfo(argv[1], &clusterSize);
+    GetVolumeInfo(target, &clusterSize);
+    FileAttributes(target);
+    FilePermissions(target);
+    ExtendedAttributes(target);
+    ResourceFork(target);
+    Filenames(target);
+    Timestamps(target);
+    Links(target);
+    DirectoryDepth(target);
+    Fragmentation(target, clusterSize);
+    Sparse(target);
+    MillionFiles(target);
+    DeleteFiles(target);
+    GetVolumeInfo(target, &clusterSize);
 
     log_close();
     return 0;
