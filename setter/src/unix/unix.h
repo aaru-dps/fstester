@@ -25,8 +25,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_UNIX_H
 #define AARU_FSTESTER_SETTER_UNIX_H
 
-#if defined(unix) || defined(UNIX) || defined(__unix) || defined(__unix__) || defined(__UNIX__)
-
 #ifndef ADFS_SUPER_MAGIC
 #define ADFS_SUPER_MAGIC 0xadf5
 #endif
@@ -406,7 +404,5 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define MINTIMESTAMP 0x00000000
 #define Y2KTIMESTAMP 0x386D4380
 #define Y1KTIMESTAMP 0x386D437F
-
-#endif
 
 #endif // AARU_FSTESTER_SETTER_UNIX_H
