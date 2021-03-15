@@ -33,9 +33,12 @@ message("Detected system processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
 add_subdirectory(src)
 
-add_subdirectory(src/dos)
-add_subdirectory(src/unix)
-add_subdirectory(src/linux)
-add_subdirectory(src/win32)
 add_subdirectory(src/macos)
+add_subdirectory(src/dos)
+add_subdirectory(src/win32)
+
+add_subdirectory(src/unix)
+add_subdirectory(src/darwin)
+add_subdirectory(src/linux)
+
 

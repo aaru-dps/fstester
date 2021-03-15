@@ -22,10 +22,21 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     return()
 endif()
 
-set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c)
+project(
+        fssetter-darwin
+        DESCRIPTION "Filesystem test creator for Darwin"
+        LANGUAGES C)
 
-add_library(unix ${UNIX_SOURCES})
+add_definitions(-DHAVE_SYS_MOUNT_H)
+
+set(PLATFORM_SOURCES os.c darwin.h)
+
+set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+
+add_executable(${EXECUTABLE_NAME} ${PLATFORM_SOURCES})
+
+target_link_libraries(${EXECUTABLE_NAME} core unix)
