@@ -22,7 +22,7 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_ETTER_SRC_LOG_H_
+#ifndef AARU_FSTESTER_SETTER_SRC_LOG_H_
 #define AARU_FSTESTER_SETTER_SRC_LOG_H_
 
 int  log_open(int quiet);
