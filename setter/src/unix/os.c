@@ -22,15 +22,23 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#if defined(__APPLE__) && defined(__MACH__)
+#include "../darwin/darwin.h"
+#else
 #include <errno.h>
 #include <stdio.h>
 #include <sys/utsname.h>
 
-#include "../include/defs.h"
 #include "../log.h"
+#endif
+
+#include "../include/defs.h"
 
 void GetOsInfo()
 {
+#if defined(__APPLE__) && defined(__MACH__)
+    DarwinGetOsInfo();
+#else
     struct utsname buf;
     int            ret;
 
@@ -47,4 +55,5 @@ void GetOsInfo()
     log_write("\tRelease: %s\n", buf.release);
     log_write("\tVersion: %s\n", buf.version);
     log_write("\tMachine: %s\n", buf.machine);
+#endif
 }
