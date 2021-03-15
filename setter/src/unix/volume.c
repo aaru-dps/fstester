@@ -26,7 +26,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stddef.h>
 #include <stdio.h>
 
-#ifdef HAVE_SYS_STAT_H
+#ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
 #endif
 
@@ -38,6 +38,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 #include "unix.h"
+
+#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+#include "../linux/linux.h"
+#elif defined(__APPLE__) && defined(__MACH__)
+#include "../darwin/darwin.h"
+#endif
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
@@ -159,75 +165,13 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(buf.f_flags)
     {
-        log_write("\tFlags:\n");
-
-        if(buf.f_flags & ST_RDONLY)
-        {
-            log_write("\t\tVolume is read-only.\n");
-            buf.f_flags -= ST_RDONLY;
-        }
-
-        if(buf.f_flags & ST_NOSUID)
-        {
-            log_write("\t\tVolume ignores suid and sgid bits.\n");
-            buf.f_flags -= ST_NOSUID;
-        }
-
-        if(buf.f_flags & ST_NODEV)
-        {
-            log_write("\t\tVolume disallows access to device special files.\n");
-            buf.f_flags -= ST_NODEV;
-        }
-
-        if(buf.f_flags & ST_NOEXEC)
-        {
-            log_write("\t\tVolume disallows program execution.\n");
-            buf.f_flags -= ST_NOEXEC;
-        }
-
-        if(buf.f_flags & ST_SYNCHRONOUS)
-        {
-            log_write("\t\tVolume writes are synced at once.\n");
-            buf.f_flags -= ST_SYNCHRONOUS;
-        }
-
-        if(buf.f_flags & ST_MANDLOCK)
-        {
-            log_write("\t\tVolume allows mandatory locks.\n");
-            buf.f_flags -= ST_MANDLOCK;
-        }
-
-        if(buf.f_flags & ST_WRITE)
-        {
-            log_write("\t\tVolume writes on file/directory/symlink.\n");
-            buf.f_flags -= ST_WRITE;
-        }
-
-        if(buf.f_flags & ST_APPEND)
-        {
-            log_write("\t\tVolume appends.\n");
-            buf.f_flags -= ST_APPEND;
-        }
-
-        if(buf.f_flags & ST_IMMUTABLE)
-        {
-            log_write("\t\tVolume is immutable.\n");
-            buf.f_flags -= ST_IMMUTABLE;
-        }
-
-        if(buf.f_flags & ST_NOATIME)
-        {
-            log_write("\t\tVolume does not update access times.\n");
-            buf.f_flags -= ST_NOATIME;
-        }
-
-        if(buf.f_flags & ST_NODIRATIME)
-        {
-            log_write("\t\tVolume does not update directory access times.\n");
-            buf.f_flags -= ST_NODIRATIME;
-        }
-
-        if(buf.f_flags) { log_write("\t\tRemaining flags: 0x%08lX\n", buf.f_flags); }
+#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+        LinuxPrintStatfsFlags(buf.f_flags);
+#elif defined(__APPLE__) && defined(__MACH__)
+        DarwinPrintStatfsFlags(buf.f_flags);
+#else
+        log_write("\tFlags: 0x%08lX\n", buf.f_flags);
+#endif
     }
 
     *clusterSize = buf.f_bsize;

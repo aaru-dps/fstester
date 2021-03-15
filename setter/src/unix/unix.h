@@ -349,50 +349,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define _XIAFS_SUPER_MAGIC 0x012fd16d
 #endif
 
-#ifndef ST_RDONLY
-#define ST_RDONLY 1
-#endif
-
-#ifndef ST_NOSUID
-#define ST_NOSUID 2
-#endif
-
-#ifndef ST_NODEV
-#define ST_NODEV 4
-#endif
-
-#ifndef ST_NOEXEC
-#define ST_NOEXEC 8
-#endif
-
-#ifndef ST_SYNCHRONOUS
-#define ST_SYNCHRONOUS 16
-#endif
-
-#ifndef ST_MANDLOCK
-#define ST_MANDLOCK 64
-#endif
-
-#ifndef ST_WRITE
-#define ST_WRITE 128
-#endif
-
-#ifndef ST_APPEND
-#define ST_APPEND 256
-#endif
-
-#ifndef ST_IMMUTABLE
-#define ST_IMMUTABLE 512
-#endif
-
-#ifndef ST_NOATIME
-#define ST_NOATIME 1024
-#endif
-
-#ifndef ST_NODIRATIME
-#define ST_NODIRATIME 2048
-#endif
-
 #define DATETIME_FORMAT "This file is dated %s for %s\n"
 #define LESSDATETIME "2106/02/07 06:28:15 or unknown"
 #define MAXDATETIME "2038/01/19 03:14:07"

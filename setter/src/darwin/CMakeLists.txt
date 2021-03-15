@@ -33,7 +33,7 @@ project(
 
 add_definitions(-DHAVE_SYS_MOUNT_H)
 
-set(PLATFORM_SOURCES os.c darwin.h)
+set(PLATFORM_SOURCES os.c darwin.h volume.c volume.h)
 
 set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 

@@ -25,9 +25,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_LINUX_H
 #define AARU_FSTESTER_SETTER_LINUX_H
 
+#include <sys/types.h>
+
 void LinuxExtendedAttributes(const char* path);
 void LinuxSparse(const char* path);
 void LinuxFileAttributes(const char* path);
+void LinuxPrintStatfsFlags(__fsword_t flags);
 
 static unsigned char CommentsEA[72] = {
     0x45, 0x00, 0x00, 0x00, 0x00, 0x09, 0x33, 0x00, 0x2E, 0x43, 0x4F, 0x4D, 0x4D, 0x45, 0x4E, 0x54, 0x53, 0x00,
