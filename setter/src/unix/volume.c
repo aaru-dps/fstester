@@ -22,10 +22,19 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include <errno.h>
 #include <stddef.h>
+
+#include <errno.h>
 #include <stdio.h>
+
+#ifdef HAVE_SYS_STAT_H
 #include <sys/statfs.h>
+#endif
+
+#if defined(HAVE_SYS_MOUNT_H)
+#include <sys/param.h>
+#include <sys/mount.h>
+#endif
 
 #include "../include/defs.h"
 #include "../log.h"
@@ -138,7 +147,10 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     log_write("\tBytes per block: %ld\n", buf.f_bsize);
     log_write("\tVolume size: %llu bytes\n", ((unsigned long long)buf.f_blocks) * buf.f_bsize);
     log_write("\tVolume free: %llu bytes\n", ((unsigned long long)buf.f_bfree) * buf.f_bsize);
+
+#if defined(USE_STATFS_FNAMELEN)
     log_write("\tMaximum component length: %ld\n", buf.f_namelen);
+#endif
 
     if(buf.f_flags)
     {

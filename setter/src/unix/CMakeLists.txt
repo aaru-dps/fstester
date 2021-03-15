@@ -26,6 +26,32 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES
     return()
 endif()
 
+include(CheckSymbolExists)
+include(CheckStructHasMember)
+
+CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
+CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
+
+# Linux and FreeBSD
+if(HAVE_SYS_STATFS)
+    message("-- Found statfs in sys/statfs.h")
+    add_definitions(-DHAVE_SYS_STATFS_H)
+    CHECK_STRUCT_HAS_MEMBER(statfs "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
+endif()
+
+# Darwin and most other BSDs
+if(HAVE_SYS_MOUNT)
+    message("-- Found statfs in sys/mount.h")
+    add_definitions(-DHAVE_SYS_MOUNT_H)
+    CHECK_STRUCT_HAS_MEMBER(statfs "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
+endif()
+
+if(HAVE_STATFS_FNAMELEN)
+    message("-- statfs has f_namelen member")
+    add_definitions(-DUSE_STATFS_FNAMELEN)
+    CHECK_STRUCT_HAS_MEMBER(statfs "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
+endif()
+
 set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c)
 
 add_library(unix ${UNIX_SOURCES})
