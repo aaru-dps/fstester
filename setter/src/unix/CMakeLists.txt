@@ -29,8 +29,8 @@ endif()
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 
-CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
-CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
+CHECK_SYMBOL_EXISTS("struct statfs" "sys/statfs.h" HAVE_SYS_STATFS)
+CHECK_SYMBOL_EXISTS("struct statfs" "sys/mount.h" HAVE_SYS_MOUNT)
 
 # Linux and FreeBSD
 if(HAVE_SYS_STATFS)
