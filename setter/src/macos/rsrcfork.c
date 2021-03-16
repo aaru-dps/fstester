@@ -121,28 +121,28 @@ void ResourceFork(const char* path)
     log_write("Creating resource forks.\n");
 
     memset(&finderInfo, 0, sizeof(FInfo));
-    rc = HCreate(refNum, dirId, "\pICON", ostUnknown, ftGenericDocumentPC);
+    rc = HCreate(refNum, dirId, "\pICNS", ostUnknown, ftGenericDocumentPC);
     if(!rc)
     {
         rRc = SaveResourceToNewFile(refNum,
                                     dirId,
-                                    "\pICON",
+                                    "\pICNS",
                                     rtIcons,
                                     -16455,
                                     "\pIcon resource",
                                     (unsigned char*)IcnsResource,
                                     sizeof(IcnsResource));
-        rc  = HOpenDF(refNum, dirId, "\pICON", 0, &refFile);
+        rc  = HOpenDF(refNum, dirId, "\pICNS", 0, &refFile);
         if(!rc)
         {
             memset(&fpb, 0, sizeof(HParamBlockRec));
 
-            count = strlen(rsrcText);
-            wRc   = FSWrite(refFile, &count, rsrcText);
+            count = strlen(icnsText);
+            wRc   = FSWrite(refFile, &count, icnsText);
             cRc   = FSClose(refFile);
 
             fpb.fileParam.ioVRefNum              = refNum;
-            fpb.fileParam.ioNamePtr              = "\pICON";
+            fpb.fileParam.ioNamePtr              = "\pICNS";
             fpb.fileParam.ioDirID                = dirId;
             fpb.fileParam.ioFlFndrInfo.fdType    = ftGenericDocumentPC;
             fpb.fileParam.ioFlFndrInfo.fdCreator = ostAaru;
@@ -151,8 +151,8 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
-              "ICON",
+    log_write("\tFile with an icon in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+              "ICNS",
               rc,
               wRc,
               cRc,
@@ -175,8 +175,8 @@ void ResourceFork(const char* path)
         {
             memset(&fpb, 0, sizeof(HParamBlockRec));
 
-            count                = strlen(rsrcText);
-            wRc                  = FSWrite(refFile, &count, rsrcText);
+            count                = strlen(pictText);
+            wRc                  = FSWrite(refFile, &count, pictText);
             cRc                  = FSClose(refFile);
             finderInfo.fdType    = ftPICTFile;
             finderInfo.fdCreator = ostAaru;
@@ -190,7 +190,7 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+    log_write("\tFile with a picture in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
               "PICT",
               rc,
               wRc,
@@ -214,8 +214,8 @@ void ResourceFork(const char* path)
         {
             memset(&fpb, 0, sizeof(HParamBlockRec));
 
-            count = strlen(rsrcText);
-            wRc   = FSWrite(refFile, &count, rsrcText);
+            count = strlen(versText);
+            wRc   = FSWrite(refFile, &count, versText);
             cRc   = FSClose(refFile);
 
             fpb.fileParam.ioVRefNum              = refNum;
@@ -227,7 +227,8 @@ void ResourceFork(const char* path)
             rc = PBHSetFInfoSync(&fpb);
         }
     }
-    log_write("\tFile with three items in the resource fork: name = \"%s\", rc = %d, wRc = %d, cRc = %d, rRc = %d\n",
+    log_write("\tFile with an icon, a picture and a version in the resource fork: name = \"%s\", rc = %d, wRc = %d, "
+              "cRc = %d, rRc = %d\n",
               "VERSION",
               rc,
               wRc,

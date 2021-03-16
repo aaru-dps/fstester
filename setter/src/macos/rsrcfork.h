@@ -34,6 +34,9 @@ static OSErr SaveResourceToNewFile(int16_t        vRefNum,
                                    unsigned char* buffer,
                                    size_t         length);
 
+const char* icnsText = "This file has a custom icon in the resource fork.\r";
+const char* versText = "This file has a version in the resource fork.\r";
+const char* pictText = "This file has a picture, in the resource fork.\r";
 const char* rsrcText = "This file has a custom icon, a version, and a picture, in the resource fork.\r";
 
 const unsigned char IcnsResource[5618] = {
