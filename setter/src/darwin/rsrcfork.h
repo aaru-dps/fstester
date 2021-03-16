@@ -22,16 +22,12 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include "../include/defs.h"
+#ifndef AARU_FSTESTER_SETTER_SRC_DARWIN_RSRCFORK_H_
+#define AARU_FSTESTER_SETTER_SRC_DARWIN_RSRCFORK_H_
 
-#if defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
-#endif
+const char* icnsText = "This file has a custom icon in the resource fork.\n";
+const char* versText = "This file has a version in the resource fork.\n";
+const char* pictText = "This file has a picture, in the resource fork.\n";
+const char* rsrcText = "This file has a custom icon, a version, and a picture, in the resource fork.\n";
 
-void ResourceFork(const char* path)
-{
-#if defined(__APPLE__) && defined(__MACH__)
-    DarwinResourceFork(path);
-#endif
-    // Not supported
-}
+#endif // AARU_FSTESTER_SETTER_SRC_DARWIN_RSRCFORK_H_

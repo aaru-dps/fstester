@@ -26,17 +26,25 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     return()
 endif()
 
-project(
-        fssetter-darwin
+project(fssetter-darwin
         DESCRIPTION "Filesystem test creator for Darwin"
         LANGUAGES C)
 
-add_definitions(-DHAVE_SYS_MOUNT_H)
+find_library(CARBON_LIBRARY NAMES Carbon)
 
-set(PLATFORM_SOURCES os.c darwin.h volume.c volume.h attr.c attr.h)
+set(PLATFORM_SOURCES os.c darwin.h volume.c volume.h attr.c attr.h rsrcfork.c rsrcfork.h)
+
+if(CARBON_LIBRARY)
+    add_definitions("-DHAVE_CARBON")
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES} carbon.c carbon.h)
+endif()
 
 set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
 add_executable(${EXECUTABLE_NAME} ${PLATFORM_SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME} core unix)
+if(CARBON_LIBRARY)
+    target_link_libraries(${EXECUTABLE_NAME} core unix ${CARBON_LIBRARY})
+else()
+    target_link_libraries(${EXECUTABLE_NAME} core unix)
+endif()

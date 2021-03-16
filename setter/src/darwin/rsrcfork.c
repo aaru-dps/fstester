@@ -22,16 +22,16 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include "../include/defs.h"
-
-#if defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
+#ifdef HAVE_CARBON
+#include "carbon.h"
 #endif
 
-void ResourceFork(const char* path)
+void DarwinResourceFork(const char* path)
 {
-#if defined(__APPLE__) && defined(__MACH__)
-    DarwinResourceFork(path);
+#ifdef HAVE_CARBON
+    int ret;
+
+    // TODO: If -1, try BSD way (/..namedfork/rsrc defined in _PATH_RSRCFORKSPEC)
+    ret = CarbonResourceFork(path);
 #endif
-    // Not supported
 }
