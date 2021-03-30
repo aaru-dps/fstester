@@ -175,4 +175,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     }
 
     *clusterSize = buf.f_bsize;
+
+#if defined(__APPLE__) && defined(__MACH__)
+    DarwinVolumeAttributes(path);
+#endif
 }
