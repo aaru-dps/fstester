@@ -31,7 +31,7 @@ project(
         DESCRIPTION "Filesystem test creator for Linux"
         LANGUAGES C)
 
-set(PLATFORM_SOURCES attr.c sparse.c xattr.c volume.c volume.h)
+set(PLATFORM_SOURCES attr.c sparse.c xattr.c xattr.h volume.c volume.h)
 
 set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 

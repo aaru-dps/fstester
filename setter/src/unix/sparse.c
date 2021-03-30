@@ -23,6 +23,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
+#define _GNU_SOURCE
+
 #include <dlfcn.h>
 
 #include "../linux/linux.h"

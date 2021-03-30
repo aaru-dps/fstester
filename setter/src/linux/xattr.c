@@ -31,6 +31,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../log.h"
 #include "linux.h"
+#include "xattr.h"
 
 #if((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)) || (__GLIBC__ > 2)
 #include <sys/xattr.h>
