@@ -26,7 +26,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../darwin/darwin.h"
 #else
 #include <errno.h>
-#include <stdio.h>
 #include <sys/utsname.h>
 
 #include "../log.h"

@@ -37,7 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 #include "../log.h"
-#include "unix.h"
+#include "volume.h"
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
 #include "../linux/linux.h"

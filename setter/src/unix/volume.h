@@ -22,8 +22,8 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_SETTER_UNIX_H
-#define AARU_FSTESTER_SETTER_UNIX_H
+#ifndef AARU_FSTESTER_SETTER_UNIX_VOLUME_H
+#define AARU_FSTESTER_SETTER_UNIX_VOLUME_H
 
 #ifndef ADFS_SUPER_MAGIC
 #define ADFS_SUPER_MAGIC 0xadf5
@@ -349,4 +349,4 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define _XIAFS_SUPER_MAGIC 0x012fd16d
 #endif
 
-#endif // AARU_FSTESTER_SETTER_UNIX_H
+#endif // AARU_FSTESTER_SETTER_UNIX_VOLUME_H
