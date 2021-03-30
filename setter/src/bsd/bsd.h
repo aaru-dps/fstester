@@ -22,23 +22,9 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include "../include/defs.h"
+#ifndef SETTER_SRC_BSD_H_
+#define SETTER_SRC_BSD_H_
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-#include "../linux/linux.h"
-#elif defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
-#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#include "../bsd/bsd.h"
-#endif
+void BsdExtendedAttributes(const char* path);
 
-void ExtendedAttributes(const char* path)
-{
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-    LinuxExtendedAttributes(path);
-#elif defined(__APPLE__) && defined(__MACH__)
-    DarwinExtendedAttributes(path);
-#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
-    BsdExtendedAttributes(path);
-#endif
-}
+#endif // SETTER_SRC_BSD_H_
