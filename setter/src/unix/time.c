@@ -30,19 +30,18 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 #include <utime.h>
 
+#include "time.h"
+
 #include "../include/defs.h"
 #include "../log.h"
-#include "unix.h"
 
 void Timestamps(const char* path)
 {
-    char           message[300];
     int            ret;
-    time_t         ftLastAccessTime;
-    time_t         ftLastWriteTime;
     FILE*          h;
     int            rc, wRc, cRc, tRc;
     struct utimbuf times;
+    int            i;
 
     ret = chdir(path);
 
@@ -70,243 +69,30 @@ void Timestamps(const char* path)
 
     log_write("Creating timestamped files.\n");
 
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("MAXATIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
+    for(i = 0; i < KNOWN_UNIX_TIMES; i++)
     {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "access");
-        times.actime = MAXTIMESTAMP;
+        memset(&times, 0, sizeof(struct utimbuf));
+        h   = fopen(unix_times[i].filename, "w+");
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+        tRc = 0;
+        if(h == NULL) { rc = errno; }
+        else
+        {
+            times.actime  = unix_times[i].access;
+            times.modtime = unix_times[i].modification;
 
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
+            ret = fprintf(h, DATETIME_FORMAT, unix_times[i].message, unix_times[i].type);
+            if(ret < 0) { wRc = errno; }
 
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
+            ret = fclose(h);
+            if(ret) { cRc = errno; }
 
-        ret = utime("MAXATIME", &times);
-        if(ret) { tRc = errno; }
+            ret = utime(unix_times[i].filename, &times);
+            if(ret) { tRc = errno; }
+        }
+        log_write(
+            "\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", unix_times[i].filename, rc, wRc, cRc, tRc);
     }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXATIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("MAXMTIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MAXDATETIME, "modification");
-        times.modtime = MAXTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("MAXMTIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MAXMTIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("MINATIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MINDATETIME, "access");
-        times.actime = MINTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("MINATIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINATIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("MINMTIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, MINDATETIME, "modification");
-        times.modtime = MINTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("MINMTIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "MINMTIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("Y1KATIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "access");
-        times.actime = Y1KTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("Y1KATIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KATIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("Y1KMTIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
-        times.modtime = Y1KTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("Y1KMTIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y1KMTIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("Y2KATIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y2KDATETIME, "access");
-        times.actime = Y2KTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("Y2KATIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KATIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("Y2KMTIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, Y1KDATETIME, "modification");
-        times.modtime = Y2KTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("Y2KMTIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "Y2KMTIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("LESSATIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, LESSDATETIME, "access");
-        times.actime = LESSTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("LESSATIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSATIME", rc, wRc, cRc, tRc);
-
-    memset(&times, 0, sizeof(struct utimbuf));
-    h   = fopen("LESSMTIME", "w+");
-    rc  = 0;
-    wRc = 0;
-    cRc = 0;
-    tRc = 0;
-    if(h == NULL) { rc = errno; }
-    else
-    {
-        memset(message, 0, 300);
-        sprintf(message, DATETIME_FORMAT, LESSDATETIME, "modification");
-        times.modtime = LESSTIMESTAMP;
-
-        ret = fprintf(h, message);
-        if(ret < 0) { wRc = errno; }
-
-        ret = fclose(h);
-        if(ret) { cRc = errno; }
-
-        ret = utime("LESSMTIME", &times);
-        if(ret) { tRc = errno; }
-    }
-    log_write("\tFile name = \"%s\", rc = %d, wRc = %d, cRc = %d, tRc = %d\n", "LESSMTIME", rc, wRc, cRc, tRc);
 }

@@ -65,6 +65,6 @@ if(HAVE_STATFS_NAMEMAX)
     add_definitions(-DUSE_STATFS_NAMEMAX)
 endif()
 
-set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c)
+set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c time.h)
 
 add_library(unix ${UNIX_SOURCES})
