@@ -37,12 +37,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void LinuxSparse(const char* path)
 {
-    int            ret;
-    int            rc, wRc, cRc, zRc;
-    FILE*          h;
-    unsigned char* buffer;
-    int            i;
-    int            fd;
+    int   ret;
+    int   rc, wRc, cRc, zRc;
+    FILE* h;
+    int   i;
+    int   fd;
 
     ret = chdir(path);
 
@@ -78,9 +77,6 @@ void LinuxSparse(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(4096 * 3);
-        memset(buffer, 0, 4096 * 3);
-
         for(i = 0; i < 4096 * 3; i += CLAUNIA_SIZE)
         {
             ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
@@ -97,12 +93,11 @@ void LinuxSparse(const char* path)
 
         ret = fclose(h);
         if(ret) { cRc = errno; }
-        free(buffer);
     }
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
               "SMALL",
-              4096 * 3,
+              4096 * 4,
               rc,
               wRc,
               cRc,
@@ -116,9 +111,6 @@ void LinuxSparse(const char* path)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(4096 * 30);
-        memset(buffer, 0, 4096 * 30);
-
         for(i = 0; i < 4096 * 30; i += CLAUNIA_SIZE)
         {
             ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
@@ -135,7 +127,6 @@ void LinuxSparse(const char* path)
 
         ret = fclose(h);
         if(ret) { cRc = errno; }
-        free(buffer);
     }
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
