@@ -26,11 +26,15 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
 #include "../linux/linux.h"
+#elif defined(__APPLE__) && defined(__MACH__)
+#include "../darwin/darwin.h"
 #endif
 
 void ExtendedAttributes(const char* path)
 {
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
     LinuxExtendedAttributes(path);
+#elif defined(__APPLE__) && defined(__MACH__)
+    DarwinExtendedAttributes(path);
 #endif
 }

@@ -36,7 +36,7 @@ set(PLATFORM_SOURCES os.c darwin.h volume.c volume.h attr.c attr.h rsrcfork.c rs
 
 if(CARBON_LIBRARY)
     add_definitions("-DHAVE_CARBON")
-    set(PLATFORM_SOURCES ${PLATFORM_SOURCES} carbon.c carbon.h)
+    set(PLATFORM_SOURCES ${PLATFORM_SOURCES} carbon.c carbon.h xattr.c xattr.h)
 endif()
 
 set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
