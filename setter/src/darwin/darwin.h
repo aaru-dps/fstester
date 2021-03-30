@@ -13,5 +13,6 @@ void DarwinResourceFork(const char* path);
 void DarwinFileAttributes(const char* path);
 void DarwinExtendedAttributes(const char* path);
 void DarwinVolumeAttributes(const char* path);
+int  DarwinSparse(const char* path);
 
 #endif // SETTER_SRC_DARWIN_DARWIN_H_

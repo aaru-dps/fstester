@@ -22,56 +22,33 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-#include <dlfcn.h>
-
-#include "../linux/linux.h"
-#elif defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
-#endif
-
 #include <errno.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "../include/consts.h"
-#include "../include/defs.h"
 #include "../log.h"
 
-void Sparse(const char* path)
+int DarwinSparse(const char* path)
 {
-    int   ret;
-    int   rc, wRc, cRc;
-    FILE* h;
-    int   i;
-
-#if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-    void* linux_fallocate;
-
-    linux_fallocate = dlsym(RTLD_DEFAULT, "fallocate");
-
-    if(linux_fallocate)
-    {
-        LinuxSparse(path);
-
-        return;
-    }
-#elif defined(__APPLE__) && defined(__MACH__)
-    ret = DarwinSparse(path);
-
-    if(ret > 0) return;
-
-    ret = chdir(path);
-    rmdir("SPARSE");
-#endif
+    int          ret;
+    int          rc, wRc, cRc, sRc;
+    FILE*        h;
+    int          i;
+    int          fd;
+    int          done = -1;
+    fpunchhole_t fphole;
+    memset(&fphole, 0, sizeof(fpunchhole_t));
 
     ret = chdir(path);
 
     if(ret)
     {
         log_write("Error %d changing to specified path.\n", errno);
-        return;
+        return done;
     }
 
     ret = mkdir("SPARSE", 0755);
@@ -79,7 +56,7 @@ void Sparse(const char* path)
     if(ret)
     {
         log_write("Error %d creating working directory.\n", errno);
-        return;
+        return done;
     }
 
     ret = chdir("SPARSE");
@@ -87,8 +64,10 @@ void Sparse(const char* path)
     if(ret)
     {
         log_write("Error %d changing to working directory.\n", errno);
-        return;
+        return done;
     }
+
+    done = 0;
 
     log_write("Creating sparse files.\n");
 
@@ -96,10 +75,11 @@ void Sparse(const char* path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
+    sRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
-        for(i = 0; i < 4096; i += CLAUNIA_SIZE)
+        for(i = 0; i < 4096 * 3; i += CLAUNIA_SIZE)
         {
             ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
             if(ret < 0)
@@ -109,32 +89,35 @@ void Sparse(const char* path)
             }
         }
 
-        fseek(h, 8192, SEEK_CUR);
-
-        for(i = 4096 + 8192; i < 4096 * 4; i += CLAUNIA_SIZE)
-        {
-            ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
-            if(ret < 0)
-            {
-                wRc = errno;
-                break;
-            }
-        }
+        fd               = fileno(h);
+        fphole.fp_offset = 4096;
+        fphole.fp_length = 8192;
+        ret              = fcntl(fd, F_PUNCHHOLE, &fphole);
+        if(ret) sRc = errno;
+        else
+            done++;
 
         ret = fclose(h);
-        if(ret) { cRc = errno; }
+        if(ret) cRc = errno;
     }
 
-    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "SMALL", 4096 * 4, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
+              "SMALL",
+              4096 * 4,
+              rc,
+              wRc,
+              cRc,
+              sRc);
 
     h   = fopen("BIG", "w+");
     rc  = 0;
     wRc = 0;
     cRc = 0;
+    sRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
-        for(i = 0; i < 4096 * 8; i += CLAUNIA_SIZE)
+        for(i = 0; i < 4096 * 30; i += CLAUNIA_SIZE)
         {
             ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
             if(ret < 0)
@@ -144,18 +127,25 @@ void Sparse(const char* path)
             }
         }
 
-        fseek(h, 81920, SEEK_CUR);
+        fd               = fileno(h);
+        fphole.fp_offset = 32768;
+        fphole.fp_length = 81920;
+        ret              = fcntl(fd, F_PUNCHHOLE, &fphole);
+        if(ret) sRc = errno;
+        else
+            done++;
 
-        for(i = 32768 + 81920; i < 4096 * 30; i += CLAUNIA_SIZE)
-        {
-            ret = fwrite(clauniaBytes, CLAUNIA_SIZE, 1, h);
-            if(ret < 0)
-            {
-                wRc = errno;
-                break;
-            }
-        }
+        ret = fclose(h);
+        if(ret) cRc = errno;
     }
 
-    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "BIG", 4096 * 30, rc, wRc, cRc);
+    log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
+              "BIG",
+              4096 * 30,
+              rc,
+              wRc,
+              cRc,
+              sRc);
+
+    return done;
 }
