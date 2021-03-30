@@ -81,4 +81,18 @@ void Links(const char* path)
     ret = symlink("TARGET", "SYMBOLIC");
 
     if(ret) { log_write("Error %d creating symbolic link.\n", errno); }
+
+#if defined(__APPLE__) && defined(__MACH__)
+    ret = mkdir("TARGETDIR", 0755);
+
+    if(ret)
+    {
+        log_write("Error %d creating target directory.\n", errno);
+        return;
+    }
+
+    ret = link("TARGETDIR", "DIRLINK");
+
+    if(ret) log_write("Error %d creating directory hard link.\n", errno);
+#endif
 }
