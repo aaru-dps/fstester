@@ -22,6 +22,9 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#define _GNU_SOURCE
+
+#include <dlfcn.h>
 #include <errno.h>
 #include <features.h>
 #include <stdio.h>
@@ -29,21 +32,26 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "../log.h"
-#include "linux.h"
 #include "xattr.h"
 
-#if((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)) || (__GLIBC__ > 2)
-#include <sys/xattr.h>
-#endif
+#include "../log.h"
+#include "linux.h"
 
 void LinuxExtendedAttributes(const char* path)
 {
-#if((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)) || (__GLIBC__ > 2)
-    int   ret;
-    FILE* file;
-    int   rc;
-    int   cRc;
+    int             ret;
+    FILE*           file;
+    int             rc;
+    int             cRc;
+    _linux_setxattr linux_setxattr;
+
+    linux_setxattr = (_linux_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
+
+    if(!linux_setxattr)
+    {
+        log_write("Error loading setxattr(2) from libc: %s\n", dlerror());
+        return;
+    }
 
     ret = chdir(path);
 
@@ -79,7 +87,7 @@ void LinuxExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.comment\" that is 72 bytes long.\n");
         fclose(file);
-        ret = setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, XATTR_CREATE);
+        ret = linux_setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, 0);
 
         if(ret) cRc = errno;
     }
@@ -93,10 +101,9 @@ void LinuxExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.icon\" that is 3516 bytes long.\n");
         fclose(file);
-        ret = setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, XATTR_CREATE);
+        ret = linux_setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, 0);
 
         if(ret) cRc = errno;
     }
     log_write("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
-#endif
 }

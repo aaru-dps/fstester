@@ -38,11 +38,11 @@ void DarwinExtendedAttributes(const char* path)
     FILE*            file;
     int              rc;
     int              cRc;
-    _darwin_setxattr setxattr;
+    _darwin_setxattr darwin_setxattr;
 
-    setxattr = (_darwin_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
+  darwin_setxattr = (_darwin_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
 
-    if(!setxattr)
+    if(!darwin_setxattr)
     {
         log_write("Error loading setxattr(2) from libSystem: %s\n", dlerror());
         return;
@@ -82,7 +82,7 @@ void DarwinExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.comment\" that is 72 bytes long.\n");
         fclose(file);
-        ret = setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, 0, 0);
+        ret = darwin_setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, 0, 0);
 
         if(ret) cRc = errno;
     }
@@ -96,7 +96,7 @@ void DarwinExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.icon\" that is 3516 bytes long.\n");
         fclose(file);
-        ret = setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, 0, 0);
+        ret = darwin_setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, 0, 0);
 
         if(ret) cRc = errno;
     }
