@@ -10,6 +10,7 @@
 void DarwinGetOsInfo();
 void DarwinPrintStatfsFlags(uint32_t flags);
 void DarwinResourceFork(const char* path);
+void DarwinFileAttributes(const char* path);
 void DarwinExtendedAttributes(const char* path);
 
 #endif // SETTER_SRC_DARWIN_DARWIN_H_
