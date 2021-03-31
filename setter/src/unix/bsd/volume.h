@@ -273,4 +273,106 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 #endif // FreeBSD
 
+#if defined(__DragonFly__)
+#ifndef MNT_RDONLY
+#define MNT_RDONLY 0x00000001 /* read only filesystem */
+#endif
+
+#ifndef MNT_SYNCHRONOUS
+#define MNT_SYNCHRONOUS 0x00000002 /* file system written synchronously */
+#endif
+
+#ifndef MNT_NOEXEC
+#define MNT_NOEXEC 0x00000004 /* can't exec from filesystem */
+#endif
+
+#ifndef MNT_NOSUID
+#define MNT_NOSUID 0x00000008 /* don't honor setuid bits on fs */
+#endif
+
+#ifndef MNT_NODEV
+#define MNT_NODEV 0x00000010 /* don't interpret special files */
+#endif
+
+#ifndef MNT_AUTOMOUNTED
+#define MNT_AUTOMOUNTED 0x00000020 /* mounted by automountd(8) */
+#endif
+
+#ifndef MNT_ASYNC
+#define MNT_ASYNC 0x00000040 /* file system written asynchronously */
+#endif
+
+#ifndef MNT_SUIDDIR
+#define MNT_SUIDDIR 0x00100000 /* special handling of SUID on dirs */
+#endif
+
+#ifndef MNT_SOFTDEP
+#define MNT_SOFTDEP 0x00200000 /* soft updates being done */
+#endif
+
+#ifndef MNT_NOSYMFOLLOW
+#define MNT_NOSYMFOLLOW 0x00400000 /* do not follow symlinks */
+#endif
+
+#ifndef MNT_TRIM
+#define MNT_TRIM 0x01000000 /* Enable online FS trimming */
+#endif
+
+#ifndef MNT_NOATIME
+#define MNT_NOATIME 0x10000000 /* disable update of file access time */
+#endif
+
+#ifndef MNT_NOCLUSTERR
+#define MNT_NOCLUSTERR 0x40000000 /* disable cluster read */
+#endif
+
+#ifndef MNT_NOCLUSTERW
+#define MNT_NOCLUSTERW 0x80000000 /* disable cluster write */
+#endif
+
+#ifndef MNT_EXRDONLY
+#define MNT_EXRDONLY 0x00000080 /* exported read only */
+#endif
+
+#ifndef MNT_EXPORTED
+#define MNT_EXPORTED 0x00000100 /* file system is exported */
+#endif
+
+#ifndef MNT_DEFEXPORTED
+#define MNT_DEFEXPORTED 0x00000200 /* exported to the world */
+#endif
+
+#ifndef MNT_EXPORTANON
+#define MNT_EXPORTANON 0x00000400 /* use anon uid mapping for everyone */
+#endif
+
+#ifndef MNT_EXKERB
+#define MNT_EXKERB 0x00000800 /* exported with Kerberos uid mapping */
+#endif
+
+#ifndef MNT_EXPUBLIC
+#define MNT_EXPUBLIC 0x20000000 /* public export (WebNFS) */
+#endif
+
+#ifndef MNT_LOCAL
+#define MNT_LOCAL 0x00001000 /* filesystem is stored locally */
+#endif
+
+#ifndef MNT_QUOTA
+#define MNT_QUOTA 0x00002000 /* quotas are enabled on filesystem */
+#endif
+
+#ifndef MNT_ROOTFS
+#define MNT_ROOTFS 0x00004000 /* identifies the root filesystem */
+#endif
+
+#ifndef MNT_USER
+#define MNT_USER 0x00008000 /* mounted by a user */
+#endif
+
+#ifndef MNT_IGNORE
+#define MNT_IGNORE 0x00800000 /* do not show entry in df */
+#endif
+#endif // DragonFly BSD
+
 #endif // AARU_FSTESTER_SETTER_SRC_BSD_VOLUME_H_

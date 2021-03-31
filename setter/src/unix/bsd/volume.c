@@ -412,3 +412,162 @@ void FreeBsdPrintStatfsFlags(uint64_t flags)
     if(flags) { log_write("\t\tRemaining flags: 0x%08lX\n", flags); }
 }
 #endif
+
+#if defined(__DragonFly__)
+void DragonFlyPrintStatfsFlags(int flags)
+{
+    log_write("\tFlags:\n");
+
+    if(flags & MNT_RDONLY)
+    {
+        log_write("\t\tVolume is read-only.\n");
+        flags -= MNT_RDONLY;
+    }
+
+    if(flags & MNT_SYNCHRONOUS)
+    {
+        log_write("\t\tVolume writes are synced at once.\n");
+        flags -= MNT_SYNCHRONOUS;
+    }
+
+    if(flags & MNT_NOEXEC)
+    {
+        log_write("\t\tVolume disallows program execution.\n");
+        flags -= MNT_NOEXEC;
+    }
+
+    if(flags & MNT_NOSUID)
+    {
+        log_write("\t\tVolume ignores suid and sgid bits.\n");
+        flags -= MNT_NOSUID;
+    }
+
+    if(flags & MNT_NODEV)
+    {
+        log_write("\t\tVolume disallows access to device special files.\n");
+        flags -= MNT_NODEV;
+    }
+
+    if(flags & MNT_AUTOMOUNTED)
+    {
+        log_write("\t\tVolume is automounted.\n");
+        flags -= MNT_AUTOMOUNTED;
+    }
+
+    if(flags & MNT_ASYNC)
+    {
+        log_write("\t\tVolume is written asynchronously.\n");
+        flags -= MNT_ASYNC;
+    }
+
+    if(flags & MNT_SUIDDIR)
+    {
+        log_write("\t\tVolume handles SUID in directories in a special way.\n");
+        flags -= MNT_SUIDDIR;
+    }
+
+    if(flags & MNT_SOFTDEP)
+    {
+        log_write("\t\tVolume uses soft dependencies.\n");
+        flags -= MNT_SOFTDEP;
+    }
+
+    if(flags & MNT_NOSYMFOLLOW)
+    {
+        log_write("\t\tVolume does not follow symbolic links.\n");
+        flags -= MNT_NOSYMFOLLOW;
+    }
+
+    if(flags & MNT_TRIM)
+    {
+        log_write("\t\tVolume is TRIMmed/DISCARDed.\n");
+        flags -= MNT_TRIM;
+    }
+
+    if(flags & MNT_NOATIME)
+    {
+        log_write("\t\tVolume does not update access times.\n");
+        flags -= MNT_NOATIME;
+    }
+
+    if(flags & MNT_NOCLUSTERR)
+    {
+        log_write("\t\tVolume has read clustering disabled.\n");
+        flags -= MNT_NOCLUSTERR;
+    }
+
+    if(flags & MNT_NOCLUSTERW)
+    {
+        log_write("\t\tVolume has write clustering disabled.\n");
+        flags -= MNT_NOCLUSTERW;
+    }
+
+    if(flags & MNT_EXRDONLY)
+    {
+        log_write("\t\tVolume is exported read-only.\n");
+        flags -= MNT_EXRDONLY;
+    }
+
+    if(flags & MNT_EXPORTED)
+    {
+        log_write("\t\tVolume is exported.\n");
+        flags -= MNT_EXPORTED;
+    }
+
+    if(flags & MNT_DEFEXPORTED)
+    {
+        log_write("\t\tVolume is exported to the world.\n");
+        flags -= MNT_DEFEXPORTED;
+    }
+
+    if(flags & MNT_EXPORTANON)
+    {
+        log_write("\t\tVolume uses anon id.\n");
+        flags -= MNT_EXPORTANON;
+    }
+
+    if(flags & MNT_EXKERB)
+    {
+        log_write("\t\tVolume is exported with Kerberos ID.\n");
+        flags -= MNT_EXKERB;
+    }
+
+    if(flags & MNT_EXPUBLIC)
+    {
+        log_write("\t\tVolume is exported publicly.\n");
+        flags -= MNT_EXPUBLIC;
+    }
+
+    if(flags & MNT_LOCAL)
+    {
+        log_write("\t\tVolume is local.\n");
+        flags -= MNT_LOCAL;
+    }
+
+    if(flags & MNT_QUOTA)
+    {
+        log_write("\t\tVolume has quotas enabled.\n");
+        flags -= MNT_QUOTA;
+    }
+
+    if(flags & MNT_ROOTFS)
+    {
+        log_write("\t\tVolume is the root filesystem.\n");
+        flags -= MNT_ROOTFS;
+    }
+
+    if(flags & MNT_USER)
+    {
+        log_write("\t\tVolume has been mounted by a user.\n");
+        flags -= MNT_USER;
+    }
+
+    if(flags & MNT_IGNORE)
+    {
+        log_write("\t\tVolume does not appear in df.\n");
+        flags -= MNT_IGNORE;
+    }
+
+    if(flags) { log_write("\t\tRemaining flags: 0x%08lX\n", flags); }
+}
+#endif

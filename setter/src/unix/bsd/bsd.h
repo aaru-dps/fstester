@@ -34,6 +34,8 @@ void NetBsdPrintStatvfsFlags(unsigned long flags);
 #include <stdint.h>
 
 void FreeBsdPrintStatfsFlags(uint64_t flags);
+#elif defined(__DragonFly__)
+void DragonFlyPrintStatfsFlags(int flags);
 #endif
 
 #endif // SETTER_SRC_BSD_H_
