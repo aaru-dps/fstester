@@ -25,6 +25,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_BSD_VOLUME_H_
 #define AARU_FSTESTER_SETTER_SRC_BSD_VOLUME_H_
 
+#if defined(HAVE_SYS_STATVFS_H)
+#include <sys/statvfs.h>
+#endif
+
+#if defined(HAVE_SYS_MOUNT_H)
+#include <sys/mount.h>
+#endif
+
 #if defined(__NetBSD__)
 #ifndef ST_RDONLY
 #define ST_RDONLY 0x00000001 /* read only filesystem */
@@ -138,5 +146,131 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define ST_ROOTFS 0x00004000 /* identifies the root filesystem */
 #endif
 #endif // NetBSD
+
+#if defined(__FreeBSD__)
+#ifndef MNT_RDONLY
+#define MNT_RDONLY 0x0000000000000001ULL /* read only filesystem */
+#endif
+
+#ifndef MNT_SYNCHRONOUS
+#define MNT_SYNCHRONOUS 0x0000000000000002ULL /* fs written synchronously */
+#endif
+
+#ifndef MNT_NOEXEC
+#define MNT_NOEXEC 0x0000000000000004ULL /* can't exec from filesystem */
+#endif
+
+#ifndef MNT_NOSUID
+#define MNT_NOSUID 0x0000000000000008ULL /* don't honor setuid fs bits */
+#endif
+
+#ifndef MNT_NFS4ACLS
+#define MNT_NFS4ACLS 0x0000000000000010ULL /* enable NFS version 4 ACLs */
+#endif
+
+#ifndef MNT_UNION
+#define MNT_UNION 0x0000000000000020ULL /* union with underlying fs */
+#endif
+
+#ifndef MNT_ASYNC
+#define MNT_ASYNC 0x0000000000000040ULL /* fs written asynchronously */
+#endif
+
+#ifndef MNT_SUIDDIR
+#define MNT_SUIDDIR 0x0000000000100000ULL /* special SUID dir handling */
+#endif
+
+#ifndef MNT_SOFTDEP
+#define MNT_SOFTDEP 0x0000000000200000ULL /* using soft updates */
+#endif
+
+#ifndef MNT_NOSYMFOLLOW
+#define MNT_NOSYMFOLLOW 0x0000000000400000ULL /* do not follow symlinks */
+#endif
+
+#ifndef MNT_GJOURNAL
+#define MNT_GJOURNAL 0x0000000002000000ULL /* GEOM journal support enabled */
+#endif
+
+#ifndef MNT_MULTILABEL
+#define MNT_MULTILABEL 0x0000000004000000ULL /* MAC support for objects */
+#endif
+
+#ifndef MNT_ACLS
+#define MNT_ACLS 0x0000000008000000ULL /* ACL support enabled */
+#endif
+
+#ifndef MNT_NOATIME
+#define MNT_NOATIME 0x0000000010000000ULL /* dont update file access time */
+#endif
+
+#ifndef MNT_NOCLUSTERR
+#define MNT_NOCLUSTERR 0x0000000040000000ULL /* disable cluster read */
+#endif
+
+#ifndef MNT_NOCLUSTERW
+#define MNT_NOCLUSTERW 0x0000000080000000ULL /* disable cluster write */
+#endif
+
+#ifndef MNT_SUJ
+#define MNT_SUJ 0x0000000100000000ULL /* using journaled soft updates */
+#endif
+
+#ifndef MNT_AUTOMOUNTED
+#define MNT_AUTOMOUNTED 0x0000000200000000ULL /* mounted by automountd(8) */
+#endif
+
+#ifndef MNT_UNTRUSTED
+#define MNT_UNTRUSTED 0x0000000800000000ULL /* filesys metadata untrusted */
+#endif
+
+#ifndef MNT_EXRDONLY
+#define MNT_EXRDONLY 0x0000000000000080ULL /* exported read only */
+#endif
+
+#ifndef MNT_EXPORTED
+#define MNT_EXPORTED 0x0000000000000100ULL /* filesystem is exported */
+#endif
+
+#ifndef MNT_DEFEXPORTED
+#define MNT_DEFEXPORTED 0x0000000000000200ULL /* exported to the world */
+#endif
+
+#ifndef MNT_EXPORTANON
+#define MNT_EXPORTANON 0x0000000000000400ULL /* anon uid mapping for all */
+#endif
+
+#ifndef MNT_EXKERB
+#define MNT_EXKERB 0x0000000000000800ULL /* exported with Kerberos */
+#endif
+
+#ifndef MNT_EXPUBLIC
+#define MNT_EXPUBLIC 0x0000000020000000ULL /* public export (WebNFS) */
+#endif
+
+#ifndef MNT_LOCAL
+#define MNT_LOCAL 0x0000000000001000ULL /* filesystem is stored locally */
+#endif
+
+#ifndef MNT_QUOTA
+#define MNT_QUOTA 0x0000000000002000ULL /* quotas are enabled on fs */
+#endif
+
+#ifndef MNT_ROOTFS
+#define MNT_ROOTFS 0x0000000000004000ULL /* identifies the root fs */
+#endif
+
+#ifndef MNT_USER
+#define MNT_USER 0x0000000000008000ULL /* mounted by a user */
+#endif
+
+#ifndef MNT_IGNORE
+#define MNT_IGNORE 0x0000000000800000ULL /* do not show entry in df */
+#endif
+
+#ifndef MNT_VERIFIED
+#define MNT_VERIFIED 0x0000000400000000ULL /* filesystem is verified */
+#endif
+#endif // FreeBSD
 
 #endif // AARU_FSTESTER_SETTER_SRC_BSD_VOLUME_H_

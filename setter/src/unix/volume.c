@@ -193,6 +193,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         LinuxPrintStatfsFlags(buf.f_flags);
 #elif defined(__APPLE__) && defined(__MACH__)
         DarwinPrintStatfsFlags(buf.f_flags);
+#elif defined(__FreeBSD__)
+        FreeBsdPrintStatfsFlags(buf.f_flags);
 #else
         log_write("\tFlags: 0x%08lX\n", buf.f_flags);
 #endif

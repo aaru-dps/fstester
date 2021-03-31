@@ -30,6 +30,10 @@ void BsdFileAttributes(const char* path);
 
 #if defined(__NetBSD__)
 void NetBsdPrintStatvfsFlags(unsigned long flags);
+#elif defined(__FreeBSD__)
+#include <stdint.h>
+
+void FreeBsdPrintStatfsFlags(uint64_t flags);
 #endif
 
 #endif // SETTER_SRC_BSD_H_
