@@ -28,6 +28,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../linux/linux.h"
 #elif defined(__APPLE__) && defined(__MACH__)
 #include "../darwin/darwin.h"
+#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#include "../bsd/bsd.h"
 #endif
 
 void FileAttributes(const char* path)
@@ -36,5 +38,7 @@ void FileAttributes(const char* path)
     LinuxFileAttributes(path);
 #elif defined(__APPLE__) && defined(__MACH__)
     DarwinFileAttributes(path);
+#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
+    BsdFileAttributes(path);
 #endif
 }

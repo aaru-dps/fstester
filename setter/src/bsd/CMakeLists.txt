@@ -31,7 +31,7 @@ project(
         DESCRIPTION "Filesystem test creator for BSD"
         LANGUAGES C)
 
-set(PLATFORM_SOURCES bsd.h xattr.c xattr.h)
+set(PLATFORM_SOURCES bsd.h xattr.c xattr.h attr.c attr.h)
 
 set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 

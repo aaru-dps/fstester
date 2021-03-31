@@ -26,5 +26,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define SETTER_SRC_BSD_H_
 
 void BsdExtendedAttributes(const char* path);
+void BsdFileAttributes(const char* path);
 
 #endif // SETTER_SRC_BSD_H_
