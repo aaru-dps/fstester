@@ -30,6 +30,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/statfs.h>
 #endif
 
+#ifdef HAVE_SYS_STATVFS_H
+#include <sys/statvfs.h>
+#endif
+
 #if defined(HAVE_SYS_MOUNT_H)
 #include <sys/mount.h>
 #include <sys/param.h>
@@ -43,14 +47,24 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../linux/linux.h"
 #elif defined(__APPLE__) && defined(__MACH__)
 #include "../darwin/darwin.h"
+#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#include "../bsd/bsd.h"
 #endif
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
+#ifdef HAVE_SYS_STATVFS_H
+    struct statvfs buf;
+#else
     struct statfs buf;
-    int           ret;
+#endif
+    int ret;
 
+#ifdef HAVE_SYS_STATVFS_H
+    ret = statvfs(path, &buf);
+#else
     ret = statfs(path, &buf);
+#endif
 
     if(ret)
     {
@@ -163,6 +177,16 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     log_write("\tMaximum component length: %ld\n", buf.f_namemax);
 #endif
 
+#if HAVE_SYS_STATVFS_H
+    if(buf.f_flag)
+    {
+#if defined(__NetBSD__)
+// TODO:    NetBsdPrintStatfsFlags(buf.f_flag);
+#else
+        log_write("\tFlags: 0x%08lX\n", buf.f_flag);
+#endif
+    }
+#else
     if(buf.f_flags)
     {
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
@@ -173,6 +197,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         log_write("\tFlags: 0x%08lX\n", buf.f_flags);
 #endif
     }
+#endif
 
     *clusterSize = buf.f_bsize;
 

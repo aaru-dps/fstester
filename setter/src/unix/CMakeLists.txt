@@ -31,6 +31,15 @@ include(CheckStructHasMember)
 
 CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
 CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
+CHECK_SYMBOL_EXISTS(statvfs "sys/statvfs.h" HAVE_SYS_STATVFS)
+
+# NetBSD >= 3.0
+if(HAVE_SYS_STATVFS)
+    message("-- Found statvfs in sys/statvfs.h")
+    add_definitions(-DHAVE_SYS_STATVFS_H)
+    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_namemax" "sys/statvfs.h" HAVE_STATFS_NAMEMAX)
+    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_fstypename" "sys/statvfs.h" HAVE_STATFS_FTYPENAME)
+endif()
 
 # Linux and FreeBSD
 if(HAVE_SYS_STATFS)
