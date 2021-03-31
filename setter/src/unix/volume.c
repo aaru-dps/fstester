@@ -35,6 +35,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #if defined(HAVE_SYS_MOUNT_H)
+#if defined(NEED_SYS_TYPES_H)
+#include <sys/types.h>
+#endif
+
 #include <sys/mount.h>
 #include <sys/param.h>
 #endif
@@ -77,7 +81,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
 #ifdef USE_STATFS_FTYPENAME
     log_write("\tFilesystem: %s\n", buf.f_fstypename);
-#else
+#elif defined HAVE_STATFS_FTYPE
     log_write("\tFilesystem: ");
     switch(buf.f_type)
     {

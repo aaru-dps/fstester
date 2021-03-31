@@ -26,6 +26,7 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES
    return()
 endif()
 
+include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 
@@ -33,13 +34,20 @@ CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
 CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
 CHECK_SYMBOL_EXISTS(statvfs "sys/statvfs.h" HAVE_SYS_STATVFS)
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
+    message("-- Forcing statfs in sys/mount.h due to OpenBSD")
+    add_definitions(-DHAVE_SYS_MOUNT_H)
+    add_definitions(-DNEED_SYS_TYPES_H)
+    set(HAVE_STATFS_FTYPENAME 1)
+    set(HAVE_STATFS_NAMEMAX 1)
 # Linux and FreeBSD
-if(HAVE_SYS_STATFS)
+elseif(HAVE_SYS_STATFS)
     message("-- Found statfs in sys/statfs.h")
     add_definitions(-DHAVE_SYS_STATFS_H)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_fstypename" "sys/statfs.h" HAVE_STATFS_FTYPENAME)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/statfs.h" HAVE_STATFS_NAMEMAX)
+    CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_type" "sys/statfs.h" HAVE_STATFS_FTYPE)
 elseif(HAVE_SYS_MOUNT) # Darwin and most other BSDs
     message("-- Found statfs in sys/mount.h")
     add_definitions(-DHAVE_SYS_MOUNT_H)
@@ -48,11 +56,13 @@ elseif(HAVE_SYS_MOUNT) # Darwin and most other BSDs
     if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # It's giving false positives sometimes
         CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/mount.h" HAVE_STATFS_NAMEMAX)
     endif()
+    CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_type" "sys/mount.h" HAVE_STATFS_FTYPE)
 elseif(HAVE_SYS_STATVFS) # NetBSD >= 3.0
     message("-- Found statvfs in sys/statvfs.h")
     add_definitions(-DHAVE_SYS_STATVFS_H)
     CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_namemax" "sys/statvfs.h" HAVE_STATFS_NAMEMAX)
     CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_fstypename" "sys/statvfs.h" HAVE_STATFS_FTYPENAME)
+    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_type" "sys/statvfs.h" HAVE_STATFS_FTYPE)
 endif()
 
 if(HAVE_STATFS_FNAMELEN)

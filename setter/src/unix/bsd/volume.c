@@ -27,6 +27,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #ifdef HAVE_SYS_MOUNT_H
+#if defined(NEED_SYS_TYPES_H)
+#include <sys/types.h>
+#endif
+
 #include <sys/mount.h>
 #endif
 
