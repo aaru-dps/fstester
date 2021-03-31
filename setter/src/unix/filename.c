@@ -37,7 +37,6 @@ void Filenames(const char* path)
     int   ret;
     FILE* h;
     int   rc, wRc, cRc;
-    char  message[300];
     int   pos;
 
     ret = chdir(path);
@@ -76,10 +75,7 @@ void Filenames(const char* path)
         if(!h) { rc = errno; }
         else
         {
-            memset(message, 0, 300);
-            sprintf(message, FILENAME_FORMAT, filenames[pos]);
-
-            ret = fprintf(h, message);
+            ret = fprintf(h, FILENAME_FORMAT, filenames[pos]);
             if(ret < 0) { wRc = errno; }
 
             ret = fclose(h);
