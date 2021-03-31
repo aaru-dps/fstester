@@ -25,7 +25,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 
 #if defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
+#include "darwin/darwin.h"
 #endif
 
 void ResourceFork(const char* path)

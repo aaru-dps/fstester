@@ -28,9 +28,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "attr.h"
 
-#include "../log.h"
+#include "../../log.h"
 
-void DarwinFileAttributes(const char* path)
+void BsdFileAttributes(const char* path)
 {
     int   ret;
     int   fd;
@@ -39,7 +39,6 @@ void DarwinFileAttributes(const char* path)
     int   wRc;
     int   sRc;
     int   cRc;
-    int   attr;
     int   i;
 
     ret = chdir(path);
@@ -68,15 +67,15 @@ void DarwinFileAttributes(const char* path)
 
     log_write("Creating files with different flags (attributes).\n");
 
-    for(i = 0; i < KNOWN_DARWIN_ATTRS; i++)
+    for(i = 0; i < KNOWN_BSD_ATTRS; i++)
     {
-        h    = fopen(darwin_attrs[i].filename, "w+");
-        rc   = 0;
-        wRc  = 0;
-        sRc  = 0;
-        cRc  = 0;
-        attr = 0;
-        if(h == NULL) { rc = errno; }
+        h   = fopen(darwin_attrs[i].filename, "w+");
+        rc  = 0;
+        wRc = 0;
+        sRc = 0;
+        cRc = 0;
+
+        if(h == NULL) rc = errno;
         else
         {
             fd  = fileno(h);
@@ -90,6 +89,7 @@ void DarwinFileAttributes(const char* path)
             else
             {
                 ret = fprintf(h, "%s", darwin_attrs[i].contents);
+
                 if(ret < 1)
                 {
                     wRc = errno;
@@ -98,8 +98,10 @@ void DarwinFileAttributes(const char* path)
             }
 
             ret = fclose(h);
-            if(ret) { cRc = errno; }
+
+            if(ret) cRc = errno;
         }
+
         log_write("\t%s, rc = %d, wRc = %d, sRc = %d, cRc = %d\n", darwin_attrs[i].description, rc, wRc, sRc, cRc);
     }
 }

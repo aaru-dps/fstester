@@ -22,31 +22,30 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#include <dlfcn.h>
 #include <errno.h>
+#include <linux/fs.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "xattr.h"
+#include "attr.h"
 
-#include "../log.h"
+#include "../../log.h"
+#include "linux.h"
 
-void DarwinExtendedAttributes(const char* path)
+void LinuxFileAttributes(const char* path)
 {
-    int              ret;
-    FILE*            file;
-    int              rc;
-    int              cRc;
-    _darwin_setxattr darwin_setxattr;
-
-  darwin_setxattr = (_darwin_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
-
-    if(!darwin_setxattr)
-    {
-        log_write("Error loading setxattr(2) from libSystem: %s\n", dlerror());
-        return;
-    }
+    int   ret;
+    int   fd;
+    FILE* h;
+    int   rc;
+    int   wRc;
+    int   sRc;
+    int   cRc;
+    int   attr;
+    int   i;
 
     ret = chdir(path);
 
@@ -56,7 +55,7 @@ void DarwinExtendedAttributes(const char* path)
         return;
     }
 
-    ret = mkdir("XATTRS", 0755);
+    ret = mkdir("ATTRS", 0755);
 
     if(ret)
     {
@@ -64,7 +63,7 @@ void DarwinExtendedAttributes(const char* path)
         return;
     }
 
-    ret = chdir("XATTRS");
+    ret = chdir("ATTRS");
 
     if(ret)
     {
@@ -72,33 +71,41 @@ void DarwinExtendedAttributes(const char* path)
         return;
     }
 
-    log_write("Creating files with extended attributes.\n");
+    log_write("Creating files with different flags (attributes).\n");
 
-    rc   = 0;
-    cRc  = 0;
-    file = fopen("com.ibm.os2.comment", "w+");
-    if(file == NULL) rc = errno;
-    else
+    for(i = 0; i < KNOWN_LINUX_ATTRS; i++)
     {
-        fprintf(file, "This file has an extended attribute called \"com.ibm.os2.comment\" that is 72 bytes long.\n");
-        fclose(file);
-        ret = darwin_setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, 0, 0);
+        h    = fopen(linux_attrs[i].filename, "w+");
+        rc   = 0;
+        wRc  = 0;
+        sRc  = 0;
+        cRc  = 0;
+        attr = 0;
+        if(h == NULL) { rc = errno; }
+        else
+        {
+            attr |= linux_attrs[i].attr;
+            fd  = fileno(h);
+            ret = ioctl(fd, FS_IOC_SETFLAGS, &attr);
 
-        if(ret) cRc = errno;
+            if(ret)
+            {
+                sRc = errno;
+                unlink(linux_attrs[i].filename);
+            }
+            else
+            {
+                ret = fprintf(h, "%s", linux_attrs[i].contents);
+                if(ret < 1)
+                {
+                    wRc = errno;
+                    unlink(linux_attrs[i].filename);
+                }
+            }
+
+            ret = fclose(h);
+            if(ret) { cRc = errno; }
+        }
+        log_write("\t%s, rc = %d, wRc = %d, sRc = %d, cRc = %d\n", linux_attrs[i].description, rc, wRc, sRc, cRc);
     }
-    log_write("\tFile with an extended attribute called \"com.ibm.os2.comment\", rc = %d, cRc = %d\n", rc, cRc);
-
-    rc   = 0;
-    cRc  = 0;
-    file = fopen("com.ibm.os2.icon", "w+");
-    if(file == NULL) rc = errno;
-    else
-    {
-        fprintf(file, "This file has an extended attribute called \"com.ibm.os2.icon\" that is 3516 bytes long.\n");
-        fclose(file);
-        ret = darwin_setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, 0, 0);
-
-        if(ret) cRc = errno;
-    }
-    log_write("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
 }

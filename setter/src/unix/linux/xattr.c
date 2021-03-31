@@ -22,29 +22,34 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#define _GNU_SOURCE
+
 #include <dlfcn.h>
 #include <errno.h>
+#include <features.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "xattr.h"
 
-#include "../log.h"
+#include "../../log.h"
+#include "linux.h"
 
-void BsdExtendedAttributes(const char* path)
+void LinuxExtendedAttributes(const char* path)
 {
-    ssize_t             ret;
-    FILE*            file;
-    int              rc;
-    int              cRc;
-  _bsd_extattr_set_file bsd_extattr_set_file;
+    int             ret;
+    FILE*           file;
+    int             rc;
+    int             cRc;
+    _linux_setxattr linux_setxattr;
 
-  bsd_extattr_set_file = (_bsd_extattr_set_file)dlsym(RTLD_DEFAULT, "extattr_set_file");
+    linux_setxattr = (_linux_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
 
-    if(!bsd_extattr_set_file)
+    if(!linux_setxattr)
     {
-        log_write("Error loading extattr_set_file(2) from libc: %s\n", dlerror());
+        log_write("Error loading setxattr(2) from libc: %s\n", dlerror());
         return;
     }
 
@@ -82,7 +87,7 @@ void BsdExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.comment\" that is 72 bytes long.\n");
         fclose(file);
-        ret = bsd_extattr_set_file("com.ibm.os2.comment", EXTATTR_NAMESPACE_USER, "user.com.ibm.os2.comment", CommentsEA, 72);
+        ret = linux_setxattr("com.ibm.os2.comment", "user.com.ibm.os2.comment", CommentsEA, 72, 0);
 
         if(ret) cRc = errno;
     }
@@ -96,7 +101,7 @@ void BsdExtendedAttributes(const char* path)
     {
         fprintf(file, "This file has an extended attribute called \"com.ibm.os2.icon\" that is 3516 bytes long.\n");
         fclose(file);
-        ret = bsd_extattr_set_file("com.ibm.os2.icon", EXTATTR_NAMESPACE_USER, "user.com.ibm.os2.icon", IconEA, 3516);
+        ret = linux_setxattr("com.ibm.os2.icon", "user.com.ibm.os2.icon", IconEA, 3516, 0);
 
         if(ret) cRc = errno;
     }

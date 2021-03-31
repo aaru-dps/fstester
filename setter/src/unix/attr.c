@@ -25,11 +25,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
-#include "../linux/linux.h"
+#include "linux/linux.h"
 #elif defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
+#include "darwin/darwin.h"
 #elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#include "../bsd/bsd.h"
+#include "bsd/bsd.h"
 #endif
 
 void FileAttributes(const char* path)

@@ -33,14 +33,6 @@ CHECK_SYMBOL_EXISTS(statfs "sys/statfs.h" HAVE_SYS_STATFS)
 CHECK_SYMBOL_EXISTS(statfs "sys/mount.h" HAVE_SYS_MOUNT)
 CHECK_SYMBOL_EXISTS(statvfs "sys/statvfs.h" HAVE_SYS_STATVFS)
 
-# NetBSD >= 3.0
-if(HAVE_SYS_STATVFS)
-    message("-- Found statvfs in sys/statvfs.h")
-    add_definitions(-DHAVE_SYS_STATVFS_H)
-    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_namemax" "sys/statvfs.h" HAVE_STATFS_NAMEMAX)
-    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_fstypename" "sys/statvfs.h" HAVE_STATFS_FTYPENAME)
-endif()
-
 # Linux and FreeBSD
 if(HAVE_SYS_STATFS)
     message("-- Found statfs in sys/statfs.h")
@@ -48,15 +40,19 @@ if(HAVE_SYS_STATFS)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namelen" "sys/statfs.h" HAVE_STATFS_FNAMELEN)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_fstypename" "sys/statfs.h" HAVE_STATFS_FTYPENAME)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/statfs.h" HAVE_STATFS_NAMEMAX)
-endif()
-
-# Darwin and most other BSDs
-if(HAVE_SYS_MOUNT)
+elseif(HAVE_SYS_MOUNT) # Darwin and most other BSDs
     message("-- Found statfs in sys/mount.h")
     add_definitions(-DHAVE_SYS_MOUNT_H)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namelen" "sys/mount.h" HAVE_STATFS_FNAMELEN)
     CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_fstypename" "sys/mount.h" HAVE_STATFS_FTYPENAME)
-    CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/mount.h" HAVE_STATFS_NAMEMAX)
+    if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # It's giving false positives sometimes
+        CHECK_STRUCT_HAS_MEMBER("struct statfs" "f_namemax" "sys/mount.h" HAVE_STATFS_NAMEMAX)
+    endif()
+elseif(HAVE_SYS_STATVFS) # NetBSD >= 3.0
+    message("-- Found statvfs in sys/statvfs.h")
+    add_definitions(-DHAVE_SYS_STATVFS_H)
+    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_namemax" "sys/statvfs.h" HAVE_STATFS_NAMEMAX)
+    CHECK_STRUCT_HAS_MEMBER("struct statvfs" "f_fstypename" "sys/statvfs.h" HAVE_STATFS_FTYPENAME)
 endif()
 
 if(HAVE_STATFS_FNAMELEN)
@@ -77,3 +73,7 @@ endif()
 set(UNIX_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c time.h)
 
 add_library(unix ${UNIX_SOURCES})
+
+add_subdirectory(darwin)
+add_subdirectory(linux)
+add_subdirectory(bsd)

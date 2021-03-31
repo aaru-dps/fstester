@@ -23,7 +23,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #if defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
+#include "darwin/darwin.h"
 #else
 #include <errno.h>
 #include <sys/utsname.h>

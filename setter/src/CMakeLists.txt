@@ -25,3 +25,8 @@
 set(MAIN_SOURCES main.c main.h log.c log.h)
 
 add_library(core ${MAIN_SOURCES})
+
+add_subdirectory(macos)
+add_subdirectory(dos)
+add_subdirectory(win32)
+add_subdirectory(unix)

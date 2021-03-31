@@ -9,7 +9,7 @@
 
 #include "carbon.h"
 
-#include "../log.h"
+#include "../../log.h"
 #include "rsrcfork.h"
 
 #pragma clang diagnostic push

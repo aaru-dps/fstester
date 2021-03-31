@@ -26,7 +26,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "volume.h"
 
-#include "../log.h"
+#include "../../log.h"
 
 void LinuxPrintStatfsFlags(__fsword_t flags)
 {

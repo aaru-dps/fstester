@@ -27,9 +27,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <dlfcn.h>
 
-#include "../linux/linux.h"
+#include "linux/linux.h"
 #elif defined(__APPLE__) && defined(__MACH__)
-#include "../darwin/darwin.h"
+#include "darwin/darwin.h"
 #endif
 
 #include <errno.h>

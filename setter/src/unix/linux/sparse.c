@@ -22,33 +22,33 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include "../../include/consts.h"
+#define _GNU_SOURCE
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "../include/consts.h"
-#include "../log.h"
+#include "../../log.h"
+#include "linux.h"
 
-int DarwinSparse(const char* path)
+void LinuxSparse(const char* path)
 {
-    int          ret;
-    int          rc, wRc, cRc, sRc;
-    FILE*        h;
-    int          i;
-    int          fd;
-    int          done = -1;
-    fpunchhole_t fphole;
-    memset(&fphole, 0, sizeof(fpunchhole_t));
+    int   ret;
+    int   rc, wRc, cRc, zRc;
+    FILE* h;
+    int   i;
+    int   fd;
 
     ret = chdir(path);
 
     if(ret)
     {
         log_write("Error %d changing to specified path.\n", errno);
-        return done;
+        return;
     }
 
     ret = mkdir("SPARSE", 0755);
@@ -56,7 +56,7 @@ int DarwinSparse(const char* path)
     if(ret)
     {
         log_write("Error %d creating working directory.\n", errno);
-        return done;
+        return;
     }
 
     ret = chdir("SPARSE");
@@ -64,10 +64,8 @@ int DarwinSparse(const char* path)
     if(ret)
     {
         log_write("Error %d changing to working directory.\n", errno);
-        return done;
+        return;
     }
-
-    done = 0;
 
     log_write("Creating sparse files.\n");
 
@@ -75,7 +73,7 @@ int DarwinSparse(const char* path)
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    sRc = 0;
+    zRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -89,16 +87,12 @@ int DarwinSparse(const char* path)
             }
         }
 
-        fd               = fileno(h);
-        fphole.fp_offset = 4096;
-        fphole.fp_length = 8192;
-        ret              = fcntl(fd, F_PUNCHHOLE, &fphole);
-        if(ret) sRc = errno;
-        else
-            done++;
+        fd  = fileno(h);
+        ret = fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 4096, 8192);
+        if(ret) { zRc = errno; }
 
         ret = fclose(h);
-        if(ret) cRc = errno;
+        if(ret) { cRc = errno; }
     }
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
@@ -107,13 +101,13 @@ int DarwinSparse(const char* path)
               rc,
               wRc,
               cRc,
-              sRc);
+              zRc);
 
     h   = fopen("BIG", "w+");
     rc  = 0;
     wRc = 0;
     cRc = 0;
-    sRc = 0;
+    zRc = 0;
     if(h == NULL) { rc = errno; }
     else
     {
@@ -127,16 +121,12 @@ int DarwinSparse(const char* path)
             }
         }
 
-        fd               = fileno(h);
-        fphole.fp_offset = 32768;
-        fphole.fp_length = 81920;
-        ret              = fcntl(fd, F_PUNCHHOLE, &fphole);
-        if(ret) sRc = errno;
-        else
-            done++;
+        fd  = fileno(h);
+        ret = fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 32768, 81920);
+        if(ret) { zRc = errno; }
 
         ret = fclose(h);
-        if(ret) cRc = errno;
+        if(ret) { cRc = errno; }
     }
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d, sRc = %d\n",
@@ -145,7 +135,5 @@ int DarwinSparse(const char* path)
               rc,
               wRc,
               cRc,
-              sRc);
-
-    return done;
+              zRc);
 }

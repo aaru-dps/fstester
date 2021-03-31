@@ -28,7 +28,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/stat.h>
 #include <sys/utsname.h>
 
-#include "../log.h"
+#include "../../log.h"
 
 void DarwinGetOsInfo()
 {
