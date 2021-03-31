@@ -28,4 +28,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 void BsdExtendedAttributes(const char* path);
 void BsdFileAttributes(const char* path);
 
+#if defined(__NetBSD__)
+void NetBsdPrintStatvfsFlags(unsigned long flags);
+#endif
+
 #endif // SETTER_SRC_BSD_H_

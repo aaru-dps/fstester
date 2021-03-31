@@ -181,7 +181,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(buf.f_flag)
     {
 #if defined(__NetBSD__)
-// TODO:    NetBsdPrintStatfsFlags(buf.f_flag);
+        NetBsdPrintStatvfsFlags(buf.f_flag);
 #else
         log_write("\tFlags: 0x%08lX\n", buf.f_flag);
 #endif
