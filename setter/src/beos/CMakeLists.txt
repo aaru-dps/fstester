@@ -22,12 +22,19 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-set(MAIN_SOURCES main.c main.h log.c log.h)
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "BeOS" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Haiku")
+    return()
+endif()
 
-add_library(core ${MAIN_SOURCES})
+project(
+        fssetter-beos
+        DESCRIPTION "Filesystem test creator for BeOS and Haiku"
+        LANGUAGES C)
 
-add_subdirectory(macos)
-add_subdirectory(dos)
-add_subdirectory(win32)
-add_subdirectory(unix)
-add_subdirectory(beos)
+set(PLATFORM_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c time.h volume.c xattr.c)
+
+set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+
+add_executable(${EXECUTABLE_NAME} ${PLATFORM_SOURCES})
+
+target_link_libraries(${EXECUTABLE_NAME} core)
