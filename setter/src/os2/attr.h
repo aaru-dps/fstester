@@ -108,4 +108,3 @@ static const os2_attr_tests_t os2_attrs[KNOWN_OS2_ATTRS] = {
 
 #endif // AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
 
-#endif
