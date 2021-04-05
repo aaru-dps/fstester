@@ -76,12 +76,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define __os2_chdir(path) DosChDir(path, 0)
 #define __os2_mkdir(path) DosMkDir(path, 0)
 #define __os2_delete(path) DosDelete(path, 0)
+#define __os2_chdisk(driveNumber) DosSelectDisk(driveNumber)
 
 #else // 32 bit
 
 #define __os2_chdir(path) DosSetCurrentDir(path)
 #define __os2_mkdir(path) DosCreateDir(path, NULL)
 #define __os2_delete(path) DosDelete(path)
+#define __os2_chdisk(driveNumber) DosSetDefaultDisk(driveNumber)
 
 #endif
 

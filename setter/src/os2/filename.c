@@ -44,6 +44,23 @@ void Filenames(const char* path)
     char       message[300];
     int        pos = 0;
 
+// 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    USHORT driveNo = path[0] - '@';
+#else // 32 bit
+    ULONG driveNo = path[0] - '@';
+#endif
+
+    if(driveNo > 32) driveNo -= 32;
+
+    rc = __os2_chdisk(driveNo);
+
+    if(rc)
+    {
+        log_write("Cannot change to specified drive, not continuing.\n");
+        return;
+    }
+
     drivePath[0] = path[0];
     drivePath[1] = ':';
     drivePath[2] = '\\';

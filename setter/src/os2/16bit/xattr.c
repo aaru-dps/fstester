@@ -45,6 +45,17 @@ void ExtendedAttributes(const char* path)
     HFILE  handle;
     char   message[300];
     EAOP   eap;
+    USHORT driveNo = path[0] - '@';
+
+    if(driveNo > 32) driveNo -= 32;
+
+    rc = DosSelectDisk(driveNo);
+
+    if(rc)
+    {
+        log_write("Cannot change to specified drive, not continuing.\n");
+        return;
+    }
 
     drivePath[0] = path[0];
     drivePath[1] = ':';

@@ -49,10 +49,22 @@ void Timestamps(const char* path)
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     USHORT     status_size = sizeof(FILESTATUS);
     FILESTATUS status;
+    USHORT     driveNo = path[0] - '@';
 #else // 32 bit
     ULONG       status_size = sizeof(FILESTATUS3);
     FILESTATUS3 status;
+    ULONG       driveNo = path[0] - '@';
 #endif
+
+    if(driveNo > 32) driveNo -= 32;
+
+    rc = __os2_chdisk(driveNo);
+
+    if(rc)
+    {
+        log_write("Cannot change to specified drive, not continuing.\n");
+        return;
+    }
 
     drivePath[0] = path[0];
     drivePath[1] = ':';
