@@ -28,6 +28,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 int  log_open(int quiet);
 void log_write(const char* fmt, ...);
 void log_set_quiet(int quiet);
-void log_close();
+void log_close(void);
 
 #endif // AARU_FSTESTER_SETTER_SRC_LOG_H_
