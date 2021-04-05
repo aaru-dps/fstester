@@ -676,7 +676,7 @@ void Timestamps(const char* path)
                 status.ftimeCreation.twosecs * 2,
                 "all");
 
-        wRc = DosWrite(handle, &essage, strlen(message), &actionTaken);
+        wRc = DosWrite(handle, &message, strlen(message), &actionTaken);
         tRc = DosSetFileInfo(handle, 1, (PBYTE)&status, status_size);
         cRc = DosClose(handle);
     }
