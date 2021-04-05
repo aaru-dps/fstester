@@ -79,7 +79,7 @@ void Timestamps(const char* path)
         return;
     }
 
-    rc = __os2_mkdir("TIMES", 0);
+    rc = __os2_mkdir("TIMES");
 
     if(rc)
     {
