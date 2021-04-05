@@ -51,8 +51,8 @@ void GetOsInfo()
 
     if(aulBuffer[0] == 20)
     {
-        MajorVer = aulBuffer[1] / 10;
-        MinorVer = aulBuffer[1] % 10;
+        MajorVer = aulBuffer[0] / 10;
+        MinorVer = aulBuffer[1];
     }
     else
     {
