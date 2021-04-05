@@ -75,7 +75,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #define __os2_chdir(path) DosChDir(path, 0)
 #define __os2_mkdir(path) DosMkDir(path, 0)
-#define __os2_delete(path) DosDelete(path, 0);
+#define __os2_delete(path) DosDelete(path, 0)
 
 #else // 32 bit
 

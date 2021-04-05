@@ -23,7 +23,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #define INCL_DOSMISC
-#define INCL_DOSFILEMGR
 
 #include <os2.h>
 #include <stdio.h>
@@ -33,7 +32,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../../include/consts.h"
 #include "../../include/defs.h"
 #include "../../log.h"
-#include "../os2.h"
 
 void GetOsInfo()
 {

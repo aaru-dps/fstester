@@ -33,7 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/consts.h"
 #include "../include/defs.h"
 #include "../log.h"
-#include "os2.h"
+#include "os2defs.h"
 
 void MillionFiles(const char* path)
 {
