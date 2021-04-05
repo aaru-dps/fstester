@@ -42,6 +42,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     PFSALLOCATE pfsAllocateBuffer;
     char*       fsdName;
     PFSINFO     pfsInfo;
+    USHORT      usVolSerialHigh;
+    USHORT      usVolSerialLow;
 
 // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
@@ -119,14 +121,12 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
+        usVolSerialHigh = *((PUSHORT)&pfsInfo->ftimeCreation);
+        usVolSerialLow = *((PUSHORT)&pfsInfo->fdateCreation);
         log_write("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
-        log_write("\tVolume created on %d/%02d/%02d %02d:%02d:%02d\n",
-                  pfsInfo->fdateCreation.year + 1980,
-                  pfsInfo->fdateCreation.month - 1,
-                  pfsInfo->fdateCreation.day,
-                  pfsInfo->ftimeCreation.hours,
-                  pfsInfo->ftimeCreation.minutes,
-                  pfsInfo->ftimeCreation.twosecs * 2);
+        log_write("\tVolume created on %04X:%04X\n",
+                  usVolSerialHigh,
+                  usVolSerialLow);
     }
 
     free(pfsInfo);
