@@ -577,3 +577,7 @@ fabric.properties
 
 # NetWare binaries
 *.nlm
+
+# Borland C++
+*.DSK
+*.bak
