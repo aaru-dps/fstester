@@ -31,11 +31,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 typedef struct
 {
-  char filename[9];
-  unsigned short date;
-  unsigned short time;
-  unsigned short function;
-  char definition[13];
+    char           filename[9];
+    unsigned short date;
+    unsigned short time;
+    unsigned short function;
+    char           definition[13];
 } dos_time_tests_t;
 
 #define KNOWN_DOS_TIMES 12
@@ -51,18 +51,18 @@ typedef struct
 #define MIN_DATE 0x0021
 
 static const dos_time_tests_t dos_times[KNOWN_DOS_TIMES] = {
-    {"MAXCTIME",MAX_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
-    {"MINCTIME",MIN_DATE, 0, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
-    {"Y19CTIME",Y1K_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
-    {"Y2KCTIME",Y2K_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
-    {"MAXWTIME",MAX_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
-    {"MINWTIME",MIN_DATE, 0, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
-    {"Y19WTIME",Y1K_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
-    {"Y2KWTIME",Y2K_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
-    {"MAXATIME",MAX_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
-    {"MINATIME",MIN_DATE, 0, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
-    {"Y19ATIME",Y1K_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
-    {"Y2KATIME",Y2K_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
+    {"MAXCTIME", MAX_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
+    {"MINCTIME", MIN_DATE, 0, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
+    {"Y19CTIME", Y1K_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
+    {"Y2KCTIME", Y2K_DATE, MAX_TIME, WIN_SET_CREATION_DATE_AND_TIME, "creation"},
+    {"MAXWTIME", MAX_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
+    {"MINWTIME", MIN_DATE, 0, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
+    {"Y19WTIME", Y1K_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
+    {"Y2KWTIME", Y2K_DATE, MAX_TIME, DOS_SET_LAST_WRITTEN_DATE_AND_TIME, "last written"},
+    {"MAXATIME", MAX_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
+    {"MINATIME", MIN_DATE, 0, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
+    {"Y19ATIME", Y1K_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
+    {"Y2KATIME", Y2K_DATE, MAX_TIME, WIN_SET_LAST_ACCESS_DATE_AND_TIME, "last access"},
 };
 
 #endif // AARU_FSTESTER_SETTER_SRC_DOS_TIME_H_
