@@ -68,7 +68,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     chdir("FRAGS");
 
-    rc = _dos_creatnew("HALFCLST", _A_NORMAL, &handle);
+    rc = _dos_creatnew("HALFCLST", 0, &handle);
     if(!rc)
     {
         buffer = malloc(halfCluster);
@@ -83,7 +83,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "HALFCLST", halfCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("QUARCLST", _A_NORMAL, &handle);
+    rc = _dos_creatnew("QUARCLST", 0, &handle);
     if(!rc)
     {
         buffer = malloc(quarterCluster);
@@ -99,7 +99,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     log_write(
         "\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "QUARCLST", quarterCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("TWOCLST", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TWOCLST", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoCluster);
@@ -114,7 +114,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWOCLST", twoCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("TRQTCLST", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TRQTCLST", 0, &handle);
     if(!rc)
     {
         buffer = malloc(threeQuartersCluster);
@@ -134,7 +134,7 @@ void Fragmentation(const char* path, size_t clusterSize)
               wRc,
               cRc);
 
-    rc = _dos_creatnew("TWTQCLST", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TWTQCLST", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoAndThreeQuartCluster);
@@ -154,7 +154,7 @@ void Fragmentation(const char* path, size_t clusterSize)
               wRc,
               cRc);
 
-    rc = _dos_creatnew("TWO1", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TWO1", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoCluster);
@@ -169,7 +169,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO1", twoCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("TWO2", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TWO2", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoCluster);
@@ -184,7 +184,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO2", twoCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("TWO3", _A_NORMAL, &handle);
+    rc = _dos_creatnew("TWO3", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoCluster);
@@ -202,7 +202,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
-    rc = _dos_creatnew("FRAGTHRQ", _A_NORMAL, &handle);
+    rc = _dos_creatnew("FRAGTHRQ", 0, &handle);
     if(!rc)
     {
         buffer = malloc(threeQuartersCluster);
@@ -227,7 +227,7 @@ void Fragmentation(const char* path, size_t clusterSize)
               wRc,
               cRc);
 
-    rc = _dos_creatnew("FRAGSIXQ", _A_NORMAL, &handle);
+    rc = _dos_creatnew("FRAGSIXQ", 0, &handle);
     if(!rc)
     {
         buffer = malloc(twoAndThreeQuartCluster);

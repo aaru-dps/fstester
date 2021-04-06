@@ -66,7 +66,7 @@ void DeleteFiles(const char* path)
     {
         memset(filename, 0, 9);
         sprintf(filename, "%X", pos);
-        rc = _dos_creatnew(filename, _A_NORMAL, &handle);
+        rc = _dos_creatnew(filename, 0, &handle);
         if(rc) break;
 
         _dos_close(handle);

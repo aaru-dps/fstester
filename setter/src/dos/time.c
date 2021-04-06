@@ -67,7 +67,7 @@ void Timestamps(const char* path)
 
     for(i = 0; i < KNOWN_DOS_TIMES; i++)
     {
-        rc = _dos_creatnew(dos_times[i].filename, _A_NORMAL, &handle);
+        rc = _dos_creatnew(dos_times[i].filename, 0, &handle);
 
         if(!rc)
         {

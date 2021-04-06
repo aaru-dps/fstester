@@ -65,7 +65,7 @@ void Filenames(const char* path)
 
     for(pos = 0; filenames[pos]; pos++)
     {
-        rc = _dos_creatnew(filenames[pos], _A_NORMAL, &handle);
+        rc = _dos_creatnew(filenames[pos], 0, &handle);
 
         if(!rc)
         {
