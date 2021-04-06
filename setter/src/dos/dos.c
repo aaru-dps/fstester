@@ -28,6 +28,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <i86.h>
 #include <stdlib.h>
 #include <string.h>
+#elif defined(__TURBOC__)
+#include <dos.h>
+#include <io.h>
+#include <stdlib.h>
+#include <string.h>
 #elif defined(__DJGPP__)
 #include <dpmi.h>
 #include <go32.h>
@@ -38,7 +43,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace)
 {
-#if defined(__WATCOM__)
+#if defined(__WATCOM__) || defined(__TURBOC__)
     char                  drivePath[4];
     union REGS            regs;
     struct SREGS          sregs;
@@ -133,3 +138,56 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
     return -1;
 #endif
 }
+
+#if defined(__BORLANDC__) && __BORLANDC__ <= 0x200
+unsigned _dos_write(int handle, void far* buf, unsigned len, unsigned* nwritten)
+{
+    int ret;
+
+    ret = _write(handle, buf, len);
+
+    if(ret == -1)
+    {
+        errno = EBADF;
+        return _doserrno;
+    }
+
+    *nwritten = ret;
+
+    return 0;
+}
+
+unsigned _dos_creat(const char* path, int attrib, int* handlep)
+{
+    int ret;
+
+    ret = _creat(path, attrib);
+
+    if(ret == -1)
+    {
+        *handlep = 0;
+        return _doserrno;
+    }
+
+    *handlep = ret;
+
+    return 0;
+}
+
+unsigned _dos_creatnew(const char* path, int attrib, int* handlep)
+{
+    int ret;
+
+    ret = creatnew(path, attrib);
+
+    if(ret == -1)
+    {
+        *handlep = 0;
+        return _doserrno;
+    }
+
+    *handlep = ret;
+
+    return 0;
+}
+#endif
