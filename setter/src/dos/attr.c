@@ -35,7 +35,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 #include "attr.h"
-#include "dos.h"
+#include "dosdefs.h"
 
 void FileAttributes(const char* path)
 {

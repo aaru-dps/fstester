@@ -37,7 +37,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/consts.h"
 #include "../include/defs.h"
 #include "../log.h"
-#include "dos.h"
+#include "dosdefs.h"
 
 void Fragmentation(const char* path, size_t clusterSize)
 {

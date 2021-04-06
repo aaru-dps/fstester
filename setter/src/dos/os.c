@@ -32,7 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 #include "../log.h"
-#include "dos.h"
+#include "dosdefs.h"
 #include "dosuname.h"
 
 void GetOsInfo()

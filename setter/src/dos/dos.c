@@ -34,7 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/movedata.h>
 #endif
 
-#include "dos.h"
+#include "dosdefs.h"
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace)
 {
