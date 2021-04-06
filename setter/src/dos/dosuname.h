@@ -82,7 +82,7 @@ struct dosuname_version_t
     int             ndos_minor;
     int             windows_major;
     int             windows_minor;
-    unsigned long             windows_mode;
+    unsigned long   windows_mode;
     int             softice_major;
     int             softice_minor;
 };
