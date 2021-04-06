@@ -64,26 +64,26 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
     drivePath[2] = '\\';
     drivePath[3] = 0;
 
-    regs.w.ax = 0x7303;
+    regs.x.ax = 0x7303;
     sregs.ds  = FP_SEG(drivePath);
-    regs.w.dx = FP_OFF(drivePath);
+    regs.x.dx = FP_OFF(drivePath);
     sregs.es  = FP_SEG(copy);
-    regs.w.di = FP_OFF(copy);
-    regs.w.cx = sizeof(struct diskfree_ex_t);
+    regs.x.di = FP_OFF(copy);
+    regs.x.cx = sizeof(struct diskfree_ex_t);
 
     int86x(0x21, &regs, &regs, &sregs);
 
-    if(regs.h.al == 0 && !regs.w.cflag)
+    if(regs.h.al == 0 && !regs.x.cflag)
     {
         free(copy);
         errno = ENOSYS;
         return -1;
     }
-    else if(regs.w.cflag)
+    else if(regs.x.cflag)
     {
         free(copy);
         errno     = EINVAL;
-        _doserrno = regs.w.ax;
+        _doserrno = regs.x.ax;
         return -1;
     }
 
@@ -91,7 +91,7 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
 
     free(copy);
     errno     = 0;
-    _doserrno = regs.w.ax;
+    _doserrno = regs.x.ax;
 
     return 0;
 #elif defined(__DJGPP__)

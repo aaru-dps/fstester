@@ -84,12 +84,12 @@ void Timestamps(const char* path)
 
             wRc = _dos_write(handle, message, strlen(message), &actionTaken);
             memset(&regs, 0, sizeof(regs));
-            regs.w.bx = handle;
-            regs.w.cx = dos_times[i].time;
-            regs.w.dx = dos_times[i].date;
-            regs.w.ax = dos_times[i].function;
+            regs.x.bx = handle;
+            regs.x.cx = dos_times[i].time;
+            regs.x.dx = dos_times[i].date;
+            regs.x.ax = dos_times[i].function;
             int86(0x21, &regs, &regs);
-            tRc = regs.w.ax;
+            tRc = regs.x.ax;
             cRc = _dos_close(handle);
         }
 
