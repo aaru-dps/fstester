@@ -56,7 +56,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(rc)
     {
-        if(errno == ENOSYS)
+        if(errno == ENOSYS || errno == EINVAL)
         {
 #ifdef __TURBOC__
             getdfree(driveNo, &oldFreeSpace);
