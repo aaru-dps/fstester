@@ -34,12 +34,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
-    char                 driveNo = path[0] - '@';
-    struct diskfree_t    oldFreeSpace;
+    char driveNo = path[0] - '@';
+#ifdef __TURBOC__
+    struct dfree oldFreeSpace;
+#else
+    struct diskfree_t oldFreeSpace;
+#endif
     struct diskfree_ex_t freeSpace;
     unsigned int         rc;
 
+#ifdef __TURBOC__
+    memset(&oldFreeSpace, 0, sizeof(struct dfree));
+#else
     memset(&oldFreeSpace, 0, sizeof(struct diskfree_t));
+#endif
     memset(&freeSpace, 0, sizeof(struct diskfree_ex_t));
 
     if(driveNo > 32) driveNo -= 32;
@@ -50,11 +58,21 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     {
         if(errno == ENOSYS)
         {
+#ifdef __TURBOC__
+            getdfree(driveNo, &oldFreeSpace);
+            freeSpace.sectorsPerCluster = oldFreeSpace.df_sclus;
+            freeSpace.freeClusters      = oldFreeSpace.df_avail;
+            freeSpace.bytesPerSector    = oldFreeSpace.df_bsec;
+            freeSpace.totalClusters     = oldFreeSpace.df_total;
+
+            rc = oldFreeSpace.df_sclus == 0xFFFF;
+#else
             rc                          = _dos_getdiskfree(driveNo, &oldFreeSpace);
             freeSpace.sectorsPerCluster = oldFreeSpace.sectors_per_cluster;
             freeSpace.freeClusters      = oldFreeSpace.avail_clusters;
             freeSpace.bytesPerSector    = oldFreeSpace.bytes_per_sector;
             freeSpace.totalClusters     = oldFreeSpace.total_clusters;
+#endif
         }
         else
         {

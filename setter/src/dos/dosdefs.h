@@ -27,10 +27,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__WATCOM__)
 #include <direct.h>
-#define __dos_mkdir(a) mkdir(a)
+#define __dos_mkdir(path) mkdir(path)
 #elif defined(__DJGPP__)
 #include <sys/stat.h>
 #define __dos_mkdir(path) mkdir(path, 0)
+#elif defined(__TURBOC__)
+#include <dir.h>
+#define __dos_mkdir(path) mkdir(path)
 #endif
 
 #if defined(__WATCOM__)
@@ -68,6 +71,30 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
 #define HOUR(t) ((t & 0xF800) >> 11)
 #define MINUTE(t) ((t & 0x07E0) >> 5)
 #define SECOND(t) ((t & 0x001F) << 1)
+
+#ifndef ENOMEM
+#define ENOMEN 12
+#endif
+
+#ifndef ENOSYS
+#define ENOSYS 38
+#endif
+
+#ifndef EINVAL
+#define EINVAL 22
+#endif
+
+// Seems these were defined starting in Borland C++ 3.0
+#if defined(__BORLANDC__) && __BORLANDC__ <= 0x200
+#include <io.h>
+
+#define _dos_setfileattr(path, attrib) _chmod(path, 1, attrib)
+#define _dos_close(handle) _close(handle)
+#define _dos_setdrive(drivep, ndrives) setdisk(drivep)
+
+unsigned _dos_write(int handle, void far* buf, unsigned len, unsigned* nwritten);
+unsigned _dos_creat(const char* path, int attrib, int* handlep);
+unsigned _dos_creatnew(const char* path, int attrib, int* handlep);
 
 #endif
 
