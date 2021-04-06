@@ -27,6 +27,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <dos.h>
 
+#if defined(__TURBOC__)
+#define _A_NORMAL FA_NORMAL /* Normal file, no attributes */
+#define _A_RDONLY FA_RDONLY /* Read only attribute */
+#define _A_HIDDEN FA_HIDDEN /* Hidden file */
+#define _A_SYSTEM FA_SYSTEM /* System file */
+#define _A_ARCH FA_ARCH     /* Archive */
+#endif
+
 typedef struct
 {
     char         filename[9];
