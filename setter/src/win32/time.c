@@ -33,11 +33,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <string.h>
 
 #include "win32.h"
-
-#include "time.h"
-
 #include "../include/defs.h"
 #include "../log.h"
+#include "timew32.h"
 
 void Timestamps(const char* path)
 {
