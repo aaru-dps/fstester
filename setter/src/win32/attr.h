@@ -29,6 +29,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "win32.h"
 
+#ifndef FILE_ATTRIBUTE_OFFLINE
+#define FILE_ATTRIBUTE_OFFLINE 0x1000
+#endif
+
 const char* compressedAttributeText = "This file is compressed.\n";
 
 typedef struct
