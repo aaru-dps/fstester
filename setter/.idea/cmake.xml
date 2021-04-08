@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+      <configuration PROFILE_NAME="DJGPP" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=toolchains/djgpp.cmake" ENABLED="true" />
+      <configuration PROFILE_NAME="MingW x86" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/usr/share/mingw/toolchain-i686-w64-mingw32.cmake" ENABLED="true" />
+      <configuration PROFILE_NAME="MingW x64" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/usr/share/mingw/toolchain-x86_64-w64-mingw32.cmake" ENABLED="true" />
+      <configuration PROFILE_NAME="Retro68k (m68k)" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/opt/Retro68/toolchain/m68k-apple-macos/cmake/retro68.toolchain.cmake" ENABLED="true" />
+      <configuration PROFILE_NAME="Retro68k (ppc)" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/opt/Retro68/toolchain/powerpc-apple-macos/cmake/retroppc.toolchain.cmake" ENABLED="true" />
+      <configuration PROFILE_NAME="MacOS (remote)" TOOLCHAIN_NAME="MacOS (remote)" ENABLED="true" />
+      <configuration PROFILE_NAME="FreeBSD (remote)" TOOLCHAIN_NAME="FreeBSD (remote)" ENABLED="true" />
+      <configuration PROFILE_NAME="NetBSD (remote)" TOOLCHAIN_NAME="NetBSD (remote)" ENABLED="true" />
+      <configuration PROFILE_NAME="OpenBSD (remote)" TOOLCHAIN_NAME="OpenBSD (remote)" ENABLED="true" />
+      <configuration PROFILE_NAME="DragonFly BSD (remote)" TOOLCHAIN_NAME="DragonFly BSD (remote)" ENABLED="true" />
+      <configuration PROFILE_NAME="Haiku (remote)" TOOLCHAIN_NAME="Haiku (remote)" ENABLED="true" />
+    </configurations>
+  </component>
+</project>
