@@ -25,7 +25,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_OS2_H
 #define AARU_FSTESTER_SETTER_SRC_OS2_H
 
+#ifndef OS2_INCLUDED
+#define INCL_DOSMISC
+#define INCL_DOSFILEMGR
+
 #include <os2.h>
+#endif
 
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) // 16 bit
 

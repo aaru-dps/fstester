@@ -25,7 +25,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
 #define AARU_FSTESTER_SETTER_SRC_OS2_ATTR_H_
 
+#ifndef OS2_INCLUDED
+#define INCL_DOSMISC
+#define INCL_DOSFILEMGR
+
 #include <os2.h>
+#endif
 
 typedef struct
 {

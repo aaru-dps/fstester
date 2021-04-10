@@ -22,6 +22,9 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#define INCL_DOSMISC
+#define INCL_DOSFILEMGR
+
 #include <os2.h>
 #include <stdio.h>
 #include <stdlib.h>
