@@ -28,7 +28,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <i86.h>
 #include <stdlib.h>
 #include <string.h>
-#elif defined(__TURBOC__)
+#elif defined(__TURBOC__) || defined(_MSC_VER)
 #include <dos.h>
 #include <io.h>
 #include <stdlib.h>
@@ -43,7 +43,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace)
 {
-#if defined(__WATCOMC__) || defined(__TURBOC__)
+#if defined(__WATCOMC__) || defined(__TURBOC__) || defined(_MSC_VER)
     char                  drivePath[4];
     union REGS            regs;
     struct SREGS          sregs;
