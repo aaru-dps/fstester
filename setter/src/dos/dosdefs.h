@@ -36,6 +36,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define __dos_mkdir(path) mkdir(path)
 #endif
 
+#if defined(__BORLANDC__) && __BORLANDC__ <= 0x200
+#define OLD_BORLAND 1
+#endif
+
+#if defined(__TURBOC__) && __TURBOC__ <= 0x297 && !defined(OLD_BORLAND)
+#define OLD_BORLAND 1
+#endif
+
 #if defined(__WATCOMC__)
 #pragma pack(__push, 1)
 #else
@@ -85,7 +93,7 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
 #endif
 
 // Seems these were defined starting in Borland C++ 3.0
-#if defined(__BORLANDC__) && __BORLANDC__ <= 0x200
+#ifdef OLD_BORLAND
 #include <io.h>
 
 #define _dos_setfileattr(path, attrib) _chmod(path, 1, attrib)

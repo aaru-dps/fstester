@@ -139,7 +139,7 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
 #endif
 }
 
-#if defined(__BORLANDC__) && __BORLANDC__ <= 0x200
+#ifdef OLD_BORLAND
 unsigned _dos_write(int handle, void far* buf, unsigned len, unsigned* nwritten)
 {
     int ret;
