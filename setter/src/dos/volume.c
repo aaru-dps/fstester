@@ -76,7 +76,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         }
         else
         {
-            log_write("Error %d requesting volume information.\n", _doserrno);
+            log_write("Error %d requesting volume information.\n", rc);
             return;
         }
     }
