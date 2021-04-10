@@ -45,7 +45,11 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #if defined(__WATCOMC__)
+#if __WATCOMC__ >= 1100
 #pragma pack(__push, 1)
+#else
+#pragma pack(1)
+#endif
 #else
 #pragma pack(push, 1)
 #endif
@@ -68,7 +72,11 @@ typedef struct diskfree_ex_t
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace);
 
 #if defined(__WATCOMC__)
+#if __WATCOMC__ >= 1100
 #pragma pack(__pop)
+#else
+#pragma pack()
+#endif
 #else
 #pragma pack(pop)
 #endif
