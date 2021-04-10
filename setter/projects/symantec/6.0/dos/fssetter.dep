@@ -1,0 +1,79 @@
+..\..\..\..\src\dos\attr.OBJ: \
+	..\..\..\..\src\dos\attr.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\attr.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\deleted.OBJ: \
+	..\..\..\..\src\dos\deleted.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\dirdepth.OBJ: \
+	..\..\..\..\src\dos\dirdepth.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\dos.OBJ: \
+	..\..\..\..\src\dos\dos.c \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\dosuname.OBJ: \
+	..\..\..\..\src\dos\dosuname.c \
+	..\..\..\..\src\dos\dosuname.h
+..\..\..\..\src\dos\filename.OBJ: \
+	..\..\..\..\src\dos\filename.c \
+	..\..\..\..\src\dos\../include/consts.h \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\files.OBJ: \
+	..\..\..\..\src\dos\files.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\frag.OBJ: \
+	..\..\..\..\src\dos\frag.c \
+	..\..\..\..\src\dos\../include/consts.h \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\links.OBJ: \
+	..\..\..\..\src\dos\links.c \
+	..\..\..\..\src\dos\../include/defs.h
+..\..\..\..\src\log.OBJ: \
+	..\..\..\..\src\log.c \
+	..\..\..\..\src\log.h \
+	..\..\..\..\src\main.h
+..\..\..\..\src\main.OBJ: \
+	..\..\..\..\src\main.c \
+	..\..\..\..\src\main.h \
+	..\..\..\..\src\include/defs.h \
+	..\..\..\..\src\log.h
+..\..\..\..\src\dos\os.OBJ: \
+	..\..\..\..\src\dos\os.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosuname.h
+..\..\..\..\src\dos\perms.OBJ: \
+	..\..\..\..\src\dos\perms.c \
+	..\..\..\..\src\dos\../include/defs.h
+..\..\..\..\src\dos\rsrcfork.OBJ: \
+	..\..\..\..\src\dos\rsrcfork.c \
+	..\..\..\..\src\dos\../include/defs.h
+..\..\..\..\src\dos\sparse.OBJ: \
+	..\..\..\..\src\dos\sparse.c \
+	..\..\..\..\src\dos\../include/defs.h
+..\..\..\..\src\dos\time.OBJ: \
+	..\..\..\..\src\dos\time.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h \
+	..\..\..\..\src\dos\dostime.h
+..\..\..\..\src\dos\volume.OBJ: \
+	..\..\..\..\src\dos\volume.c \
+	..\..\..\..\src\dos\../include/defs.h \
+	..\..\..\..\src\dos\../log.h \
+	..\..\..\..\src\dos\dosdefs.h
+..\..\..\..\src\dos\xattr.OBJ: \
+	..\..\..\..\src\dos\xattr.c \
+	..\..\..\..\src\dos\../include/defs.h
