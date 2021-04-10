@@ -45,16 +45,12 @@ void FileAttributes(const char* path)
     int        i;
     ACTION_RET actionTaken = 0;
 
-// 32 bit
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386))
+    // 32 bit
+#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386) || defined(__386__))
     FILESTATUS3 fileStatus = {{0}};
-#endif
-
-// 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+    ULONG       driveNo    = path[0] - '@';
+#else // 16 bit
     USHORT driveNo = path[0] - '@';
-#else // 32 bit
-    ULONG driveNo = path[0] - '@';
 #endif
 
     if(driveNo > 32) driveNo -= 32;
@@ -108,7 +104,7 @@ void FileAttributes(const char* path)
             wRc = DosWrite(handle, (PVOID)os2_attrs[i].contents, strlen(os2_attrs[i].contents), &actionTaken);
 
             // 32 bit
-#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386))
+#if(defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_I386) || defined(__386__))
             // It operates over the handle so file must be closed after setting attribute
             fileStatus.attrFile = os2_attrs[i].attr;
             rc                  = DosSetFileInfo(handle, FIL_STANDARD, &fileStatus, sizeof(FILESTATUS3));
