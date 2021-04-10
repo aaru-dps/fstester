@@ -25,7 +25,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_DOS_H
 #define AARU_FSTESTER_SETTER_SRC_DOS_H
 
-#if defined(__WATCOMC__) || defined(_MSC_VER)
+#if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__ZTC__)
 #include <direct.h>
 #define __dos_mkdir(path) mkdir(path)
 #elif defined(__DJGPP__)
@@ -52,6 +52,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 #elif defined(_MSC_VER) && _MSC_VER <= 800
 #pragma pack(1)
+#elif defined(__ZTC__)
+#pragma ZTC align 1
 #else
 #pragma pack(push, 1)
 #endif
@@ -81,6 +83,8 @@ unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* disks
 #endif
 #elif defined(_MSC_VER) && _MSC_VER <= 800
 #pragma pack()
+#elif defined(__ZTC__)
+#pragma ZTC align
 #else
 #pragma pack(pop)
 #endif
