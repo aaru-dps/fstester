@@ -25,7 +25,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_DOS_H
 #define AARU_FSTESTER_SETTER_SRC_DOS_H
 
-#if defined(__WATCOM__)
+#if defined(__WATCOMC__)
 #include <direct.h>
 #define __dos_mkdir(path) mkdir(path)
 #elif defined(__DJGPP__)
@@ -36,7 +36,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define __dos_mkdir(path) mkdir(path)
 #endif
 
-#if defined(__WATCOM__)
+#if defined(__WATCOMC__)
 #pragma pack(__push, 1)
 #else
 #pragma pack(push, 1)
@@ -59,7 +59,7 @@ typedef struct diskfree_ex_t
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace);
 
-#if defined(__WATCOM__)
+#if defined(__WATCOMC__)
 #pragma pack(__pop)
 #else
 #pragma pack(pop)

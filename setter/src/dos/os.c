@@ -26,7 +26,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(__WATCOM__)
+#if defined(__WATCOMC__)
 #include <i86.h>
 #endif
 

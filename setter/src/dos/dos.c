@@ -24,7 +24,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <errno.h>
 
-#if defined(__WATCOM__)
+#if defined(__WATCOMC__)
 #include <i86.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +43,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace)
 {
-#if defined(__WATCOM__) || defined(__TURBOC__)
+#if defined(__WATCOMC__) || defined(__TURBOC__)
     char                  drivePath[4];
     union REGS            regs;
     struct SREGS          sregs;
