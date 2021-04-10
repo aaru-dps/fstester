@@ -167,6 +167,7 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
+*.OBJ
 *.iobj
 *.pch
 *.pdb
@@ -573,7 +574,6 @@ fabric.properties
 *.VCW
 *.WSP
 *.SBR
-*.SBR
 
 # NetWare binaries
 *.nlm
@@ -581,3 +581,14 @@ fabric.properties
 # Borland C++
 *.DSK
 *.bak
+*.ilc
+*.ild
+*.ilf
+*.ils
+*.~*
+*.tds
+
+# Visual C++
+*.vcp
+*.mdp
+*.dsw
