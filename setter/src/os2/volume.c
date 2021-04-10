@@ -45,7 +45,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     USHORT      usVolSerialHigh;
     USHORT      usVolSerialLow;
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     USHORT cbData  = sizeof(bData);
     USHORT driveNo = path[0] - '@';
@@ -58,7 +58,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     *clusterSize = 0;
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData, 0);
 #else // 32 bit
@@ -72,7 +72,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
-// 16 bit
+        // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
         fsdName = &bData[4 + (USHORT)bData[2] + 1 + 2];
 #else // 32 bit
@@ -83,7 +83,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     pfsAllocateBuffer = (PFSALLOCATE)malloc(sizeof(FSALLOCATE));
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     rc = DosQFSInfo(driveNo, 1, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
 #else // 32 bit
@@ -111,7 +111,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     pfsInfo = (PFSINFO)malloc(sizeof(FSINFO));
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     rc = DosQFSInfo(driveNo, 2, (PBYTE)pfsInfo, sizeof(FSINFO));
 #else // 32 bit
@@ -122,11 +122,9 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     else
     {
         usVolSerialHigh = *((PUSHORT)&pfsInfo->ftimeCreation);
-        usVolSerialLow = *((PUSHORT)&pfsInfo->fdateCreation);
+        usVolSerialLow  = *((PUSHORT)&pfsInfo->fdateCreation);
         log_write("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
-        log_write("\tVolume created on %04X:%04X\n",
-                  usVolSerialHigh,
-                  usVolSerialLow);
+        log_write("\tVolume created on %04X:%04X\n", usVolSerialHigh, usVolSerialLow);
     }
 
     free(pfsInfo);

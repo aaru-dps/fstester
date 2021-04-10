@@ -30,9 +30,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
-#include "../os2defs.h"
 #include "../include/consts.h"
 #include "../include/defs.h"
+#include "os2defs.h"
 
 void Sparse(const char* path)
 { /* Do nothing, not supported by target operating system */

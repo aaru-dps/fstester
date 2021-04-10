@@ -44,7 +44,7 @@ void Filenames(const char* path)
     char       message[300];
     int        pos = 0;
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     USHORT driveNo = path[0] - '@';
 #else // 32 bit

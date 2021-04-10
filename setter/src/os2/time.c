@@ -45,7 +45,7 @@ void Timestamps(const char* path)
     HFILE      handle;
     char       message[300];
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     USHORT     status_size = sizeof(FILESTATUS);
     FILESTATUS status;

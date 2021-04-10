@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Haiku (remote) (ae2ed873-6206-45f4-adc0-01b9159fe586)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.ykC3wFwbNa" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-retro68k-m68k" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-macos-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-netbsd-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-freebsd-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-retro68k-ppc" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-haiku-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-djgpp" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-openbsd-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-dragonfly-bsd-remote" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-mingw-x86" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-mingw-x64" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

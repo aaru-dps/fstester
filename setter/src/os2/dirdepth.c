@@ -42,7 +42,7 @@ void DirectoryDepth(const char* path)
     char   filename[9];
     int    pos = 2;
 
-// 16 bit
+    // 16 bit
 #if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
     USHORT driveNo = path[0] - '@';
 #else // 32 bit

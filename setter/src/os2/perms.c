@@ -24,5 +24,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 
-void FilePermissions(const char* path) { /* Do nothing, not supported by target operating system */ }
-
+void FilePermissions(const char* path)
+{ /* Do nothing, not supported by target operating system */
+}
