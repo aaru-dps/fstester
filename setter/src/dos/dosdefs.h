@@ -75,6 +75,10 @@ typedef struct diskfree_ex_t
 
 unsigned int _dos_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace);
 
+#ifdef __DJGPP__
+unsigned int _djgpp_getdiskfree_ex(unsigned int drive, struct diskfree_ex_t* diskspace);
+#endif
+
 #if defined(__WATCOMC__)
 #if __WATCOMC__ >= 1100
 #pragma pack(__pop)
