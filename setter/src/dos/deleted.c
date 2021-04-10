@@ -28,6 +28,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #if defined(__WATCOMC__)
 #include <direct.h>
+#include <io.h>
 #elif defined(__DJGPP__)
 #include <unistd.h>
 #endif
