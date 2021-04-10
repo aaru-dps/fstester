@@ -30,6 +30,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <windows.h>
 
+#ifndef VER_PLATFORM_WIN32_WINDOWS
+#define VER_PLATFORM_WIN32_WINDOWS 0x0001
+#endif
+
+#ifndef VER_PLATFORM_WIN32_NT
+#define VER_PLATFORM_WIN32_NT 0x0002
+#endif
+
 typedef LONG NTSTATUS;
 
 #ifndef NTAPI
