@@ -121,8 +121,13 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(rc) log_write("Error %d requesting volume information.\n", rc);
     else
     {
+#ifdef _MSC_VER
+        usVolSerialHigh = (USHORT)(pfsInfo->ulVSN >> 16);
+        usVolSerialLow  = (USHORT)(pfsInfo->ulVSN & 0xFFFF);
+#else
         usVolSerialHigh = *((PUSHORT)&pfsInfo->ftimeCreation);
         usVolSerialLow  = *((PUSHORT)&pfsInfo->fdateCreation);
+#endif
         log_write("\tVolume label: %s\n", pfsInfo->vol.szVolLabel);
         log_write("\tVolume created on %04X:%04X\n", usVolSerialHigh, usVolSerialLow);
     }
