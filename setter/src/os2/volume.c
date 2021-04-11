@@ -46,7 +46,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     USHORT      usVolSerialLow;
 
     // 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86))
     USHORT cbData  = sizeof(bData);
     USHORT driveNo = path[0] - '@';
 #else // 32 bit
@@ -59,7 +59,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     *clusterSize = 0;
 
     // 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86))
     rc = DosQFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData, 0);
 #else // 32 bit
     rc            = DosQueryFSAttach((PSZ)path, 0, FSAIL_QUERYNAME, (PVOID)&bData, &cbData);
@@ -73,7 +73,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     else
     {
         // 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86))
         fsdName = &bData[4 + (USHORT)bData[2] + 1 + 2];
 #else // 32 bit
         fsdName = &bData[8 + (USHORT)bData[2] + 1];
@@ -84,7 +84,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     pfsAllocateBuffer = (PFSALLOCATE)malloc(sizeof(FSALLOCATE));
 
     // 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86))
     rc = DosQFSInfo(driveNo, 1, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
 #else // 32 bit
     rc = DosQueryFSInfo(driveNo, FSIL_ALLOC, (PBYTE)pfsAllocateBuffer, sizeof(FSALLOCATE));
@@ -112,7 +112,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     pfsInfo = (PFSINFO)malloc(sizeof(FSINFO));
 
     // 16 bit
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86))
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86))
     rc = DosQFSInfo(driveNo, 2, (PBYTE)pfsInfo, sizeof(FSINFO));
 #else // 32 bit
     rc = DosQueryFSInfo(driveNo, FSIL_VOLSER, (PBYTE)pfsInfo, sizeof(FSINFO));

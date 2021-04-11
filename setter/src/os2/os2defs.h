@@ -32,7 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <os2.h>
 #endif
 
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) // 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) || defined(M_I86) // 16 bit
 
 #ifndef APIRET
 #define APIRET USHORT
@@ -76,7 +76,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define FSAT_REMOTEDRV 4 /* Remote drive attached to FSD */
 #endif
 
-#if(defined(__I86__) || defined(__i86__) || defined(_M_I86)) // 16 bit
+#if(defined(__I86__) || defined(__i86__) || defined(_M_I86) || defined(M_I86)) // 16 bit
 
 #define __os2_chdir(path) DosChDir(path, 0)
 #define __os2_mkdir(path) DosMkDir(path, 0)
