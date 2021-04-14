@@ -83,7 +83,7 @@ void FileAttributes(const char* path)
     for(i = 0; i < KNOWN_MAC_ATTRS; i++)
     {
         memset(str255, 0, 256);
-        memcpy(str255, mac_attrs[i].filename, strlen(mac_attrs[i].filename));
+        memcpy(str255, mac_attrs[i].filename, strlen((const char*)mac_attrs[i].filename));
 
         memset(&finderInfo, 0, sizeof(FInfo));
         rc = HCreate(refNum, dirId, str255, ostUnknown, ftGenericDocumentPC);

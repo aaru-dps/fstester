@@ -33,13 +33,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 typedef struct
 {
-    char*    filename;
-    char     contents[170];
-    char     description[63];
-    uint16_t flags;
-    OSType   type;
-    OSType   creator;
-    Point    location;
+    unsigned char* filename;
+    char           contents[170];
+    char           description[63];
+    uint16_t       flags;
+    OSType         type;
+    OSType         creator;
+    Point          location;
 } mac_attr_tests_t;
 
 #define KNOWN_MAC_ATTRS 33
