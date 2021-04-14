@@ -43,9 +43,13 @@ enum
     gestaltMacOSCompatibilityBoxAttr = FOUR_CHAR_CODE('bbox'),
     ostAaru                          = FOUR_CHAR_CODE('aaru'),
     ostSimpleText                    = FOUR_CHAR_CODE('ttxt'),
-    ostUnknown                       = FOUR_CHAR_CODE('????'),
-    rtIcons                          = FOUR_CHAR_CODE('icns'),
-    rtVersion                        = FOUR_CHAR_CODE('vers'),
+#ifdef __MWERKS__
+    ostUnknown = 0x3F3F3F3F,
+#else
+    ostUnknown = FOUR_CHAR_CODE('????'),
+#endif
+    rtIcons   = FOUR_CHAR_CODE('icns'),
+    rtVersion = FOUR_CHAR_CODE('vers')
 };
 
 #if __MWERKS__ <= 0x2100
