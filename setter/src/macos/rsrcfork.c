@@ -51,7 +51,7 @@ static OSErr SaveResourceToNewFile(int16_t        vRefNum,
 
     h = NewHandle(length);
 
-    if(!h) return notEnoughMemoryErr;
+    if(!h) return -620; // notEnoughMemoryErr
 
     memcpy(*h, buffer, length);
 

@@ -137,7 +137,7 @@ enum
 /*MemoryDispatch errors*/
 enum
 {
-    notEnoughMemoryErr = -620, /*insufficient physical memory*/
+    notEnoughMemoryErr = -620 /*insufficient physical memory*/
 };
 
 enum

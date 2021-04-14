@@ -55,20 +55,20 @@ enum
 #if __MWERKS__ <= 0x2100
 
 // There's no MacTypes.h in old CodeWarrior
-typedef signed char int8_t;
-typedef unsigned char uint8_t;
-typedef short int16_t;
-typedef unsigned short uint16_t;
-typedef long int32_t;
-typedef unsigned long uint32_t;
-typedef long long int64_t;
+typedef signed char        int8_t;
+typedef unsigned char      uint8_t;
+typedef short              int16_t;
+typedef unsigned short     uint16_t;
+typedef long               int32_t;
+typedef unsigned long      uint32_t;
+typedef long long          int64_t;
 typedef unsigned long long uint64_t;
 
 #define kHasNoINITs (0x0080) /* Files only (Extensions/Control Panels only) */
 
 #if __MWERKS__ <= 0x1800
 // Old CodeWarrior C library does not include snprintf()
-int snprintf(char *str, size_t size, const char *format, ...);
+int snprintf(char* str, size_t size, const char* format, ...);
 #endif
 
 enum
