@@ -30,6 +30,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "retro68.h"
 #endif
 
+#if !defined(FOUR_CHAR_CODE)
+#if __option(enumsalwaysint) && __option(ANSI_strict)
+#define FOUR_CHAR_CODE(x) ((long)x)
+#else
+#define FOUR_CHAR_CODE(x) (x)
+#endif
+#endif
+
 enum
 {
     gestaltMacOSCompatibilityBoxAttr = FOUR_CHAR_CODE('bbox'),
