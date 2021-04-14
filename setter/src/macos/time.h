@@ -39,12 +39,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 typedef struct
 {
-    char*   filename;
-    LONGINT creation;
-    LONGINT modification;
-    LONGINT backup;
-    char    type[13];
-    char    message[20];
+    unsigned char* filename;
+    uint32_t       creation;
+    uint32_t       modification;
+    uint32_t       backup;
+    char           type[13];
+    char           message[20];
 } mac_time_tests_t;
 
 #define KNOWN_MAC_TIMES 17

@@ -84,7 +84,7 @@ void Timestamps(const char* path)
     for(i = 0; i < KNOWN_MAC_TIMES; i++)
     {
         memset(str255, 0, 256);
-        memcpy(str255, mac_times[i].filename, strlen(mac_times[i].filename));
+        memcpy(str255, mac_times[i].filename, strlen((const char*)mac_times[i].filename));
 
         rc = HCreate(refNum, dirId, str255, ostUnknown, ftGenericDocumentPC);
 
