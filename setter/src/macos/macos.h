@@ -25,8 +25,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_MACOS_H
 #define AARU_FSTESTER_SETTER_SRC_MACOS_H
 
-#include <MacTypes.h>
-
 // Things not included in Retro68
 #if defined(HAVE_MULTIVERSE_H)
 #include "retro68.h"
@@ -41,5 +39,35 @@ enum
     rtIcons                          = FOUR_CHAR_CODE('icns'),
     rtVersion                        = FOUR_CHAR_CODE('vers'),
 };
+
+#if __MWERKS__ <= 0x2100
+
+// There's no MacTypes.h in old CodeWarrior
+typedef signed char int8_t;
+typedef unsigned char uint8_t;
+typedef short int16_t;
+typedef unsigned short uint16_t;
+typedef long int32_t;
+typedef unsigned long uint32_t;
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
+
+#define kHasNoINITs (0x0080) /* Files only (Extensions/Control Panels only) */
+
+#if __MWERKS__ <= 0x1800
+// Old CodeWarrior C library does not include snprintf()
+int snprintf(char *str, size_t size, const char *format, ...);
+#endif
+
+enum
+{
+    gestaltHasHFSPlusAPIs = 12 /* file system supports HFS Plus APIs */
+};
+
+#define PBXGetVolInfo(pb, async) ((async) ? PBXGetVolInfoAsync(pb) : PBXGetVolInfoSync(pb))
+
+#else
+#include <MacTypes.h>
+#endif
 
 #endif
