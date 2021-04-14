@@ -42,9 +42,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "links.h"
 #include "macos.h"
 
-static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType)
+static OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType)
 {
-    short       rsrcID;
     short       aliasRefnum;
     FInfo       finf;
     OSErr       err;

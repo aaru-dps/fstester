@@ -31,7 +31,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <Files.h>
 
-static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType);
+static OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType);
 
 const char* targetText = "This file is the target of an alias.\r";
 
