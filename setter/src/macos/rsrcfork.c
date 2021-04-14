@@ -27,9 +27,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include <Files.h>
-#include <MacTypes.h>
 #include <Resources.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 

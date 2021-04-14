@@ -29,8 +29,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <FileTypesAndCreators.h>
 #endif
 
-#include <MacTypes.h>
-
 #include "macos.h"
 
 typedef struct

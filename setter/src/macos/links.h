@@ -30,7 +30,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include <Files.h>
-#include <MacTypes.h>
 
 static pascal OSErr CreateAliasFile(FSSpec* targetFile, FSSpec* aliasFile, OSType fileCreator, OSType fileType);
 
