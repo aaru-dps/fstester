@@ -25,6 +25,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <Files.h>
 #include <Gestalt.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/defs.h"
 #include "../log.h"
@@ -95,17 +96,20 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
             log_write("Could not get volume information.\n");
             return;
         }
+
+        // Because old compilers use a struct instead of a 64 bit integer
+        memcpy(&totalBytes, &xpb.ioVTotalBytes, 8);
+        memcpy(&freeBytes, &xpb.ioVFreeBytes, 8);
+
         drvInfo      = xpb.ioVDrvInfo;
         refNum       = xpb.ioVRefNum;
-        totalBlocks  = xpb.ioVTotalBytes / xpb.ioVAlBlkSiz;
-        freeBlocks   = xpb.ioVFreeBytes / xpb.ioVAlBlkSiz;
+        totalBlocks  = totalBytes / xpb.ioVAlBlkSiz;
+        freeBlocks   = freeBytes / xpb.ioVAlBlkSiz;
         crDate       = xpb.ioVCrDate;
         lwDate       = xpb.ioVLsMod;
         bkDate       = xpb.ioVBkUp;
         fsId         = xpb.ioVSigWord;
         *clusterSize = xpb.ioVAlBlkSiz;
-        totalBytes   = xpb.ioVTotalBytes;
-        freeBytes    = xpb.ioVFreeBytes;
         if(xpb.ioVFSID != 0) { fsId = xpb.ioVFSID; }
     }
 
