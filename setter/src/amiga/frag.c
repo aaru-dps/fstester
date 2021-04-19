@@ -24,6 +24,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <proto/dos.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../include/consts.h"
 #include "../include/defs.h"
