@@ -22,9 +22,54 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <proto/dos.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void MillionFiles(const char* path)
 {
-    // TODO
+    BPTR pathLock;
+    BPTR dirLock;
+    char filename[9];
+    long pos = 0;
+    BPTR h;
+    int  ret;
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "MILLION");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating lots of files.\n");
+
+    for(pos = 0; pos < 1000; pos++)
+    {
+        memset(filename, 0, 9);
+        sprintf(filename, "%08ld", pos);
+
+        h = Open((CONST_STRPTR)filename, MODE_NEWFILE);
+        if(!h) break;
+
+        Close(h);
+    }
+
+    log_write("\tCreated %ld files\n", pos);
 }
