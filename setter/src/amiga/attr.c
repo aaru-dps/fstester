@@ -27,5 +27,5 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void FileAttributes(const char* path)
 {
-    // TODO
+    // Is in permissions
 }

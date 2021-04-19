@@ -22,9 +22,67 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <dos/dos.h>
+#include <proto/dos.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "perms.h"
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void FilePermissions(const char* path)
 {
-    // TODO
+    BPTR pathLock;
+    BPTR dirLock;
+    int  ret;
+    BPTR file;
+    int  rc;
+    int  cRc;
+    int  i;
+    char buffer[256];
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "PERMS");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating permissions files.\n");
+
+    for(i = 0; i < KNOWN_AMIGA_PERMS; i++)
+    {
+        file = Open((CONST_STRPTR)amiga_perms[i].filename, MODE_NEWFILE);
+        rc   = 0;
+        cRc  = 0;
+
+        if(!file) rc = IoErr();
+        else
+        {
+            memset(buffer, 0, 256);
+            snprintf(buffer, 256, "%s.\n", amiga_perms[i].description);
+            Write(file, buffer, 256);
+            Close(file);
+            cRc = SetProtection((CONST_STRPTR)amiga_perms[i].filename, amiga_perms[i].mode);
+            if(!cRc) cRc = IoErr();
+        }
+
+        log_write(
+            "\t%s: name = \"%s\", rc = %d, cRc = %d\n", amiga_perms[i].description, amiga_perms[i].filename, rc, cRc);
+    }
 }
