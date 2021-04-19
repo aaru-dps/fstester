@@ -75,11 +75,11 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     {
         type[pos++] = '\\';
 
-        if(typeByte <= 7) type[pos++] = typeByte + 0x30;
+        if(typeByte < 10) type[pos++] = typeByte + 0x30;
         else
         {
-            type[pos++] = (typeByte / 8) + 0x30;
-            type[pos++] = (typeByte % 8) + 0x30;
+            type[pos++] = (typeByte / 10) + 0x30;
+            type[pos++] = (typeByte % 10) + 0x30;
         }
     }
     else
@@ -91,11 +91,11 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     {
         type[pos++] = '\\';
 
-        if(typeByte <= 7) type[pos++] = typeByte + 0x30;
+        if(typeByte < 10) type[pos++] = typeByte + 0x30;
         else
         {
-            type[pos++] = (typeByte / 8) + 0x30;
-            type[pos++] = (typeByte % 8) + 0x30;
+            type[pos++] = (typeByte / 10) + 0x30;
+            type[pos++] = (typeByte % 10) + 0x30;
         }
     }
     else
@@ -107,11 +107,11 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     {
         type[pos++] = '\\';
 
-        if(typeByte <= 7) type[pos++] = typeByte + 0x30;
+        if(typeByte < 10) type[pos++] = typeByte + 0x30;
         else
         {
-            type[pos++] = (typeByte / 8) + 0x30;
-            type[pos++] = (typeByte % 8) + 0x30;
+            type[pos++] = (typeByte / 10) + 0x30;
+            type[pos++] = (typeByte % 10) + 0x30;
         }
     }
     else
@@ -123,11 +123,11 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     {
         type[pos++] = '\\';
 
-        if(typeByte <= 7) type[pos++] = typeByte + 0x30;
+        if(typeByte < 10) type[pos++] = typeByte + 0x30;
         else
         {
-            type[pos++] = (typeByte / 8) + 0x30;
-            type[pos++] = (typeByte % 8) + 0x30;
+            type[pos++] = (typeByte / 10) + 0x30;
+            type[pos++] = (typeByte % 10) + 0x30;
         }
     }
     else
