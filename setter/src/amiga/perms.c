@@ -26,11 +26,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <proto/dos.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "perms.h"
+#if defined(__amigaos4__)
+#include <dos/obsolete.h>
+#endif
 
 #include "../include/defs.h"
 #include "../log.h"
+#include "perms.h"
 
 void FilePermissions(const char* path)
 {

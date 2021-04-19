@@ -23,6 +23,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #include <proto/dos.h>
+#if defined(__amigaos4__)
+#include <dos/obsolete.h>
+#endif
 
 #include "../include/consts.h"
 #include "../include/defs.h"

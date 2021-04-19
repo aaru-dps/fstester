@@ -24,6 +24,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <proto/dos.h>
 #include <string.h>
+#if defined(__amigaos4__)
+#include <dos/obsolete.h>
+#endif
 
 #include "../include/defs.h"
 #include "../log.h"
@@ -32,11 +35,9 @@ void ExtendedAttributes(const char* path)
 {
     BPTR  pathLock;
     BPTR  dirLock;
-    int   ret;
     BPTR  file;
     int   rc;
     int   cRc;
-    int   attr_fd;
     char* buffer = "This file has a comment.\n";
 
     pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
