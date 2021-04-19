@@ -22,9 +22,52 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <proto/dos.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void DeleteFiles(const char* path)
 {
-    // TODO
+    BPTR pathLock;
+    BPTR dirLock;
+    char filename[9];
+    long pos;
+    BPTR h;
+    int  ret;
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "DELETED");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating and deleting files.\n");
+
+    for(pos = 0; pos < 64; pos++)
+    {
+        memset(filename, 0, 9);
+        sprintf(filename, "%lX", pos);
+        h = Open((CONST_STRPTR)filename, MODE_NEWFILE);
+        if(!h) { break; }
+
+        Close(h);
+        DeleteFile((CONST_STRPTR)filename);
+    }
 }
