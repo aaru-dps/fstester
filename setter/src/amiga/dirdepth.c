@@ -22,9 +22,58 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <proto/dos.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void DirectoryDepth(const char* path)
 {
-    // TODO
+    int  ret;
+    char filename[9];
+    long pos = 2;
+    BPTR pathLock;
+    BPTR dirLock;
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "DELETED");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating deepest directory tree.\n");
+
+    while(!ret)
+    {
+        memset(filename, 0, 9);
+        sprintf(filename, "%08ld", pos);
+        dirLock = CreateDir((CONST_STRPTR)filename);
+
+        if(!dirLock) break;
+
+        CurrentDir(dirLock);
+
+        pos++;
+
+        // This can continue until the disk fills, the kernel crashes, or some other nasty success
+        if(pos >= 1000) break;
+    }
+
+    log_write("\tCreated %ld levels of directory hierarchy\n", pos);
 }
