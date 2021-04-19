@@ -253,7 +253,7 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tDeleting \"TWO2\".\n");
     ret = DeleteFile((CONST_STRPTR) "TWO2");
-    if(!ret) rc = errno;
+    if(!ret) rc = IoErr();
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n", "TWO3", twoCluster, rc, wRc, cRc);
 
@@ -279,10 +279,10 @@ void Fragmentation(const char* path, size_t clusterSize)
 
     log_write("\tDeleting \"TWO1\".\n");
     ret = DeleteFile((CONST_STRPTR) "TWO1");
-    if(!ret) rc = errno;
+    if(!ret) rc = IoErr();
     log_write("\tDeleting \"TWO3\".\n");
     ret = DeleteFile((CONST_STRPTR) "TWO3");
-    if(!ret) rc = errno;
+    if(!ret) rc = IoErr();
 
     log_write("\tFile name = \"%s\", size = %d, rc = %d, wRc = %d, cRc = %d\n",
               "FRAGTHRQ",
