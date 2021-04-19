@@ -67,11 +67,11 @@ void Links(const char* path)
 
     Write(h, "This is the target for the links.\n", strlen("This is the target for the links.\n"));
 
-    ret = MakeLink((CONST_STRPTR) "HARD", h, LINK_HARD);
+    ret = MakeLink((CONST_STRPTR) "HARD", (LONG)h, LINK_HARD);
 
     if(ret != DOSTRUE) log_write("Error %d creating hard link.\n", IoErr());
 
-    ret = MakeLink((CONST_STRPTR) "SYMBOLIC", h, LINK_SOFT);
+    ret = MakeLink((CONST_STRPTR) "SYMBOLIC", (LONG) "TARGET", LINK_SOFT);
 
     if(ret != DOSTRUE) log_write("Error %d creating symbolic link.\n", IoErr());
 
@@ -85,7 +85,7 @@ void Links(const char* path)
         return;
     }
 
-    ret = MakeLink((CONST_STRPTR) "DIRLINK", h, LINK_HARD);
+    ret = MakeLink((CONST_STRPTR) "DIRLINK", (LONG)h, LINK_HARD);
 
     if(ret != DOSTRUE) log_write("Error %d creating directory hard link.\n", IoErr());
 }
