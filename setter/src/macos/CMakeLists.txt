@@ -22,7 +22,7 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Retro68" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "RetroPPC")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Retro68|RetroPPC")
     return()
 endif()
 

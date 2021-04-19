@@ -22,7 +22,7 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "BeOS" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Haiku")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "BeOS|Haiku")
     return()
 endif()
 

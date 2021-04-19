@@ -22,7 +22,7 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "^(([^k].*)?BSD|DragonFly)$" )
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux|Darwin" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "^(([^k].*)?BSD|DragonFly)$" )
    return()
 endif()
 

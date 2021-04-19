@@ -22,7 +22,8 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "AmigaOS" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "MorphOS" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "AROS")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "AmigaOS|MorphOS" AND NOT AROS)
+    message("Ignoring Amiga")
     return()
 endif()
 
