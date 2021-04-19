@@ -71,11 +71,6 @@ typedef unsigned long long uint64_t;
 int snprintf(char* str, size_t size, const char* format, ...);
 #endif
 
-enum
-{
-    gestaltHasHFSPlusAPIs = 12 /* file system supports HFS Plus APIs */
-};
-
 #define PBXGetVolInfo(pb, async) ((async) ? PBXGetVolInfoAsync(pb) : PBXGetVolInfoSync(pb))
 
 #else
