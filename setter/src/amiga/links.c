@@ -22,9 +22,70 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <proto/dos.h>
+#include <string.h>
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void Links(const char* path)
 {
-    // TODO
+    BPTR pathLock;
+    BPTR dirLock;
+    BPTR h;
+    int  ret;
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "LINKS");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating links.\n");
+
+    h = Open((CONST_STRPTR) "TARGET", MODE_NEWFILE);
+
+    if(!h)
+    {
+        log_write("Error %d creating target file.\n", IoErr());
+        return;
+    }
+
+    Write(h, "This is the target for the links.\n", strlen("This is the target for the links.\n"));
+
+    ret = MakeLink((CONST_STRPTR) "HARD", h, LINK_HARD);
+
+    if(ret != DOSTRUE) log_write("Error %d creating hard link.\n", IoErr());
+
+    ret = MakeLink((CONST_STRPTR) "SYMBOLIC", h, LINK_SOFT);
+
+    if(ret != DOSTRUE) log_write("Error %d creating symbolic link.\n", IoErr());
+
+    Close(h);
+
+    h = CreateDir((CONST_STRPTR) "TARGETDIR");
+
+    if(!h)
+    {
+        log_write("Error %d creating target directory.\n", IoErr());
+        return;
+    }
+
+    ret = MakeLink((CONST_STRPTR) "DIRLINK", h, LINK_HARD);
+
+    if(ret != DOSTRUE) log_write("Error %d creating directory hard link.\n", IoErr());
 }
