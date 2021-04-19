@@ -28,6 +28,15 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 
+// This is a stupid way of doing things by the Amiga/AROS/MorphOS SDK creators
+#if defined(__amigaos4__)
+#define LNKLONG APTR
+#elif defined(__AROS__)
+#define LNKLONG SIPTR
+#else
+#define LNKLONG LONG
+#endif
+
 void Links(const char* path)
 {
     BPTR pathLock;
@@ -67,11 +76,11 @@ void Links(const char* path)
 
     Write(h, "This is the target for the links.\n", strlen("This is the target for the links.\n"));
 
-    ret = MakeLink((CONST_STRPTR) "HARD", (LONG)h, LINK_HARD);
+    ret = MakeLink((CONST_STRPTR) "HARD", (LNKLONG)h, LINK_HARD);
 
     if(ret != DOSTRUE) log_write("Error %d creating hard link.\n", IoErr());
 
-    ret = MakeLink((CONST_STRPTR) "SYMBOLIC", (LONG) "TARGET", LINK_SOFT);
+    ret = MakeLink((CONST_STRPTR) "SYMBOLIC", (LNKLONG) "TARGET", LINK_SOFT);
 
     if(ret != DOSTRUE) log_write("Error %d creating symbolic link.\n", IoErr());
 
@@ -85,7 +94,7 @@ void Links(const char* path)
         return;
     }
 
-    ret = MakeLink((CONST_STRPTR) "DIRLINK", (LONG)h, LINK_HARD);
+    ret = MakeLink((CONST_STRPTR) "DIRLINK", (LNKLONG)h, LINK_HARD);
 
     if(ret != DOSTRUE) log_write("Error %d creating directory hard link.\n", IoErr());
 }
