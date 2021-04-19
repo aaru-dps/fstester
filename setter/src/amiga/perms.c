@@ -36,7 +36,6 @@ void FilePermissions(const char* path)
 {
     BPTR pathLock;
     BPTR dirLock;
-    int  ret;
     BPTR file;
     int  rc;
     int  cRc;

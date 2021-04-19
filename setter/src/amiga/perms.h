@@ -31,7 +31,7 @@ typedef struct
 {
     char   filename[256];
     char   description[256];
-    mode_t mode;
+    LONG   mode;
 } amiga_perms_tests_t;
 
 #define KNOWN_AMIGA_PERMS 16
