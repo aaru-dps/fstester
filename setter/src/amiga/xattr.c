@@ -49,7 +49,7 @@ void ExtendedAttributes(const char* path)
 
     CurrentDir(pathLock);
 
-    dirLock = CreateDir((CONST_STRPTR) "FILENAME");
+    dirLock = CreateDir((CONST_STRPTR) "XATTRS");
 
     if(!dirLock)
     {

@@ -47,7 +47,7 @@ void DirectoryDepth(const char* path)
 
     CurrentDir(pathLock);
 
-    dirLock = CreateDir((CONST_STRPTR) "DELETED");
+    dirLock = CreateDir((CONST_STRPTR) "DEPTH");
 
     if(!dirLock)
     {
