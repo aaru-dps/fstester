@@ -22,9 +22,56 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <proto/dos.h>
+#include <string.h>
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void ExtendedAttributes(const char* path)
 {
-    // TODO
+    BPTR  pathLock;
+    BPTR  dirLock;
+    int   ret;
+    BPTR  file;
+    int   rc;
+    int   cRc;
+    int   attr_fd;
+    char* buffer = "This file has a comment.\n";
+
+    pathLock = Lock((CONST_STRPTR)path, SHARED_LOCK);
+
+    if(!pathLock)
+    {
+        log_write("Error %d changing to specified path.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(pathLock);
+
+    dirLock = CreateDir((CONST_STRPTR) "FILENAME");
+
+    if(!dirLock)
+    {
+        log_write("Error %d creating working directory.\n", IoErr());
+        return;
+    }
+
+    CurrentDir(dirLock);
+
+    log_write("Creating files with extended attributes.\n");
+
+    rc   = 0;
+    cRc  = 0;
+    file = Open((CONST_STRPTR) "comment", MODE_NEWFILE);
+    if(!file) rc = IoErr();
+    else
+    {
+        Write(file, buffer, strlen(buffer));
+        Close(file);
+
+        cRc = SetComment((CONST_STRPTR) "comment", (CONST_STRPTR) "This is a comment for a file named comment!\n");
+        if(!cRc) cRc = IoErr();
+    }
+    log_write("\tFile with an extended attribute called \"comment\", rc = %d, cRc = %d\n", rc, cRc);
 }
