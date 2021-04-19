@@ -27,11 +27,15 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <dos/dos.h>
 
+#if defined(__amigaos4__)
+#include <dos/obsolete.h>
+#endif
+
 typedef struct
 {
-    char   filename[256];
-    char   description[256];
-    LONG   mode;
+    char filename[256];
+    char description[256];
+    LONG mode;
 } amiga_perms_tests_t;
 
 #define KNOWN_AMIGA_PERMS 16
