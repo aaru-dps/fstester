@@ -22,14 +22,18 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-set(MAIN_SOURCES main.c main.h log.c log.h)
+if(NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "I86")
+    return()
+endif()
 
-add_library(core ${MAIN_SOURCES})
+project(fssetter-os2
+        DESCRIPTION "Filesystem test creator for 16-bit OS/2"
+        LANGUAGES C)
 
-add_subdirectory(macos)
-add_subdirectory(dos)
-add_subdirectory(win32)
-add_subdirectory(unix)
-add_subdirectory(beos)
-add_subdirectory(amiga)
-add_subdirectory(os2)
+set(SUBPLATFORM_SOURCES os.c xattr.c xattr.h)
+
+set(EXECUTABLE_NAME "fssetter")
+
+add_executable(${EXECUTABLE_NAME} ${SUBPLATFORM_SOURCES})
+
+target_link_libraries(${EXECUTABLE_NAME} core platform)

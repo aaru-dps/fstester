@@ -22,14 +22,14 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-set(MAIN_SOURCES main.c main.h log.c log.h)
+if(NOT OS2)
+    return()
+endif()
 
-add_library(core ${MAIN_SOURCES})
+set(PLATFORM_SOURCES attr.c attr.h deleted.c dirdepth.c filename.c files.c frag.c links.c os2defs.h perms.c rsrcfork.c sparse.c time.c volume.c)
 
-add_subdirectory(macos)
-add_subdirectory(dos)
-add_subdirectory(win32)
-add_subdirectory(unix)
-add_subdirectory(beos)
-add_subdirectory(amiga)
-add_subdirectory(os2)
+add_library(platform ${PLATFORM_SOURCES})
+
+add_subdirectory(16bit)
+add_subdirectory(32bit)
+
