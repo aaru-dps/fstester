@@ -23,7 +23,6 @@
 # *****************************************************************************/
 
 if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "AmigaOS|MorphOS" AND NOT AROS)
-    message("Ignoring Amiga")
     return()
 endif()
 
