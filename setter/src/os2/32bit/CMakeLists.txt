@@ -22,7 +22,7 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "i386")
+if(NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "i386|X86")
     return()
 endif()
 
