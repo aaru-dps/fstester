@@ -26,14 +26,4 @@ if(NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "I86")
     return()
 endif()
 
-project(fssetter-os2
-        DESCRIPTION "Filesystem test creator for 16-bit OS/2"
-        LANGUAGES C)
-
-set(SUBPLATFORM_SOURCES os.c xattr.c xattr.h)
-
-set(EXECUTABLE_NAME "fssetter")
-
-add_executable(${EXECUTABLE_NAME} ${SUBPLATFORM_SOURCES})
-
-target_link_libraries(${EXECUTABLE_NAME} core platform)
+add_sources(os.c xattr.c xattr.h)

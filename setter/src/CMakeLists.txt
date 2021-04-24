@@ -22,10 +22,6 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-set(MAIN_SOURCES main.c main.h log.c log.h)
-
-add_library(core ${MAIN_SOURCES})
-
 add_subdirectory(macos)
 add_subdirectory(dos)
 add_subdirectory(win32)
@@ -33,3 +29,12 @@ add_subdirectory(unix)
 add_subdirectory(beos)
 add_subdirectory(amiga)
 add_subdirectory(os2)
+
+# This must be after all directories
+add_sources(main.c main.h log.c log.h)
+
+# Even if empty it needs to be present
+add_sub_definitions()
+
+# Even if empty it needs to be present
+add_sub_libraries()

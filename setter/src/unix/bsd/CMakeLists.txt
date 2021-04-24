@@ -26,15 +26,4 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "^(([^k].*)?BSD|DragonFly)$" )
     return()
 endif()
 
-project(
-        fssetter-bsd
-        DESCRIPTION "Filesystem test creator for BSD"
-        LANGUAGES C)
-
-set(PLATFORM_SOURCES bsd.h xattr.c xattr.h attr.c attr.h volume.c volume.h)
-
-set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
-
-add_executable(${EXECUTABLE_NAME} ${PLATFORM_SOURCES})
-
-target_link_libraries(${EXECUTABLE_NAME} core unix)
+add_sources(bsd.h xattr.c xattr.h attr.c attr.h volume.c volume.h)

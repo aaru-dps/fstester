@@ -26,10 +26,7 @@ if(NOT OS2)
     return()
 endif()
 
-set(PLATFORM_SOURCES attr.c attr.h deleted.c dirdepth.c filename.c files.c frag.c links.c os2defs.h perms.c rsrcfork.c sparse.c time.c volume.c)
-
-add_library(platform ${PLATFORM_SOURCES})
-
 add_subdirectory(16bit)
 add_subdirectory(32bit)
 
+add_sources(attr.c attr.h deleted.c dirdepth.c filename.c files.c frag.c links.c os2defs.h perms.c rsrcfork.c sparse.c time.c volume.c)

@@ -26,18 +26,7 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "AmigaOS|MorphOS" AND NOT AROS)
     return()
 endif()
 
-project(
-        fssetter-amiga
-        DESCRIPTION "Filesystem test creator for AmigaOS and compatibles"
-        LANGUAGES C)
+add_sub_definitions(__USE_INLINE__)
+add_sub_definitions(__USE_BASETYPE__)
 
-add_definitions(-D__USE_INLINE__)
-add_definitions(-D__USE_BASETYPE__)
-
-set(PLATFORM_SOURCES attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c time.h volume.c xattr.c)
-
-set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
-
-add_executable(${EXECUTABLE_NAME} ${PLATFORM_SOURCES})
-
-target_link_libraries(${EXECUTABLE_NAME} core)
+add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c time.h volume.c xattr.c)
