@@ -29,7 +29,7 @@ struct _stemu_vars
 {
     int16_t version; /* e.g. 0x0121 Version 1.21    */
     int32_t unused;  /* 0, currently not used       */
-}
+};
 
 struct _tos2win_vars
 {

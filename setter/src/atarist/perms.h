@@ -29,7 +29,7 @@ typedef struct
 {
     char   filename[256];
     char   description[256];
-    mode_t mode;
+    short  mode;
 } atari_perms_tests_t;
 
 #define KNOWN_ATARI_PERMS 14

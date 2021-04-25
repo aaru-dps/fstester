@@ -75,7 +75,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(rc == E_OK)
     {
         log_write("\tFilesystem name: %s", fsInfo.name);
-        log_write("\tFilesystem version: %d.%02d", (fsInfo.version & 0xFFFF0000) >> 16, fsInfo & 0xFFFF);
+        log_write("\tFilesystem version: %d.%02d", (fsInfo.version & 0xFFFF0000) >> 16, fsInfo.version & 0xFFFF);
         log_write("\tFilesystem type: %d (%s)", fsInfo.type, fsInfo.type_asc);
     }
     else

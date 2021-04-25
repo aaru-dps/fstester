@@ -39,7 +39,7 @@ void FilePermissions(const char* path)
 {
     long** cookieJar = _p_cookies;
     long   cookie;
-    int    rc, cRc;
+    int    rc, cRc, i;
     FILE*  file;
     char   driveNo = path[0] - '@';
 
