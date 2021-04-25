@@ -22,20 +22,8 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-add_subdirectory(macos)
-add_subdirectory(dos)
-add_subdirectory(win32)
-add_subdirectory(unix)
-add_subdirectory(beos)
-add_subdirectory(amiga)
-add_subdirectory(os2)
-add_subdirectory(atarist)
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "MiNT")
+    return()
+endif()
 
-# This must be after all directories
-add_sources(main.c main.h log.c log.h)
-
-# Even if empty it needs to be present
-add_sub_definitions()
-
-# Even if empty it needs to be present
-add_sub_libraries()
+add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c)
