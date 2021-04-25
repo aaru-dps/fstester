@@ -60,7 +60,7 @@ void Filenames(const char* path)
     {
         handle = Fcreate((char*)filenames[pos], 0);
 
-        if(handle < 0)
+        if(handle > 0)
         {
             memset(message, 0, 300);
             sprintf(message, FILENAME_FORMAT, filenames[pos]);
