@@ -26,4 +26,4 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "MiNT")
     return()
 endif()
 
-add_sources(attr.c attr.h deleted.c dirdepth.c filename.c files.c frag.c links.c os.c os.h perms.c rsrcfork.c sparse.c time.c tostime.h volume.c xattr.c)
+add_sources(attr.c attr.h deleted.c dirdepth.c filename.c files.c frag.c links.c os.c os.h perms.c perms.h rsrcfork.c sparse.c time.c tostime.h volume.c xattr.c)

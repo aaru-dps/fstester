@@ -22,8 +22,75 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <errno.h>
+#include <eti.h>
+#include <mint/cookie.h>
+#include <mint/mintbind.h>
+#include <mint/osbind.h>
+#include <mint/sysvars.h>
+#include <stdio.h>
+
+#include "perms.h"
+
 #include "../include/defs.h"
+#include "../log.h"
 
 void FilePermissions(const char* path)
-{ // TODO: MiNT. MagiC?
+{
+    long** cookieJar = _p_cookies;
+    long   cookie;
+    int    rc, cRc;
+    FILE*  file;
+    char   driveNo = path[0] - '@';
+
+    // Check for a cookie jar
+    if(*cookieJar == 0) return;
+
+    // Check if MiNT or MagiC
+    rc = (Getcookie(C_MiNT, &cookie) == E_OK) || (Getcookie(C_MagX, &cookie) == E_OK) ||
+         (Getcookie(C_MgMc, &cookie) == E_OK) || (Getcookie(C_MgMx, &cookie) == E_OK) ||
+         (Getcookie(C_MgPC, &cookie) == E_OK);
+
+    if(rc == 0) return;
+
+    if(driveNo > 32) driveNo -= 32;
+
+    Dsetdrv(driveNo);
+    Dsetpath("\\");
+
+    rc = Dcreate("PERMS");
+
+    if(rc != E_OK)
+    {
+        log_write("Error %d creating working directory.\n", rc);
+        return;
+    }
+
+    rc = Dsetpath("PERMS");
+
+    if(rc != E_OK)
+    {
+        log_write("Error %d changing to working directory.\n", rc);
+        return;
+    }
+
+    log_write("Creating permission files.\n");
+
+    for(i = 0; i < KNOWN_ATARI_PERMS; i++)
+    {
+        file = fopen(atari_perms[i].filename, "w+");
+        rc   = 0;
+        cRc  = 0;
+
+        if(!file) rc = errno;
+        else
+        {
+            fprintf(file, "%s.\n", atari_perms[i].description);
+            fclose(file);
+            cRc = Fchmod(atari_perms[i].filename, atari_perms[i].mode);
+        }
+
+        log_write(
+            "\t%s: name = \"%s\", rc = %d, cRc = %d\n", atari_perms[i].description, atari_perms[i].filename, rc, cRc);
+    }
 }
