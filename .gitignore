@@ -587,8 +587,33 @@ fabric.properties
 *.ils
 *.~*
 *.tds
+*.csm
+*.mbt
+*.mrt
+*.r$p
 
 # Visual C++
 *.vcp
 *.mdp
 *.dsw
+
+# CodeWarrior
+*.SYM
+*.sea
+*.hqx
+
+# Needed for tar
+cmake-build-*
+xcuserdata
+*.nativecodeanalysis.xml
+*.tlog
+*.nativecodeanalysis.all.xml
+*.nativecodeanalysis.sarif
+*.exe.recipe
+*.filters
+*.intermediate.manifest
+*.embed.manifest.res
+*.embed.manifest
+*.lastcodeanalysissucceeded
+*.FileListAbsolute.txt
+*.dep
