@@ -31,12 +31,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __CYGWIN__
+#include <sys/utsname.h>
+#endif
+
 #include "win32.h"
-
-#include "os.h"
-
 #include "../include/defs.h"
 #include "../log.h"
+#include "os.h"
 
 DWORD oldVersion;
 
@@ -47,6 +49,9 @@ void GetOsInfo()
     DWORD             error;
     void*             func;
     HINSTANCE         kernel32;
+#ifdef __CYGWIN__
+    struct utsname utsname;
+#endif
     kernel32 = LoadLibraryA("KERNEL32.DLL");
 
     memset(&verInfo, 0, sizeof(WIN_OSVERSIONINFO));
@@ -194,4 +199,11 @@ void GetOsInfo()
     }
 
     FreeLibrary(kernel32);
+
+#ifdef __CYGWIN__
+    memset(&utsname, 0, sizeof(struct utsname));
+    uname(&utsname);
+
+    printf("\tRunning under Cygwin release %s version %s.\n", utsname.release, utsname.version);
+#endif
 }

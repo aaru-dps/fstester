@@ -22,8 +22,8 @@
 # Copyright (C) 2011-2021 Natalia Portillo
 # *****************************************************************************/
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT CYGWIN)
     return()
 endif()
 
-add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c rsrcfork.c sparse.c time.c volume.c xattr.c attr.h rsrcfork.h xattr.h links.h volume.h timew32.h os.h sparse.h)
+add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c volume.c xattr.c attr.h rsrcfork.h xattr.h links.h volume.h timew32.h os.h sparse.h)

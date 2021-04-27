@@ -22,16 +22,34 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
-#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_LINKS_H_
-#define AARU_FSTESTER_SETTER_SRC_WIN32_LINKS_H_
-
-#include "win32.h"
+#ifndef AARU_FSTESTER_SETTER_SRC_WIN32_PERMS_H_
+#define AARU_FSTESTER_SETTER_SRC_WIN32_PERMS_H_
 
 #ifdef __CYGWIN__
-void CygwinLinks(const char* path);
-#endif // __CYGWIN__
+typedef struct
+{
+    char   filename[256];
+    char   description[256];
+    mode_t mode;
+} cygwin_perms_tests_t;
 
-static BOOL(WINAPI* WinNtCreateHardLinkA)(LPCSTR, LPCSTR, LPSECURITY_ATTRIBUTES);
-static BOOL(WINAPI* WinNtCreateSymbolicLinkA)(LPCSTR, LPCSTR, DWORD);
+#define KNOWN_CYGWIN_PERMS 13
 
-#endif // AARU_FSTESTER_SETTER_SRC_WIN32_LINKS_H_
+static const cygwin_perms_tests_t cygwin_perms[KNOWN_CYGWIN_PERMS] = {
+    {"NONE", "File with no permissions", 0},
+    {"04000", "File with set-user-ID", 04000},
+    {"02000", "File with set-group-ID", 02000},
+    {"01000", "File with sticky bit", 01000},
+    {"00400", "File with read by owner", 00400},
+    {"00200", "File with write by owner", 00200},
+    {"00100", "File with execute by owner", 00100},
+    {"00040", "File with read by group", 00040},
+    {"00020", "File with write by group", 00020},
+    {"00010", "File with execute by group", 00010},
+    {"00004", "File with read by others", 00004},
+    {"00002", "File with write by others", 00002},
+    {"00001", "File with execute by others", 00001},
+};
+#endif
+
+#endif // AARU_FSTESTER_SETTER_SRC_WIN32_PERMS_H_

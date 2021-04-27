@@ -32,12 +32,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __CYGWIN__
+#include <limits.h>
+#include <sys/cygwin.h>
+#include <sys/unistd.h>
+#endif // __CYGWIN__
+
 #include "win32.h"
-
-#include "links.h"
-
 #include "../include/defs.h"
 #include "../log.h"
+#include "links.h"
 
 extern DWORD oldVersion;
 
@@ -70,11 +74,14 @@ void Links(const char* path)
     else if(oldVersion == 0)
         verInfo.dwPlatformId = VER_PLATFORM_WIN32_NT;
 
+        // If we are not in Cygwin, do not proceed unless we are in Windows NT
+#if !defined(__CYGWIN__)
     if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
     {
         // Not supported on Windows 9x
         return;
     }
+#endif // !__CYGWIN__
 
     lpRootPathName = malloc(dwMaxNameSize);
 
@@ -115,6 +122,17 @@ void Links(const char* path)
         log_write("Error %lu changing to working directory.\n", error);
         return;
     }
+
+    // If we are not in Cygwin, call it, but do not proceed further unless we are in Windows NT
+#ifdef __CYGWIN__
+    CygwinLinks(path);
+
+    if(verInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
+    {
+        // Not supported on Windows 9x
+        return;
+    }
+#endif // __CYGWIN__
 
     kernel32 = LoadLibraryA("kernel32.dll");
 
@@ -209,3 +227,60 @@ void Links(const char* path)
 
     FreeLibrary(kernel32);
 }
+
+#ifdef __CYGWIN__
+void CygwinLinks(const char* path)
+{
+    char  cyg_path[PATH_MAX];
+    FILE* h;
+    int   ret;
+
+    memset(cyg_path, 0, PATH_MAX);
+
+    cygwin_conv_path(CCP_WIN_A_TO_POSIX, path, cyg_path, PATH_MAX);
+
+    ret = chdir(cyg_path);
+
+    if(ret)
+    {
+        log_write("Error %d changing to specified path.\n", errno);
+        return;
+    }
+
+    ret = chdir("LINKS");
+
+    if(ret)
+    {
+        log_write("Error %d changing to working directory.\n", errno);
+        return;
+    }
+
+    log_write("Creating cygwin links.\n");
+
+    log_write("\tCreating cygwin target file.\n");
+
+    h = fopen("CYGTARGET", "w+");
+
+    if(h == NULL)
+    {
+        log_write("\tError %d creating cygwin target file.\n", errno);
+        return;
+    }
+
+    fprintf(h, "This is the target for the links.\n");
+
+    fclose(h);
+
+    log_write("\tCreating cygwin symbolic link.\n");
+
+    ret = link("CYGTARGET", "CYGHARD");
+
+    if(ret) log_write("\tError %d creating cygwin hard link.\n", errno);
+
+    log_write("\tCreating cygwin hard link.\n");
+
+    ret = symlink("CYGTARGET", "CYGSYMBOLIC");
+
+    if(ret) log_write("\tError %d creating cygwin symbolic link.\n", errno);
+}
+#endif // __CYGWIN__
