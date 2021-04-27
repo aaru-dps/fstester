@@ -32,7 +32,7 @@ typedef struct
     mode_t mode;
 } unix_perms_tests_t;
 
-#define KNOWN_UNIX_PERMS 14
+#define KNOWN_UNIX_PERMS 13
 
 static const unix_perms_tests_t unix_perms[KNOWN_UNIX_PERMS] = {
     {"NONE", "File with no permissions", 0},
