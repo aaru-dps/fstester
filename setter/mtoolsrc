@@ -1,1 +1,2 @@
+MTOOLS_NO_VFAT=1
 drive a: file="fssetter.img"
