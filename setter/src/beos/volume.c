@@ -64,7 +64,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     }
 
     printf("\tDevice number: %ld\n", fsinfo.dev);
-    printf("\tRoot inode number: %" PRIu64, fsinfo.root);
+    printf("\tRoot inode number: %" PRIu64 "\n", fsinfo.root);
     printf("\tDevice number: %ld\n", fsinfo.flags);
     printf("\tBlock size: %" PRIu64 " bytes\n", fsinfo.block_size);
     printf("\tTotal blocks: %" PRIu64 " (%" PRIu64 " bytes)\n",

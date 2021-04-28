@@ -24,7 +24,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../include/defs.h"
 
-
 void FileAttributes(const char* path)
 {
     // Not supported
