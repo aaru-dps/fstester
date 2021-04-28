@@ -26,8 +26,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <errno.h>
 #include <fs_attr.h>
 #include <stdio.h>
-#include <stdio_pre.h>
-#include <sys/stat.h>
 #include <unistd.h>
 
 #include "xattr.h"
@@ -76,19 +74,13 @@ void ExtendedAttributes(const char* path)
     else
     {
         fprintf(file, "This file has an extended attribute called \"comment\" that is 34 bytes long.\n");
+        attr_fd = fileno(file);
+
+        cRc = fs_write_attr(attr_fd, "comment", B_STRING_TYPE, 0, stringAttribute, 34);
+
+        cRc = cRc < 0 ? errno : 0;
+
         fclose(file);
-        attr_fd = fs_open_attr("comment", "comment", B_STRING_TYPE, O_RDWR);
-
-        if(attr_fd >= 0)
-        {
-            cRc = fs_write_attr(attr_fd, "comment", B_STRING_TYPE, 0, stringAttribute, 34);
-
-            cRc = cRc < 0 ? errno : 0;
-
-            fs_close_attr(attr_fd);
-        }
-        else
-            rc = errno;
     }
     log_write("\tFile with an extended attribute called \"comment\", rc = %d, cRc = %d\n", rc, cRc);
 
@@ -99,19 +91,13 @@ void ExtendedAttributes(const char* path)
     else
     {
         fprintf(file, "This file has an extended attribute called \"comment\" that is 34 bytes long.\n");
+        attr_fd = fileno(file);
+
+        cRc = fs_write_attr(attr_fd, "BEOS:L:STD_ICON", B_LARGE_ICON_TYPE, 0, iconAttribute, 1024);
+
+        cRc = cRc < 0 ? errno : 0;
+
         fclose(file);
-        attr_fd = fs_open_attr("icon", "BEOS:L:STD_ICON", B_LARGE_ICON_TYPE, O_RDWR);
-
-        if(attr_fd >= 0)
-        {
-            cRc = fs_write_attr(attr_fd, "BEOS:L:STD_ICON", B_LARGE_ICON_TYPE, 0, iconAttribute, 1024);
-
-            cRc = cRc < 0 ? errno : 0;
-
-            fs_close_attr(attr_fd);
-        }
-        else
-            rc = errno;
     }
     log_write("\tFile with an extended attribute called \"BEOS:L:STD_ICON\", rc = %d, cRc = %d\n", rc, cRc);
 }
