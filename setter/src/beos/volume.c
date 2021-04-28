@@ -69,9 +69,10 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     printf("\tBlock size: %" PRIu64 " bytes\n", fsinfo.block_size);
     printf("\tTotal blocks: %" PRIu64 " (%" PRIu64 " bytes)\n",
            fsinfo.total_blocks,
-           fsinfo.total_blocks * fsinfo.block_size);
-    printf(
-        "\tFree blocks: %" PRIu64 " (%" PRIu64 " bytes)\n", fsinfo.free_blocks, fsinfo.free_blocks * fsinfo.block_size);
+           (long long)fsinfo.total_blocks * fsinfo.block_size);
+    printf("\tFree blocks: %" PRIu64 " (%" PRIu64 " bytes)\n",
+           fsinfo.free_blocks,
+           (long long)fsinfo.free_blocks * fsinfo.block_size);
     printf("\tOptimal I/O size: %" PRIu64 " bytes\n", fsinfo.io_size);
     printf("\tTotal nodes: %" PRIu64 "\n", fsinfo.total_nodes);
     printf("\tAvailable nodes: %" PRIu64 "\n", fsinfo.free_nodes);
