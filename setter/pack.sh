@@ -4,7 +4,8 @@ export MTOOLS_NO_VFAT=1
 mkdir -p diskimgs/
 
 # Create source package
-tar -c --exclude-vcs --exclude-vcs-ignores --no-acls --no-selinux --no-xattrs --old-archive --exclude=.vs --exclude=.idea --exclude=binaries --exclude=projects/compdb --exclude=diskimgs -f diskimgs/src.tar.Z .
+tar -c --exclude-vcs --exclude-vcs-ignores --no-acls --no-selinux --no-xattrs --old-archive --exclude=.vs --exclude=.idea --exclude=binaries --exclude=projects/compdb --exclude=diskimgs -f diskimgs/src.tar .
+compress diskimgs/src.tar
 
 # For MS-DOS, use Watcom 11 output
 dd if=/dev/zero of=fssetter.img bs=512 count=1440 status=none
@@ -76,3 +77,9 @@ mformat -f 1440 -v FSSETTER a:
 mcopy -sv binaries/beos a:
 mcopy -sv binaries/haiku a:
 mv fssetter.img diskimgs/beos.img
+
+# For source
+dd if=/dev/zero of=fssetter.img bs=512 count=2880 status=none
+mformat -f 1440 -v FSSETTER a:
+mcopy -sv diskimgs/src.tar.Z a:src.taz
+mv fssetter.img diskimgs/src.img
