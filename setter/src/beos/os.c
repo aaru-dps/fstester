@@ -33,6 +33,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 
+#if !defined(_SYS_NAMELEN)
+#define _SYS_NAMELEN 32
+#endif
+
 void GetOsInfo()
 {
     struct utsname buf;
