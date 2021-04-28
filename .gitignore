@@ -617,3 +617,5 @@ xcuserdata
 *.lastcodeanalysissucceeded
 *.FileListAbsolute.txt
 *.dep
+(Objects)
+*.xMAP
