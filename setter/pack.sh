@@ -69,3 +69,10 @@ mmd a:/CYGWIN
 mmd a:/CYGWIN/AMD64
 mcopy -sv binaries/win32/x64/cygwin/fssetter.exe a:/CYGWIN/AMD64/fssetter.exe
 mv fssetter.img diskimgs/win32.img
+
+# For BeOS and Haiku
+dd if=/dev/zero of=fssetter.img bs=512 count=2880 status=none
+mformat -f 1440 -v FSSETTER a:
+mcopy -sv binaries/beos a:
+mcopy -sv binaries/haiku a:
+mv fssetter.img diskimgs/beos.img
