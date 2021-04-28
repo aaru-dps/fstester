@@ -619,3 +619,4 @@ xcuserdata
 *.dep
 (Objects)
 *.xMAP
+(Objects.*)
