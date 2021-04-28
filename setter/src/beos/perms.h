@@ -32,7 +32,7 @@ typedef struct
     mode_t mode;
 } beos_perms_tests_t;
 
-#define KNOWN_BEOS_PERMS 14
+#define KNOWN_BEOS_PERMS 13
 
 static const beos_perms_tests_t beos_perms[KNOWN_BEOS_PERMS] = {
     {"NONE", "File with no permissions", 0},
