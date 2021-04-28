@@ -26,6 +26,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <errno.h>
 #include <fs_attr.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "xattr.h"
