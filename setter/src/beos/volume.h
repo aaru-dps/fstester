@@ -71,4 +71,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define B_FS_SUPPORTS_MONITOR_CHILDREN 0x00400000
 #endif
 
+#ifndef PRIu64
+#define PRIu64 "ld"
+#endif
+
 #endif // AARU_FSTESTER_SETTER_SRC_BEOS_VOLUME_H_
