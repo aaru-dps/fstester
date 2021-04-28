@@ -26,4 +26,4 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "BeOS|Haiku")
     return()
 endif()
 
-add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c time.h volume.c volume.h xattr.c xattr.h)
+add_sources(attr.c deleted.c dirdepth.c filename.c files.c frag.c links.c os.c perms.c perms.h rsrcfork.c sparse.c time.c beostime.h volume.c volume.h xattr.c xattr.h)

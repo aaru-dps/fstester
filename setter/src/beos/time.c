@@ -30,10 +30,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <unistd.h>
 #include <utime.h>
 
-#include "time.h"
-
 #include "../include/defs.h"
 #include "../log.h"
+#include "beostime.h"
 
 void Timestamps(const char* path)
 {

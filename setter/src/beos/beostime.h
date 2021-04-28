@@ -39,26 +39,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 typedef struct
 {
-  char*   filename;
-  time_t access;
-  time_t modification;
-  char    type[13];
-  char    message[32];
+    char*  filename;
+    time_t access;
+    time_t modification;
+    char   type[13];
+    char   message[32];
 } beos_time_tests_t;
 
 #define KNOWN_BEOS_TIMES 10
 
 static const beos_time_tests_t beos_times[KNOWN_BEOS_TIMES] = {
-    "MAXATIME", MAXTIMESTAMP, 0, "access", MAXDATETIME,
-    "MAXMTIME", 0, MAXTIMESTAMP, "modification", MAXDATETIME,
-    "MINATIME", MINTIMESTAMP, 0, "access", MINDATETIME,
-    "MINMTIME", 0, MINTIMESTAMP, "modification", MINDATETIME,
-    "Y1KATIME", Y1KTIMESTAMP, 0, "access", Y1KDATETIME,
-    "Y1KMTIME", 0, Y1KTIMESTAMP, "modification", Y1KDATETIME,
-    "Y2KATIME", Y2KTIMESTAMP, 0, "access", Y2KDATETIME,
-    "Y2KMTIME", 0, Y2KTIMESTAMP, "modification", Y2KDATETIME,
-    "LESSATIME", LESSTIMESTAMP, 0, "access", LESSDATETIME,
-    "LESSMTIME", 0, LESSTIMESTAMP, "modification", LESSDATETIME
-};
+    "MAXATIME",  MAXTIMESTAMP,  0, "access", MAXDATETIME,  "MAXMTIME",  0, MAXTIMESTAMP,  "modification", MAXDATETIME,
+    "MINATIME",  MINTIMESTAMP,  0, "access", MINDATETIME,  "MINMTIME",  0, MINTIMESTAMP,  "modification", MINDATETIME,
+    "Y1KATIME",  Y1KTIMESTAMP,  0, "access", Y1KDATETIME,  "Y1KMTIME",  0, Y1KTIMESTAMP,  "modification", Y1KDATETIME,
+    "Y2KATIME",  Y2KTIMESTAMP,  0, "access", Y2KDATETIME,  "Y2KMTIME",  0, Y2KTIMESTAMP,  "modification", Y2KDATETIME,
+    "LESSATIME", LESSTIMESTAMP, 0, "access", LESSDATETIME, "LESSMTIME", 0, LESSTIMESTAMP, "modification", LESSDATETIME};
 
 #endif // AARU_FSTESTER_SETTER_SRC_BEOS_TIME_H_
