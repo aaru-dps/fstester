@@ -80,7 +80,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(halfCluster);
+        buffer = (unsigned char*)malloc(halfCluster);
         memset(buffer, 0, halfCluster);
 
         for(i = 0; i < halfCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -102,7 +102,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(quarterCluster);
+        buffer = (unsigned char*)malloc(quarterCluster);
         memset(buffer, 0, quarterCluster);
 
         for(i = 0; i < quarterCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -125,7 +125,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoCluster);
+        buffer = (unsigned char*)malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -147,7 +147,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(threeQuartersCluster);
+        buffer = (unsigned char*)malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
         for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -174,7 +174,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoAndThreeQuartCluster);
+        buffer = (unsigned char*)malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
         for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -201,7 +201,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoCluster);
+        buffer = (unsigned char*)malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -223,7 +223,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoCluster);
+        buffer = (unsigned char*)malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -245,7 +245,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoCluster);
+        buffer = (unsigned char*)malloc(twoCluster);
         memset(buffer, 0, twoCluster);
 
         for(i = 0; i < twoCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -271,7 +271,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(threeQuartersCluster);
+        buffer = (unsigned char*)malloc(threeQuartersCluster);
         memset(buffer, 0, threeQuartersCluster);
 
         for(i = 0; i < threeQuartersCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
@@ -305,7 +305,7 @@ void Fragmentation(const char* path, size_t clusterSize)
     if(h == NULL) { rc = errno; }
     else
     {
-        buffer = malloc(twoAndThreeQuartCluster);
+        buffer = (unsigned char*)malloc(twoAndThreeQuartCluster);
         memset(buffer, 0, twoAndThreeQuartCluster);
 
         for(i = 0; i < twoAndThreeQuartCluster; i++) buffer[i] = clauniaBytes[i % CLAUNIA_SIZE];
