@@ -68,8 +68,13 @@ void GetOsInfo()
     else if(strncmp(buf.sysname, "Haiku", 5) == 0)
     {
         strncpy(version, buf.version, _SYS_NAMELEN);
-        version_date  = strchr(version, '+');
-        *version_date = '\0';
+        version_date = strchr(version, '+');
+        if(version_date) *version_date = '\0';
+        else
+        {
+            version_date = strchr(version, ' ');
+            if(version_date) *version_date = '\0';
+        }
 
         log_write("Running under Haiku %s\n", buf.version);
     }
