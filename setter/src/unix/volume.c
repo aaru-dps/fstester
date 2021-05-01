@@ -26,6 +26,26 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <stddef.h>
 #include <stdio.h>
 
+#ifdef __NeXT__
+
+#if NS_TARGET < 42 && !defined(_POSIX_SOURCE)
+#error Need to be compiled with -posix argument
+#elif NS_TARGET >= 42 && defined(_POSIX_SOURCE)
+#error Need to be compiled without -posix argument
+#endif
+
+#define HAVE_STATFS_FTYPE
+
+#if NS_TARGET >= 42 // Rhapsody DR1
+#define NEED_SYS_TYPES_H
+#define HAVE_SYS_MOUNT_H
+#define USE_STATFS_FTYPENAME
+#else
+#include <sys/vfs.h>
+#endif // Rhapsody DR1
+
+#endif // __NeXT__
+
 #ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
 #endif
@@ -190,7 +210,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         log_write("\tFlags: 0x%08lX\n", buf.f_flag);
 #endif
     }
-#else
+#elif !defined(__NeXT__) || (defined(NS_TARGET) && NS_TARGET >= 42)
     if(buf.f_flags)
     {
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)

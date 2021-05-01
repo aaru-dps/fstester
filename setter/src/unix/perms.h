@@ -25,6 +25,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_UNIX_PERMS_H_
 #define AARU_FSTESTER_SETTER_SRC_UNIX_PERMS_H_
 
+#if defined(__NeXT__) && NS_TARGET <= 32
+typedef int mode_t;
+#endif
+
 typedef struct
 {
     char   filename[256];

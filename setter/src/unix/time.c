@@ -22,6 +22,14 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#if defined(__NeXT__)
+#if NS_TARGET < 42 && !defined(_POSIX_SOURCE)
+#error Need to be compiled with -posix argument
+#elif NS_TARGET >= 42 && defined(_POSIX_SOURCE)
+#error Need to be compiled without -posix argument
+#endif
+#endif
+
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
