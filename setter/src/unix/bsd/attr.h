@@ -175,7 +175,7 @@ static const bsd_attr_tests_t darwin_attrs[KNOWN_BSD_ATTRS] = {
     {"SF_NOUNLINK", "This file may not be removed or renamed", "File with super-user no unlink flag", SF_NOUNLINK},
 #endif
 
-#if defined(__FreeBSD__) || defined(__NetBSD__)
+#if(defined(__FreeBSD__) || defined(__NetBSD__)) && !defined(__DragonFly__)
     {"SF_SNAPSHOT", "This file is a snapshot", "File with super-user snapshot flag", SF_SNAPSHOT},
 #endif
 
@@ -184,7 +184,7 @@ static const bsd_attr_tests_t darwin_attrs[KNOWN_BSD_ATTRS] = {
     {"SF_SNAPINVAL", "This file is an invalid snapshot", "File with super-user invalid snapshot flag", SF_SNAPINVAL},
 #endif
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) && !defined(__DragonFly__)
     {"SYSTEM", "This file is a system file for Windows", "File with system flag", UF_SYSTEM},
     {"SPARSE", "This file is sparse", "File with sparse flag", UF_SPARSE},
     {"OFFLINE", "This file is available offline for Windows", "File with offline flag", UF_OFFLINE},
