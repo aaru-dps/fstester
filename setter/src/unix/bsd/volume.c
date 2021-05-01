@@ -32,6 +32,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #endif
 
 #include <sys/mount.h>
+#include <sys/param.h>
 #endif
 
 #if defined(__FreeBSD__)
