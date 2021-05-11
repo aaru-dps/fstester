@@ -26,6 +26,6 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     return()
 endif()
 
-add_sources(attr.c sparse.c xattr.c xattr.h volume.c volume.h)
+add_sources(attr.c sparse.c sparse.h xattr.c xattr.h volume.c volume.h)
 
 add_sub_libraries(dl)

@@ -24,6 +24,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../../include/consts.h"
 #define _GNU_SOURCE
+#include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -34,14 +35,24 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include "../../log.h"
 #include "linux.h"
+#include "sparse.h"
 
 void LinuxSparse(const char* path)
 {
-    int   ret;
-    int   rc, wRc, cRc, zRc;
-    FILE* h;
-    int   i;
-    int   fd;
+    int              ret;
+    int              rc, wRc, cRc, zRc;
+    FILE*            h;
+    int              i;
+    int              fd;
+    _linux_fallocate linux_fallocate;
+
+    linux_fallocate = (_linux_fallocate)dlsym(RTLD_DEFAULT, "fallocate");
+
+    if(!linux_fallocate)
+    {
+        log_write("Error loading fallocate(2) from libc: %s\n", dlerror());
+        return;
+    }
 
     ret = chdir(path);
 
@@ -88,7 +99,7 @@ void LinuxSparse(const char* path)
         }
 
         fd  = fileno(h);
-        ret = fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 4096, 8192);
+        ret = linux_fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 4096, 8192);
         if(ret) { zRc = errno; }
 
         ret = fclose(h);
@@ -122,7 +133,7 @@ void LinuxSparse(const char* path)
         }
 
         fd  = fileno(h);
-        ret = fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 32768, 81920);
+        ret = linux_fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 32768, 81920);
         if(ret) { zRc = errno; }
 
         ret = fclose(h);
