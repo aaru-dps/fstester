@@ -34,7 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #error Need to be compiled without -posix argument
 #endif
 
-#define HAVE_STATFS_FTYPE
+#define HAVE_STATFS_TYPE
 
 #if NS_TARGET >= 42 // Rhapsody DR1
 #define NEED_SYS_TYPES_H
@@ -52,6 +52,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #ifdef HAVE_SYS_STATVFS_H
 #include <sys/statvfs.h>
+#endif
+
+#ifdef HAVE_SYS_VFS_H
+#include <sys/vfs.h>
 #endif
 
 #if defined(HAVE_SYS_MOUNT_H)
@@ -101,7 +105,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
 #ifdef USE_STATFS_FTYPENAME
     log_write("\tFilesystem: %s\n", buf.f_fstypename);
-#elif defined HAVE_STATFS_FTYPE
+#elif defined(HAVE_STATFS_TYPE)
     log_write("\tFilesystem: ");
     switch(buf.f_type)
     {
@@ -195,7 +199,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     log_write("\tVolume size: %llu bytes\n", ((unsigned long long)buf.f_blocks) * buf.f_bsize);
     log_write("\tVolume free: %llu bytes\n", ((unsigned long long)buf.f_bfree) * buf.f_bsize);
 
-#ifdef USE_STATFS_FNAMELEN
+#ifdef USE_STATFS_NAMELEN
     log_write("\tMaximum component length: %ld\n", buf.f_namelen);
 #elif USE_STATFS_NAMEMAX
     log_write("\tMaximum component length: %ld\n", buf.f_namemax);
@@ -210,7 +214,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         log_write("\tFlags: 0x%08lX\n", buf.f_flag);
 #endif
     }
-#elif !defined(__NeXT__) || (defined(NS_TARGET) && NS_TARGET >= 42)
+#elif(!defined(__NeXT__) || (defined(NS_TARGET) && NS_TARGET >= 42)) && defined(USE_STATFS_FLAGS)
     if(buf.f_flags)
     {
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)

@@ -58,7 +58,7 @@ LFLAGS	=
 
 # Compiler flags. This needs the definitions on how to find statfs.h as there is no autodetection
 # BSD 2.11 defines statfs to be in sys/mount.h
-CFLAGS  = -DHAVE_SYS_MOUNT_H -DHAVE_STATFS_FTYPENAME -DHAVE_STATFS_FTYPE -DNEED_SYS_TYPES_H
+CFLAGS  = -DHAVE_SYS_MOUNT_H -DHAVE_STATFS_TYPENAME -DHAVE_STATFS_TYPE -DNEED_SYS_TYPES_H
 
 all: fssetter
 

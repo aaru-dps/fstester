@@ -22,11 +22,16 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
-
-#include "volume.h"
+#elif defined(HAVE_SYS_VFS_H)
+#include <sys/vfs.h>
+#else
+#warning statfs not found, will use custom redefinition of flags
+#endif
 
 #include "../../log.h"
+#include "volume.h"
 
 void LinuxPrintStatfsFlags(__fsword_t flags)
 {
