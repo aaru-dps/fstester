@@ -27,6 +27,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 #include <sys/types.h>
 
+#ifndef RTLD_DEFAULT
+#define RTLD_DEFAULT NULL
+#endif
+
 void LinuxExtendedAttributes(const char* path);
 void LinuxSparse(const char* path);
 void LinuxFileAttributes(const char* path);
