@@ -33,7 +33,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include "../../log.h"
 #include "volume.h"
 
-void LinuxPrintStatfsFlags(__fsword_t flags)
+void LinuxPrintStatfsFlags(long flags)
 {
     log_write("\tFlags:\n");
 

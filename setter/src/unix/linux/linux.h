@@ -34,6 +34,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 void LinuxExtendedAttributes(const char* path);
 void LinuxSparse(const char* path);
 void LinuxFileAttributes(const char* path);
-void LinuxPrintStatfsFlags(__fsword_t flags);
+void LinuxPrintStatfsFlags(long flags);
 
 #endif
