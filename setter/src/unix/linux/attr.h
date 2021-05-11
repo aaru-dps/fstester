@@ -25,6 +25,10 @@ Copyright (C) 2011-2021 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_LINUX_ATTR_H_
 #define AARU_FSTESTER_SETTER_SRC_LINUX_ATTR_H_
 
+#ifndef FS_IOC_SETFLAGS
+#define FS_IOC_SETFLAGS _IOW('f', 2, long)
+#endif
+
 typedef struct
 {
     char filename[16];
