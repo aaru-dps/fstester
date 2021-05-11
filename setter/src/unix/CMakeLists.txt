@@ -96,7 +96,7 @@ endif()
 
 if(HAVE_STATFS_TYPE)
     message("-- statfs has f_type member")
-    add_sub_definitions(USE_STATFS_FLAGS)
+    add_sub_definitions(USE_STATFS_TYPE)
 endif()
 
 if(HAVE_STATFS_FLAGS)

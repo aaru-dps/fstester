@@ -105,7 +105,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
 #ifdef USE_STATFS_FTYPENAME
     log_write("\tFilesystem: %s\n", buf.f_fstypename);
-#elif defined(HAVE_STATFS_TYPE)
+#elif defined(USE_STATFS_TYPE)
     log_write("\tFilesystem: ");
     switch(buf.f_type)
     {
