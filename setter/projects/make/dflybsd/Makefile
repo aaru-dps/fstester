@@ -26,29 +26,29 @@
 MAINDIR  = ../../../src
 
 # Directory with main platform source files
-SRCDIR = $(MAINDIR)/unix
+SRCDIR = ${MAINDIR}/unix
 
 # Directory with subplatform source files
-PLATDIR =$(SRCDIR)/bsd
+PLATDIR =${SRCDIR}/bsd
 
 # Object files
-OBJS	= $(MAINDIR)/log.o $(MAINDIR)/main.o $(SRCDIR)/attr.o $(SRCDIR)/dirdepth.o \
-		  $(SRCDIR)/files.o $(SRCDIR)/links.o $(SRCDIR)/perms.o $(SRCDIR)/rsrcfork.o \
-		  $(SRCDIR)/time.o $(SRCDIR)/volume.o $(SRCDIR)/xattr.o $(SRCDIR)/deleted.o \
-		  $(SRCDIR)/filename.o $(SRCDIR)/frag.o $(SRCDIR)/os.o $(SRCDIR)/sparse.o \
-		  $(PLATDIR)/attr.o $(PLATDIR)/volume.o $(PLATDIR)/xattr.o
+OBJS	= ${MAINDIR}/log.o ${MAINDIR}/main.o ${SRCDIR}/attr.o ${SRCDIR}/dirdepth.o \
+		  ${SRCDIR}/files.o ${SRCDIR}/links.o ${SRCDIR}/perms.o ${SRCDIR}/rsrcfork.o \
+		  ${SRCDIR}/time.o ${SRCDIR}/volume.o ${SRCDIR}/xattr.o ${SRCDIR}/deleted.o \
+		  ${SRCDIR}/filename.o ${SRCDIR}/frag.o ${SRCDIR}/os.o ${SRCDIR}/sparse.o \
+		  ${PLATDIR}/attr.o ${PLATDIR}/volume.o ${PLATDIR}/xattr.o
 
 # Source files
-SOURCE	= $(MAINDIR)/log.c $(MAINDIR)/main.c $(SRCDIR)/attr.c $(SRCDIR)/dirdepth.c \
-		  $(SRCDIR)/files.c $(SRCDIR)/links.c $(SRCDIR)/perms.c $(SRCDIR)/rsrcfork.c \
-		  $(SRCDIR)/time.c $(SRCDIR)/volume.c $(SRCDIR)/xattr.c $(SRCDIR)/deleted.c \
-		  $(SRCDIR)/filename.c $(SRCDIR)/frag.c $(SRCDIR)/os.c $(SRCDIR)/sparse.c \
-		  $(PLATDIR)/attr.c $(PLATDIR)/volume.c $(PLATDIR)/xattr.c
+SOURCE	= ${MAINDIR}/log.c ${MAINDIR}/main.c ${SRCDIR}/attr.c ${SRCDIR}/dirdepth.c \
+		  ${SRCDIR}/files.c ${SRCDIR}/links.c ${SRCDIR}/perms.c ${SRCDIR}/rsrcfork.c \
+		  ${SRCDIR}/time.c ${SRCDIR}/volume.c ${SRCDIR}/xattr.c ${SRCDIR}/deleted.c \
+		  ${SRCDIR}/filename.c ${SRCDIR}/frag.c ${SRCDIR}/os.c ${SRCDIR}/sparse.c \
+		  ${PLATDIR}/attr.c ${PLATDIR}/volume.c ${PLATDIR}/xattr.c
 
 # Header files
-HEADER	= $(MAINDIR)/log.h $(MAINDIR)/main.h $(SRCDIR)/perms.h $(SRCDIR)/time.h \
-		  $(SRCDIR)/volume.h $(PLATDIR)/attr.h $(PLATDIR)/bsd.h $(PLATDIR)/volume.h \
-		  $(PLATDIR)/xattr.h
+HEADER	= ${MAINDIR}/log.h ${MAINDIR}/main.h ${SRCDIR}/perms.h ${SRCDIR}/time.h \
+		  ${SRCDIR}/volume.h ${PLATDIR}/attr.h ${PLATDIR}/bsd.h ${PLATDIR}/volume.h \
+		  ${PLATDIR}/xattr.h
 
 # Outfile
 OUT	= fssetter
@@ -62,12 +62,12 @@ CFLAGS  = -DHAVE_SYS_MOUNT_H -DHAVE_STATFS_TYPENAME -DHAVE_STATFS_TYPE -DNEED_SY
 
 all: fssetter
 
-fssetter: $(OBJS)
-	$(CC) -o $@ $^ $(LFLAGS)
+fssetter: ${OBJS}
+	${CC} ${LFLAGS} ${OBJS} -o fssetter
 
-%.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c -o $@ $<
+.c.o:
+	${CC} ${CFLAGS} -c ${.IMPSRC} -o ${.TARGET}
 
 # clean house
 clean:
-	rm -f $(OBJS) $(OUT)
+	rm -f ${OBJS} ${OUT}
