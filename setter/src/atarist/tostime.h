@@ -42,7 +42,7 @@ typedef struct
     char           definition[13];
 } atari_time_tests_t;
 
-#define KNOWN_ATARI_TIMES 12
+#define KNOWN_ATARI_TIMES 4
 
 #define MAX_TIME 0xBF7D
 #define MAX_DATE 0xFF9F
