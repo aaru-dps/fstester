@@ -64,10 +64,10 @@ void GetOsInfo()
     log_write("\tRunning under TOS %d.%02d\n", (osHeader->os_version & 0xFF00) >> 8, osHeader->os_version & 0xFF);
     log_write("\tCountry code: %d\n", osHeader->os_conf >> 1);
     log_write("\tVideo mode: %d\n", (osHeader->os_conf & 0x01) ? "PAL" : "NTSC");
-    log_write("\tSystem build date: %04X/%02X/%02X\n",
-              osHeader->os_date >> 16,
-              (osHeader->os_date & 0xFF00) >> 8,
-              osHeader->os_date & 0xFF);
+    log_write("\tSystem build date: %04lX/%02lX/%02lX\n",
+              osHeader->os_date & 0xFFFF,
+              (osHeader->os_date & 0xFF0000) >> 16,
+              (osHeader->os_date & 0xFF000000) >> 24);
     log_write("\tGEMDOS v%d.%02d\n", version >> 8, version & 0xFF);
 
     rc = Ssystem(-1, 0, 0);
