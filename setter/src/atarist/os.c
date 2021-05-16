@@ -41,14 +41,14 @@ void GetOsInfo()
 {
     OSHEADER*             osHeader;
     unsigned short        version;
-    long**                cookieJar = _p_cookies;
-    long                  cookie    = 0;
+    long*                 cookieJar;
+    long                  cookie = 0;
     char                  type[5];
     int                   rc;
     struct _stemu_vars*   stemu_vars;
     struct _tos2win_vars* tos2win_vars;
     MAGX_COOKIE*          magic_vars;
-    int32_t               savessp;
+    long                  savessp;
 
     // Retrieve the OS data in Supervisor mode
     savessp  = Super(0L);
@@ -93,8 +93,13 @@ void GetOsInfo()
         }
     }
 
+    // Retrieve pointer to cookie jar in Supervisor mode
+    savessp   = Super(0L);
+    cookieJar = *_p_cookies;
+    Super((void*)savessp);
+
     // Check for a cookie jar
-    if(*cookieJar == 0) return;
+    if(cookieJar == 0) return;
 
     // KAOS TOS
     rc = Getcookie(C__T30, &cookie);

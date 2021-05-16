@@ -37,14 +37,20 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void FilePermissions(const char* path)
 {
-    long** cookieJar = _p_cookies;
-    long   cookie;
-    int    rc, cRc, i;
-    FILE*  file;
-    char   driveNo = path[0] - '@';
+    long* cookieJar;
+    long  cookie;
+    int   rc, cRc, i;
+    FILE* file;
+    char  driveNo = path[0] - '@';
+    long  savessp;
+
+    // Retrieve pointer to cookie jar in Supervisor mode
+    savessp   = Super(0L);
+    cookieJar = *_p_cookies;
+    Super((void*)savessp);
 
     // Check for a cookie jar
-    if(*cookieJar == 0) return;
+    if(cookieJar == 0) return;
 
     // Check if MiNT or MagiC
     rc = (Getcookie(C_MiNT, &cookie) == E_OK) || (Getcookie(C_MagX, &cookie) == E_OK) ||
