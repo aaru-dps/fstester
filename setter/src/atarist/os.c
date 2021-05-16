@@ -39,7 +39,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void GetOsInfo()
 {
-    OSHEADER*             osHeader = (OSHEADER*)_sysbase;
+    OSHEADER*             osHeader;
     unsigned short        version;
     long**                cookieJar = _p_cookies;
     long                  cookie    = 0;
@@ -48,6 +48,15 @@ void GetOsInfo()
     struct _stemu_vars*   stemu_vars;
     struct _tos2win_vars* tos2win_vars;
     MAGX_COOKIE*          magic_vars;
+    int32_t               savessp;
+
+    // Retrieve the OS data in Supervisor mode
+    savessp  = Super(0L);
+    osHeader = *((OSHEADER**)_sysbase);
+    Super((void*)savessp);
+
+    // Due to old AHDI bug
+    osHeader = osHeader->os_beg;
 
     version = Sversion();
 
