@@ -47,7 +47,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(bpb == NULL)
     {
-        log_write("Error %d requesting volume information.\n", rc);
+        log_write("Error requesting volume information, assuming 512 bps.\n");
+        *clusterSize = 512;
         return;
     }
 
