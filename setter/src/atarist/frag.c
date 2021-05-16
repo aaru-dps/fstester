@@ -40,12 +40,12 @@ void Fragmentation(const char* path, size_t clusterSize)
     unsigned int   threeQuartersCluster    = halfCluster + quarterCluster;
     unsigned int   twoAndThreeQuartCluster = threeQuartersCluster + twoCluster;
     unsigned char* buffer;
-    char           driveNo = path[0] - '@';
+    char           driveNo = path[0] - 'A';
     unsigned int   rc, wRc = 0, cRc = 0;
     int            handle;
     long           i;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");

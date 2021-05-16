@@ -34,14 +34,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void Timestamps(const char* path)
 {
-    char         driveNo = path[0] - '@';
+    char         driveNo = path[0] - 'A';
     unsigned int rc, wRc = 0, cRc = 0, tRc = 0;
     int          handle;
     char         message[300];
     int          i;
     _DOSTIME     timestamp;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");

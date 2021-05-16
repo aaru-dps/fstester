@@ -34,12 +34,12 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void FileAttributes(const char* path)
 {
-    char  driveNo = path[0] - '@';
+    char  driveNo = path[0] - 'A';
     short rc, wRc, cRc;
     short handle;
     int   i;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");

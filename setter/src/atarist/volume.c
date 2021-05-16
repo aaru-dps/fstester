@@ -35,7 +35,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void GetVolumeInfo(const char* path, size_t* clusterSize)
 {
-    char           driveNo = path[0] - '@';
+    char           driveNo = path[0] - 'A';
     _BPB*          bpb;
     _DISKINFO      diskInfo;
     unsigned int   rc;

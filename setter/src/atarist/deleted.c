@@ -31,13 +31,13 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void DeleteFiles(const char* path)
 {
-    char         driveNo = path[0] - '@';
+    char         driveNo = path[0] - 'A';
     unsigned int rc;
     char         filename[9];
     short        pos;
     int          handle;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");

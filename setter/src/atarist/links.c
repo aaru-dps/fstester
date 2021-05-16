@@ -39,7 +39,7 @@ void Links(const char* path)
     long  cookie;
     int   rc;
     FILE* h;
-    char  driveNo = path[0] - '@';
+    char  driveNo = path[0] - 'A';
     long  savessp;
 
     // Retrieve pointer to cookie jar in Supervisor mode
@@ -57,7 +57,7 @@ void Links(const char* path)
 
     if(rc == 0) return;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");

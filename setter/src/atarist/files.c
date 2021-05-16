@@ -32,14 +32,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void MillionFiles(const char* path)
 {
-    char         driveNo = path[0] - '@';
+    char         driveNo = path[0] - 'A';
     unsigned int rc;
     char         filename[9];
     unsigned int pos;
     int          handle;
     unsigned     total;
 
-    if(driveNo > 32) driveNo -= 32;
+    if(driveNo >= 32) driveNo -= 32;
 
     Dsetdrv(driveNo);
     Dsetpath("\\");
