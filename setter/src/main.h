@@ -66,6 +66,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "AIX"
 #elif defined(__ANDROID__)
 #define OS_NAME "Android"
+#elif defined(atarist)
+#define OS_NAME "Atari ST"
 #elif defined(__morphos__)
 #define OS_NAME "MorphOS"
 #elif defined(AMIGA) || defined(__amigaos__)
