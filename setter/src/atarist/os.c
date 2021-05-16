@@ -104,12 +104,14 @@ void GetOsInfo()
     // KAOS TOS
     rc = Getcookie(C__T30, &cookie);
     if(rc == E_OK)
-        log_write(
-            "\tRunning under KAOS TOS from %04X/%02X/%02X\n", cookie & 0xFFFF, (cookie & 0xFF0000 >> 16), cookie >> 24);
+        log_write("\tRunning under KAOS TOS from %04lX/%02lX/%02X\n",
+                  cookie & 0xFFFF,
+                  (cookie & 0xFF0000 >> 16),
+                  cookie >> 24);
 
     // MiNT / MultiTOS
     rc = Getcookie(C_MiNT, &cookie);
-    if(rc == E_OK) log_write("\tRunning under MiNT/MultiTOS version %d.%02d\n", cookie >> 8, cookie & 0xFF);
+    if(rc == E_OK) log_write("\tRunning under MiNT/MultiTOS version %ld.%02ld\n", cookie >> 8, cookie & 0xFF);
 
     // oTOSis (format of cookie not known
     rc = Getcookie(0x4F544F53L, &cookie);
