@@ -52,9 +52,9 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         return;
     }
 
-    log_write("\tBytes per sector: %lu\n", bpb->recsiz);
-    log_write("\tSectors per cluster: %lu (%lu bytes)\n", bpb->clsiz, (int)bpb->clsiz * bpb->recsiz);
-    log_write("\tClusters: %lu (%lu bytes)\n", bpb->numcl, (int)bpb->numcl * bpb->clsiz * bpb->recsiz);
+    log_write("\tBytes per sector: %hd\n", bpb->recsiz);
+    log_write("\tSectors per cluster: %hd (%lu bytes)\n", bpb->clsiz, (unsigned long)bpb->clsiz * bpb->recsiz);
+    log_write("\tClusters: %hd (%lu bytes)\n", bpb->numcl, (unsigned long)bpb->numcl * bpb->clsiz * bpb->recsiz);
 
     *clusterSize = bpb->clsiz * bpb->recsiz;
 
@@ -64,8 +64,9 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
     if(rc == E_OK)
     {
-        log_write(
-            "\tFree clusters: %lu (%lu bytes)\n", diskInfo.b_free, (int)diskInfo.b_free * bpb->clsiz * bpb->recsiz);
+        log_write("\tFree clusters: %lu (%lu bytes)\n",
+                  diskInfo.b_free,
+                  (unsigned long)diskInfo.b_free * bpb->clsiz * bpb->recsiz);
     }
 
     memset(&fsInfo, 0, sizeof(struct fs_info));
@@ -75,8 +76,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     if(rc == E_OK)
     {
         log_write("\tFilesystem name: %s", fsInfo.name);
-        log_write("\tFilesystem version: %d.%02d", (fsInfo.version & 0xFFFF0000) >> 16, fsInfo.version & 0xFFFF);
-        log_write("\tFilesystem type: %d (%s)", fsInfo.type, fsInfo.type_asc);
+        log_write("\tFilesystem version: %ld.%02ld", (fsInfo.version & 0xFFFF0000) >> 16, fsInfo.version & 0xFFFF);
+        log_write("\tFilesystem type: 0x%08lX (%s)", fsInfo.type, fsInfo.type_asc);
     }
     else
     {
