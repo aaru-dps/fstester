@@ -42,8 +42,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
     char           xfsName[256];
     struct fs_info fsInfo;
 
-    if(driveNo > 32) driveNo -= 32;
-
+    Mediach(driveNo);
     bpb = Getbpb(driveNo);
 
     if(bpb == NULL)
