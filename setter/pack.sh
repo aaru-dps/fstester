@@ -51,7 +51,7 @@ cp binaries/macos/retro68/ppc/fssetter.dsk diskimgs/macppc.dsk
 dd if=/dev/zero of=fssetter.img bs=512 count=1440 status=none
 mformat -f 720 -v FSSETTER a:
 mcopy -sv binaries/atarist/fssetter.ttp a:
-mv fssetter.img diskimgs/atarist.img
+mv fssetter.img diskimgs/atarist.st
 
 # Copy for Windows
 dd if=/dev/zero of=fssetter.img bs=512 count=2880 status=none
