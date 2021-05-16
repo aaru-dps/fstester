@@ -105,11 +105,16 @@ int main(int argc, char** argv)
     Filenames(target);
     Timestamps(target);
     Links(target);
+#ifndef __atarist__ // Because this prevents us from generation more folders
     DirectoryDepth(target);
+#endif
     Fragmentation(target, clusterSize);
     Sparse(target);
     MillionFiles(target);
     DeleteFiles(target);
+#ifdef __atarist__ // Because this prevents us from generation more folders
+    DirectoryDepth(target);
+#endif
     GetVolumeInfo(target, &clusterSize);
 
     log_close();
