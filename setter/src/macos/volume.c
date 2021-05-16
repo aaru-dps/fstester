@@ -138,6 +138,7 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         case 0x4A48: log_write("Audio CD\n"); break;
         case 0x0100: log_write("ProDOS\n"); break;
         case 0x4953: log_write("FAT\n"); break;
+        case 0x0017: log_write("UFS\n"); break;
         default: log_write("unknown id 0x%04X\n", fsId); break;
     }
 }
