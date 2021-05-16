@@ -37,7 +37,7 @@ void GetOsInfo()
     log_write("OS information:\n");
 
     rc = Gestalt(gestaltAUXVersion, &gestaltResponse);
-    if(!rc) { log_write("Running under A/UX version 0x%08lX\n", gestaltResponse); }
+    if(!rc) log_write("Running under A/UX version %d.%d\n", (gestaltResponse & 0xFF00) >> 8, gestaltResponse & 0xFF);
     else
     {
         rc = Gestalt(gestaltSystemVersion, &gestaltResponse);
