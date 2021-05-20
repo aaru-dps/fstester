@@ -67,8 +67,8 @@ void GetOsInfo()
     log_write("\tVideo mode: %d\n", (osHeader->os_conf & 0x01) ? "PAL" : "NTSC");
     log_write("\tSystem build date: %04lX/%02lX/%02lX\n",
               osHeader->os_date & 0xFFFF,
-              (osHeader->os_date & 0xFF0000) >> 16,
-              (osHeader->os_date & 0xFF000000) >> 24);
+              (osHeader->os_date & 0xFF000000) >> 24,
+              (osHeader->os_date & 0xFF0000) >> 16);
 
     rc = Ssystem(-1, 0, 0);
 
