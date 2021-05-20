@@ -1,0 +1,840 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		014CEA520018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_SYS_MOUNT_H USE_STATFS_FTYPENAME USE_STATFS_FLAGS HAVE_CARBON HAVE_DLSYM";
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OPTIMIZATION_CFLAGS = "-O0";
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA530018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_SYS_MOUNT_H USE_STATFS_FTYPENAME USE_STATFS_FLAGS HAVE_CARBON HAVE_DLSYM";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA520018CE5811CA2923,
+				014CEA530018CE5811CA2923,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				C6A0FF2B0290797F04C91782,
+				1AB674ADFE9D54B511CA2CBB,
+				CE4DB4B12654820100FE1C3F,
+			);
+			isa = PBXGroup;
+			name = fssetter;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				CE4DB46B26547FD700FE1C3F,
+				CE4DB46126547FCE00FE1C3F,
+				CE4DB46226547FCE00FE1C3F,
+				CE4DB46326547FCE00FE1C3F,
+				CE4DB46426547FCE00FE1C3F,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				8DD76FB20486AB0100D96B5E,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//8D0
+//8D1
+//8D2
+//8D3
+//8D4
+		8DD76FA90486AB0100D96B5E = {
+			buildPhases = (
+				8DD76FAA0486AB0100D96B5E,
+				8DD76FAB0486AB0100D96B5E,
+				8DD76FAD0486AB0100D96B5E,
+				8DD76FAE0486AB0100D96B5E,
+				8DD76FAF0486AB0100D96B5E,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fssetter;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = fssetter;
+			productInstallPath = "$(HOME)/bin";
+			productName = fssetter;
+			productReference = 8DD76FB20486AB0100D96B5E;
+			productType = "com.apple.product-type.tool";
+		};
+		8DD76FAA0486AB0100D96B5E = {
+			buildActionMask = 2147483647;
+			files = (
+				CE4DB46626547FCE00FE1C3F,
+				CE4DB46826547FCE00FE1C3F,
+				CE4DB4882654800900FE1C3F,
+				CE4DB48C2654800900FE1C3F,
+				CE4DB48E2654800900FE1C3F,
+				CE4DB4A32654817C00FE1C3F,
+				CE4DB4A52654817C00FE1C3F,
+				CE4DB4A62654817C00FE1C3F,
+				CE4DB4A92654817C00FE1C3F,
+				CE4DB4AC2654817C00FE1C3F,
+				CE4DB4AE2654817C00FE1C3F,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAB0486AB0100D96B5E = {
+			buildActionMask = 2147483647;
+			files = (
+				CE4DB46526547FCE00FE1C3F,
+				CE4DB46726547FCE00FE1C3F,
+				CE4DB47F2654800900FE1C3F,
+				CE4DB4802654800900FE1C3F,
+				CE4DB4812654800900FE1C3F,
+				CE4DB4822654800900FE1C3F,
+				CE4DB4832654800900FE1C3F,
+				CE4DB4842654800900FE1C3F,
+				CE4DB4852654800900FE1C3F,
+				CE4DB4862654800900FE1C3F,
+				CE4DB4872654800900FE1C3F,
+				CE4DB4892654800900FE1C3F,
+				CE4DB48A2654800900FE1C3F,
+				CE4DB48B2654800900FE1C3F,
+				CE4DB48D2654800900FE1C3F,
+				CE4DB48F2654800900FE1C3F,
+				CE4DB4A22654817C00FE1C3F,
+				CE4DB4A42654817C00FE1C3F,
+				CE4DB4A72654817C00FE1C3F,
+				CE4DB4A82654817C00FE1C3F,
+				CE4DB4AA2654817C00FE1C3F,
+				CE4DB4AB2654817C00FE1C3F,
+				CE4DB4AD2654817C00FE1C3F,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAD0486AB0100D96B5E = {
+			buildActionMask = 2147483647;
+			files = (
+				CE4DB4B22654820100FE1C3F,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAE0486AB0100D96B5E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAF0486AB0100D96B5E = {
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		8DD76FB20486AB0100D96B5E = {
+			expectedFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = fssetter;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+//8D0
+//8D1
+//8D2
+//8D3
+//8D4
+//C60
+//C61
+//C62
+//C63
+//C64
+		C6A0FF2B0290797F04C91782 = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = Documentation;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//C60
+//C61
+//C62
+//C63
+//C64
+//CE0
+//CE1
+//CE2
+//CE3
+//CE4
+		CE4DB46126547FCE00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = log.c;
+			path = ../../../src/log.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB46226547FCE00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = log.h;
+			path = ../../../src/log.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB46326547FCE00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = main.c;
+			path = ../../../src/main.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB46426547FCE00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = main.h;
+			path = ../../../src/main.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB46526547FCE00FE1C3F = {
+			fileRef = CE4DB46126547FCE00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB46626547FCE00FE1C3F = {
+			fileRef = CE4DB46226547FCE00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB46726547FCE00FE1C3F = {
+			fileRef = CE4DB46326547FCE00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB46826547FCE00FE1C3F = {
+			fileRef = CE4DB46426547FCE00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB46B26547FD700FE1C3F = {
+			children = (
+				CE4DB4922654801300FE1C3F,
+				CE4DB46E2654800800FE1C3F,
+				CE4DB46F2654800800FE1C3F,
+				CE4DB4702654800800FE1C3F,
+				CE4DB4712654800900FE1C3F,
+				CE4DB4722654800900FE1C3F,
+				CE4DB4732654800900FE1C3F,
+				CE4DB4742654800900FE1C3F,
+				CE4DB4752654800900FE1C3F,
+				CE4DB4762654800900FE1C3F,
+				CE4DB4772654800900FE1C3F,
+				CE4DB4782654800900FE1C3F,
+				CE4DB4792654800900FE1C3F,
+				CE4DB47A2654800900FE1C3F,
+				CE4DB47B2654800900FE1C3F,
+				CE4DB47C2654800900FE1C3F,
+				CE4DB47D2654800900FE1C3F,
+				CE4DB47E2654800900FE1C3F,
+			);
+			isa = PBXGroup;
+			name = unix;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CE4DB46E2654800800FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = attr.c;
+			path = ../../../src/unix/attr.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB46F2654800800FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = deleted.c;
+			path = ../../../src/unix/deleted.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4702654800800FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = dirdepth.c;
+			path = ../../../src/unix/dirdepth.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4712654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = filename.c;
+			path = ../../../src/unix/filename.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4722654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = files.c;
+			path = ../../../src/unix/files.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4732654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = frag.c;
+			path = ../../../src/unix/frag.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4742654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = links.c;
+			path = ../../../src/unix/links.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4752654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = os.c;
+			path = ../../../src/unix/os.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4762654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = perms.c;
+			path = ../../../src/unix/perms.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4772654800900FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = perms.h;
+			path = ../../../src/unix/perms.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4782654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = rsrcfork.c;
+			path = ../../../src/unix/rsrcfork.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4792654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = sparse.c;
+			path = ../../../src/unix/sparse.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47A2654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = time.c;
+			path = ../../../src/unix/time.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47B2654800900FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = time.h;
+			path = ../../../src/unix/time.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47C2654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = volume.c;
+			path = ../../../src/unix/volume.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47D2654800900FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = volume.h;
+			path = ../../../src/unix/volume.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47E2654800900FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = xattr.c;
+			path = ../../../src/unix/xattr.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB47F2654800900FE1C3F = {
+			fileRef = CE4DB46E2654800800FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4802654800900FE1C3F = {
+			fileRef = CE4DB46F2654800800FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4812654800900FE1C3F = {
+			fileRef = CE4DB4702654800800FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4822654800900FE1C3F = {
+			fileRef = CE4DB4712654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4832654800900FE1C3F = {
+			fileRef = CE4DB4722654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4842654800900FE1C3F = {
+			fileRef = CE4DB4732654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4852654800900FE1C3F = {
+			fileRef = CE4DB4742654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4862654800900FE1C3F = {
+			fileRef = CE4DB4752654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4872654800900FE1C3F = {
+			fileRef = CE4DB4762654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4882654800900FE1C3F = {
+			fileRef = CE4DB4772654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4892654800900FE1C3F = {
+			fileRef = CE4DB4782654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48A2654800900FE1C3F = {
+			fileRef = CE4DB4792654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48B2654800900FE1C3F = {
+			fileRef = CE4DB47A2654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48C2654800900FE1C3F = {
+			fileRef = CE4DB47B2654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48D2654800900FE1C3F = {
+			fileRef = CE4DB47C2654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48E2654800900FE1C3F = {
+			fileRef = CE4DB47D2654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB48F2654800900FE1C3F = {
+			fileRef = CE4DB47E2654800900FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4922654801300FE1C3F = {
+			children = (
+				CE4DB4952654817C00FE1C3F,
+				CE4DB4962654817C00FE1C3F,
+				CE4DB4972654817C00FE1C3F,
+				CE4DB4982654817C00FE1C3F,
+				CE4DB4992654817C00FE1C3F,
+				CE4DB49A2654817C00FE1C3F,
+				CE4DB49B2654817C00FE1C3F,
+				CE4DB49C2654817C00FE1C3F,
+				CE4DB49D2654817C00FE1C3F,
+				CE4DB49E2654817C00FE1C3F,
+				CE4DB49F2654817C00FE1C3F,
+				CE4DB4A02654817C00FE1C3F,
+				CE4DB4A12654817C00FE1C3F,
+			);
+			isa = PBXGroup;
+			name = darwin;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CE4DB4952654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = attr.c;
+			path = ../../../src/unix/darwin/attr.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4962654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = attr.h;
+			path = ../../../src/unix/darwin/attr.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4972654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = carbon.c;
+			path = ../../../src/unix/darwin/carbon.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4982654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = carbon.h;
+			path = ../../../src/unix/darwin/carbon.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4992654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = darwin.h;
+			path = ../../../src/unix/darwin/darwin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49A2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = os.c;
+			path = ../../../src/unix/darwin/os.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49B2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = rsrcfork.c;
+			path = ../../../src/unix/darwin/rsrcfork.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49C2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = rsrcfork.h;
+			path = ../../../src/unix/darwin/rsrcfork.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49D2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = sparse.c;
+			path = ../../../src/unix/darwin/sparse.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49E2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = volume.c;
+			path = ../../../src/unix/darwin/volume.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB49F2654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = volume.h;
+			path = ../../../src/unix/darwin/volume.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4A02654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = xattr.c;
+			path = ../../../src/unix/darwin/xattr.c;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4A12654817C00FE1C3F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = xattr.h;
+			path = ../../../src/unix/darwin/xattr.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE4DB4A22654817C00FE1C3F = {
+			fileRef = CE4DB4952654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A32654817C00FE1C3F = {
+			fileRef = CE4DB4962654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A42654817C00FE1C3F = {
+			fileRef = CE4DB4972654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A52654817C00FE1C3F = {
+			fileRef = CE4DB4982654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A62654817C00FE1C3F = {
+			fileRef = CE4DB4992654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A72654817C00FE1C3F = {
+			fileRef = CE4DB49A2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A82654817C00FE1C3F = {
+			fileRef = CE4DB49B2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4A92654817C00FE1C3F = {
+			fileRef = CE4DB49C2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4AA2654817C00FE1C3F = {
+			fileRef = CE4DB49D2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4AB2654817C00FE1C3F = {
+			fileRef = CE4DB49E2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4AC2654817C00FE1C3F = {
+			fileRef = CE4DB49F2654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4AD2654817C00FE1C3F = {
+			fileRef = CE4DB4A02654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4AE2654817C00FE1C3F = {
+			fileRef = CE4DB4A12654817C00FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CE4DB4B12654820100FE1C3F = {
+			expectedFileType = wrapper.framework;
+			isa = PBXFileReference;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		CE4DB4B22654820100FE1C3F = {
+			fileRef = CE4DB4B12654820100FE1C3F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
