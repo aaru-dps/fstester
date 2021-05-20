@@ -63,6 +63,8 @@ void DirectoryDepth(const char* path)
         if(rc == E_OK) rc = Dsetpath(filename);
 
         pos++;
+
+        if(pos >= 90) break;
     }
 
     log_write("\tCreated %d levels of directory hierarchy\n", pos);
