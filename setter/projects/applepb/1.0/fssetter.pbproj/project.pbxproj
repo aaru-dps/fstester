@@ -1,0 +1,635 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 32;
+	objects = {
+		00E4956B26553C747F000001 = {
+			children = (
+				00E4956C26553C747F000001,
+				00E4958726553CF97F000001,
+				00E4958826553CF97F000001,
+				00E4958926553CF97F000001,
+				00E4958A26553CF97F000001,
+				00E4958B26553CF97F000001,
+				00E4958C26553CF97F000001,
+				00E4958D26553CF97F000001,
+				00E4958E26553CF97F000001,
+				00E4958F26553CF97F000001,
+				00E4959026553CF97F000001,
+				00E4959126553CF97F000001,
+				00E4959226553CF97F000001,
+				00E4959326553CF97F000001,
+				00E4959426553CF97F000001,
+				00E4959526553CF97F000001,
+				00E4959626553CF97F000001,
+				00E4959726553CF97F000001,
+			);
+			isa = PBXGroup;
+			name = unix;
+			refType = 4;
+		};
+		00E4956C26553C747F000001 = {
+			children = (
+				00E4956D26553CA07F000001,
+				00E4956E26553CA07F000001,
+				00E4956F26553CA07F000001,
+				00E4957026553CA07F000001,
+				00E4957126553CA07F000001,
+				00E4957226553CA07F000001,
+				00E4957326553CA07F000001,
+				00E4957426553CA07F000001,
+				00E4957526553CA07F000001,
+				00E4957626553CA07F000001,
+				00E4957726553CA07F000001,
+				00E4957826553CA07F000001,
+				00E4957926553CA07F000001,
+			);
+			isa = PBXGroup;
+			name = darwin;
+			refType = 4;
+		};
+		00E4956D26553CA07F000001 = {
+			isa = PBXFileReference;
+			name = attr.c;
+			path = ../../../src/unix/darwin/attr.c;
+			refType = 2;
+		};
+		00E4956E26553CA07F000001 = {
+			isa = PBXFileReference;
+			name = attr.h;
+			path = ../../../src/unix/darwin/attr.h;
+			refType = 2;
+		};
+		00E4956F26553CA07F000001 = {
+			isa = PBXFileReference;
+			name = carbon.c;
+			path = ../../../src/unix/darwin/carbon.c;
+			refType = 2;
+		};
+		00E4957026553CA07F000001 = {
+			isa = PBXFileReference;
+			name = carbon.h;
+			path = ../../../src/unix/darwin/carbon.h;
+			refType = 2;
+		};
+		00E4957126553CA07F000001 = {
+			isa = PBXFileReference;
+			name = darwin.h;
+			path = ../../../src/unix/darwin/darwin.h;
+			refType = 2;
+		};
+		00E4957226553CA07F000001 = {
+			isa = PBXFileReference;
+			name = os.c;
+			path = ../../../src/unix/darwin/os.c;
+			refType = 2;
+		};
+		00E4957326553CA07F000001 = {
+			isa = PBXFileReference;
+			name = rsrcfork.c;
+			path = ../../../src/unix/darwin/rsrcfork.c;
+			refType = 2;
+		};
+		00E4957426553CA07F000001 = {
+			isa = PBXFileReference;
+			name = rsrcfork.h;
+			path = ../../../src/unix/darwin/rsrcfork.h;
+			refType = 2;
+		};
+		00E4957526553CA07F000001 = {
+			isa = PBXFileReference;
+			name = sparse.c;
+			path = ../../../src/unix/darwin/sparse.c;
+			refType = 2;
+		};
+		00E4957626553CA07F000001 = {
+			isa = PBXFileReference;
+			name = volume.c;
+			path = ../../../src/unix/darwin/volume.c;
+			refType = 2;
+		};
+		00E4957726553CA07F000001 = {
+			isa = PBXFileReference;
+			name = volume.h;
+			path = ../../../src/unix/darwin/volume.h;
+			refType = 2;
+		};
+		00E4957826553CA07F000001 = {
+			isa = PBXFileReference;
+			name = xattr.c;
+			path = ../../../src/unix/darwin/xattr.c;
+			refType = 2;
+		};
+		00E4957926553CA07F000001 = {
+			isa = PBXFileReference;
+			name = xattr.h;
+			path = ../../../src/unix/darwin/xattr.h;
+			refType = 2;
+		};
+		00E4957A26553CA07F000001 = {
+			fileRef = 00E4956E26553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4957B26553CA07F000001 = {
+			fileRef = 00E4957026553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4957C26553CA07F000001 = {
+			fileRef = 00E4957126553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4957D26553CA07F000001 = {
+			fileRef = 00E4957426553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4957E26553CA07F000001 = {
+			fileRef = 00E4957726553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4957F26553CA07F000001 = {
+			fileRef = 00E4957926553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958026553CA07F000001 = {
+			fileRef = 00E4956D26553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958126553CA07F000001 = {
+			fileRef = 00E4956F26553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958226553CA07F000001 = {
+			fileRef = 00E4957226553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958326553CA07F000001 = {
+			fileRef = 00E4957326553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958426553CA07F000001 = {
+			fileRef = 00E4957526553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958526553CA07F000001 = {
+			fileRef = 00E4957626553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958626553CA07F000001 = {
+			fileRef = 00E4957826553CA07F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4958726553CF97F000001 = {
+			isa = PBXFileReference;
+			name = attr.c;
+			path = ../../../src/unix/attr.c;
+			refType = 2;
+		};
+		00E4958826553CF97F000001 = {
+			isa = PBXFileReference;
+			name = deleted.c;
+			path = ../../../src/unix/deleted.c;
+			refType = 2;
+		};
+		00E4958926553CF97F000001 = {
+			isa = PBXFileReference;
+			name = dirdepth.c;
+			path = ../../../src/unix/dirdepth.c;
+			refType = 2;
+		};
+		00E4958A26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = filename.c;
+			path = ../../../src/unix/filename.c;
+			refType = 2;
+		};
+		00E4958B26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = files.c;
+			path = ../../../src/unix/files.c;
+			refType = 2;
+		};
+		00E4958C26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = frag.c;
+			path = ../../../src/unix/frag.c;
+			refType = 2;
+		};
+		00E4958D26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = links.c;
+			path = ../../../src/unix/links.c;
+			refType = 2;
+		};
+		00E4958E26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = os.c;
+			path = ../../../src/unix/os.c;
+			refType = 2;
+		};
+		00E4958F26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = perms.c;
+			path = ../../../src/unix/perms.c;
+			refType = 2;
+		};
+		00E4959026553CF97F000001 = {
+			isa = PBXFileReference;
+			name = perms.h;
+			path = ../../../src/unix/perms.h;
+			refType = 2;
+		};
+		00E4959126553CF97F000001 = {
+			isa = PBXFileReference;
+			name = rsrcfork.c;
+			path = ../../../src/unix/rsrcfork.c;
+			refType = 2;
+		};
+		00E4959226553CF97F000001 = {
+			isa = PBXFileReference;
+			name = sparse.c;
+			path = ../../../src/unix/sparse.c;
+			refType = 2;
+		};
+		00E4959326553CF97F000001 = {
+			isa = PBXFileReference;
+			name = time.c;
+			path = ../../../src/unix/time.c;
+			refType = 2;
+		};
+		00E4959426553CF97F000001 = {
+			isa = PBXFileReference;
+			name = time.h;
+			path = ../../../src/unix/time.h;
+			refType = 2;
+		};
+		00E4959526553CF97F000001 = {
+			isa = PBXFileReference;
+			name = volume.c;
+			path = ../../../src/unix/volume.c;
+			refType = 2;
+		};
+		00E4959626553CF97F000001 = {
+			isa = PBXFileReference;
+			name = volume.h;
+			path = ../../../src/unix/volume.h;
+			refType = 2;
+		};
+		00E4959726553CF97F000001 = {
+			isa = PBXFileReference;
+			name = xattr.c;
+			path = ../../../src/unix/xattr.c;
+			refType = 2;
+		};
+		00E4959826553CF97F000001 = {
+			isa = PBXFileReference;
+			name = log.c;
+			path = ../../../src/log.c;
+			refType = 2;
+		};
+		00E4959926553CF97F000001 = {
+			isa = PBXFileReference;
+			name = log.h;
+			path = ../../../src/log.h;
+			refType = 2;
+		};
+		00E4959A26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = main.c;
+			path = ../../../src/main.c;
+			refType = 2;
+		};
+		00E4959B26553CF97F000001 = {
+			isa = PBXFileReference;
+			name = main.h;
+			path = ../../../src/main.h;
+			refType = 2;
+		};
+		00E4959C26553CF97F000001 = {
+			isa = PBXFrameworkReference;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+		};
+		00E4959D26553CF97F000001 = {
+			fileRef = 00E4959026553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4959E26553CF97F000001 = {
+			fileRef = 00E4959426553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E4959F26553CF97F000001 = {
+			fileRef = 00E4959626553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A026553CF97F000001 = {
+			fileRef = 00E4959926553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A126553CF97F000001 = {
+			fileRef = 00E4959B26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A226553CF97F000001 = {
+			fileRef = 00E4958726553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A326553CF97F000001 = {
+			fileRef = 00E4958826553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A426553CF97F000001 = {
+			fileRef = 00E4958926553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A526553CF97F000001 = {
+			fileRef = 00E4958A26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A626553CF97F000001 = {
+			fileRef = 00E4958B26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A726553CF97F000001 = {
+			fileRef = 00E4958C26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A826553CF97F000001 = {
+			fileRef = 00E4958D26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495A926553CF97F000001 = {
+			fileRef = 00E4958E26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AA26553CF97F000001 = {
+			fileRef = 00E4958F26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AB26553CF97F000001 = {
+			fileRef = 00E4959126553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AC26553CF97F000001 = {
+			fileRef = 00E4959226553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AD26553CF97F000001 = {
+			fileRef = 00E4959326553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AE26553CF97F000001 = {
+			fileRef = 00E4959526553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495AF26553CF97F000001 = {
+			fileRef = 00E4959726553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495B026553CF97F000001 = {
+			fileRef = 00E4959826553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495B126553CF97F000001 = {
+			fileRef = 00E4959A26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		00E495B226553CF97F000001 = {
+			fileRef = 00E4959C26553CF97F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		014CEA520018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA530018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+		034768E8FF38A79811DB9C8B = {
+			isa = PBXExecutableFileReference;
+			path = fssetter;
+			refType = 3;
+		};
+		08FB7793FE84155DC02AAC07 = {
+			buildStyles = (
+				014CEA520018CE5811CA2923,
+				014CEA530018CE5811CA2923,
+			);
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = .;
+			targets = (
+				08FB779FFE84155DC02AAC07,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				1AB674ADFE9D54B511CA2CBB,
+				00E4959C26553CF97F000001,
+			);
+			isa = PBXGroup;
+			name = fssetter;
+			refType = 4;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				00E4956B26553C747F000001,
+				00E4959826553CF97F000001,
+				00E4959926553CF97F000001,
+				00E4959A26553CF97F000001,
+				00E4959B26553CF97F000001,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+		};
+		08FB779FFE84155DC02AAC07 = {
+			buildPhases = (
+				08FB77A0FE84155DC02AAC07,
+				08FB77A1FE84155DC02AAC07,
+				08FB77A3FE84155DC02AAC07,
+				08FB77A5FE84155DC02AAC07,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "-DHAVE_SYS_MOUNT_H -DUSE_STATFS_FTYPENAME -DUSE_STATFS_FLAGS -DHAVE_CARBON";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fssetter;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			conditionalBuildSettings = {
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = fssetter;
+			productInstallPath = "$(HOME)/bin";
+			productName = fssetter;
+			productReference = 034768E8FF38A79811DB9C8B;
+			shouldUseHeadermap = 0;
+		};
+		08FB77A0FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				00E4957A26553CA07F000001,
+				00E4957B26553CA07F000001,
+				00E4957C26553CA07F000001,
+				00E4957D26553CA07F000001,
+				00E4957E26553CA07F000001,
+				00E4957F26553CA07F000001,
+				00E4959D26553CF97F000001,
+				00E4959E26553CF97F000001,
+				00E4959F26553CF97F000001,
+				00E495A026553CF97F000001,
+				00E495A126553CF97F000001,
+			);
+			isa = PBXHeadersBuildPhase;
+			name = Headers;
+		};
+		08FB77A1FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				00E4958026553CA07F000001,
+				00E4958126553CA07F000001,
+				00E4958226553CA07F000001,
+				00E4958326553CA07F000001,
+				00E4958426553CA07F000001,
+				00E4958526553CA07F000001,
+				00E4958626553CA07F000001,
+				00E495A226553CF97F000001,
+				00E495A326553CF97F000001,
+				00E495A426553CF97F000001,
+				00E495A526553CF97F000001,
+				00E495A626553CF97F000001,
+				00E495A726553CF97F000001,
+				00E495A826553CF97F000001,
+				00E495A926553CF97F000001,
+				00E495AA26553CF97F000001,
+				00E495AB26553CF97F000001,
+				00E495AC26553CF97F000001,
+				00E495AD26553CF97F000001,
+				00E495AE26553CF97F000001,
+				00E495AF26553CF97F000001,
+				00E495B026553CF97F000001,
+				00E495B126553CF97F000001,
+			);
+			isa = PBXSourcesBuildPhase;
+			name = Sources;
+		};
+		08FB77A3FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				00E495B226553CF97F000001,
+			);
+			isa = PBXFrameworksBuildPhase;
+			name = "Frameworks & Libraries";
+		};
+		08FB77A5FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			name = "ResourceManager Resources";
+		};
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				034768E8FF38A79811DB9C8B,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
