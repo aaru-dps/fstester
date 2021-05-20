@@ -3,9 +3,10 @@
 //
 
 #include <Carbon/Carbon.h>
-#include <MacTypes.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/syslimits.h>
+#include <unistd.h>
 
 #include "carbon.h"
 

@@ -23,7 +23,9 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
+#include <stdint.h>
 #include <string.h>
+#include <sys/attr.h>
 #include <unistd.h>
 
 #include "volume.h"

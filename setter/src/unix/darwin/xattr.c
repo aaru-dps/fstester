@@ -28,9 +28,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "xattr.h"
-
 #include "../../log.h"
+#include "xattr.h"
 
 void DarwinExtendedAttributes(const char* path)
 {
