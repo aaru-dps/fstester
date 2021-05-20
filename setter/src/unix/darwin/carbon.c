@@ -236,7 +236,7 @@ int CarbonResourceFork(const char* path)
                 if(f != NULL)
                 {
                     txtLen  = strlen(icnsText);
-                    written = fwrite(icnsText, txtLen, 1, f);
+                    written = fwrite(icnsText, 1, txtLen, f);
 
                     wRc = written != txtLen ? errno : 0;
                     cRc = fclose(f);
@@ -295,7 +295,7 @@ int CarbonResourceFork(const char* path)
                 if(f != NULL)
                 {
                     txtLen  = strlen(pictText);
-                    written = fwrite(pictText, txtLen, 1, f);
+                    written = fwrite(pictText, 1, txtLen, f);
 
                     wRc = written != txtLen ? errno : 0;
                     cRc = fclose(f);
@@ -354,7 +354,7 @@ int CarbonResourceFork(const char* path)
                 if(f != NULL)
                 {
                     txtLen  = strlen(versText);
-                    written = fwrite(versText, txtLen, 1, f);
+                    written = fwrite(versText, 1, txtLen, f);
 
                     wRc = written != txtLen ? errno : 0;
                     cRc = fclose(f);
@@ -442,7 +442,7 @@ int CarbonResourceFork(const char* path)
             if(f != NULL)
             {
                 txtLen  = strlen(rsrcText);
-                written = fwrite(rsrcText, txtLen, 1, f);
+                written = fwrite(rsrcText, 1, txtLen, f);
 
                 wRc = written != txtLen ? errno : 0;
                 cRc = fclose(f);
