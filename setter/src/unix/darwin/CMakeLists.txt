@@ -26,7 +26,14 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     return()
 endif()
 
+include(CheckSymbolExists)
 find_library(CARBON_LIBRARY NAMES Carbon)
+
+CHECK_SYMBOL_EXISTS(dlsym dlfcn.h HAVE_DLSYM)
+
+if(HAVE_DLSYM)
+    add_sub_definitions(HAVE_DLSYM)
+endif()
 
 add_sources(os.c darwin.h volume.c volume.h attr.c attr.h rsrcfork.c rsrcfork.h sparse.c xattr.c xattr.h)
 

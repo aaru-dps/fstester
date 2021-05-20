@@ -22,7 +22,11 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+// TODO: old dyld interface
+#if HAVE_DLSYM
 #include <dlfcn.h>
+#endif // HAVE_DLSYM
+
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -33,13 +37,15 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void DarwinExtendedAttributes(const char* path)
 {
+// TODO: old dyld interface
+#if HAVE_DLSYM
     int              ret;
     FILE*            file;
     int              rc;
     int              cRc;
     _darwin_setxattr darwin_setxattr;
 
-  darwin_setxattr = (_darwin_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
+    darwin_setxattr = (_darwin_setxattr)dlsym(RTLD_DEFAULT, "setxattr");
 
     if(!darwin_setxattr)
     {
@@ -100,4 +106,8 @@ void DarwinExtendedAttributes(const char* path)
         if(ret) cRc = errno;
     }
     log_write("\tFile with an extended attribute called \"com.ibm.os2.icon\", rc = %d, cRc = %d\n", rc, cRc);
+#else  // HAVE_DLSYM
+    printf("This version is not compiled to try extended attributes. This version MUST NOT be used in Mac OS X 10.4 "
+           "(Darwin 8.0) or higher\n");
+#endif // HAVE_DLSYM
 }
