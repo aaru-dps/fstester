@@ -108,6 +108,9 @@ add_subdirectory(darwin)
 add_subdirectory(linux)
 add_subdirectory(bsd)
 
+# Needed to pass upper level definitions back down
+add_sub_definitions()
+
 # Even if empty it needs to be present
 add_sub_libraries()
 
