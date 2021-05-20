@@ -34,6 +34,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 int DarwinSparse(const char* path)
 {
+#ifdef F_PUNCHHOLE
     int          ret;
     int          rc, wRc, cRc, sRc;
     FILE*        h;
@@ -148,4 +149,7 @@ int DarwinSparse(const char* path)
               sRc);
 
     return done;
+#else
+    return -1;
+#endif
 }
