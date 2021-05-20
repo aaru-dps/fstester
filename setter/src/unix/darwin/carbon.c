@@ -42,6 +42,10 @@ int CarbonResourceFork(const char* path)
     size_t            txtLen, written;
     int               wRc, cRc;
 
+    memset(iconUnicodeStr, 0, 256);
+    memset(pictUnicodeStr, 0, 256);
+    memset(versionUnicodeStr, 0, 256);
+    memset(allUnicodeStr, 0, 256);
     memset(&oTextToUnicodeInfo, 0, sizeof(TextToUnicodeInfo));
 
     err = CreateTextToUnicodeInfoByEncoding(kTextEncodingMacRoman, &oTextToUnicodeInfo);
