@@ -219,7 +219,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, IcnsResource, ICNS_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, IcnsResource, ICNS_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, rtIcons, -16455, IcnsResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
@@ -276,7 +278,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, PictResource, PICT_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, PictResource, PICT_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, ftPICTFile, 29876, PictResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
@@ -333,7 +337,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, VersResource, VERS_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, VersResource, VERS_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, rtVersion, 1, VersResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
@@ -390,7 +396,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, IcnsResource, ICNS_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, IcnsResource, ICNS_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, rtIcons, -16455, IcnsResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
@@ -402,7 +410,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, PictResource, PICT_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, PictResource, PICT_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, ftPICTFile, -16455, PictResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
@@ -414,7 +424,9 @@ int CarbonResourceFork(const char* path)
 
             if(h)
             {
-                memcpy(h, VersResource, VERS_RESOURCE_SIZE);
+                HLock(h);
+                memcpy(*h, VersResource, VERS_RESOURCE_SIZE);
+                HUnlock(h);
                 AddResource(h, rtVersion, 1, VersResourceNamePascal);
                 WriteResource(h);
                 ReleaseResource(h);
