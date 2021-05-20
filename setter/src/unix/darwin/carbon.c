@@ -19,7 +19,7 @@
 int CarbonResourceFork(const char* path)
 {
     int               ret;
-    unsigned char*    absolute_path;
+    char              absolute_path[PATH_MAX];
     OSStatus          err;
     FSRef             parentDirRef;
     TextToUnicodeInfo oTextToUnicodeInfo;
@@ -156,9 +156,7 @@ int CarbonResourceFork(const char* path)
         return count;
     }
 
-    absolute_path = (unsigned char*)realpath("RSRC", NULL);
-
-    if(absolute_path == NULL)
+    if(realpath("RSRC", absolute_path) == NULL)
     {
         log_write("Error getting working directory absolute path.\n", errno);
 
