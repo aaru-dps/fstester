@@ -1,0 +1,1 @@
+This directory contains the project files for Symantec C++ 6.0.

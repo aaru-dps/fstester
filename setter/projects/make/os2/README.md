@@ -1,0 +1,1 @@
+This directory contains the Makefile for OS/2 EMX.

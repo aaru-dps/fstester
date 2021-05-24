@@ -1,0 +1,1 @@
+This directory contains the project files for Metrowerks CodeWarrior Professional 3.0.

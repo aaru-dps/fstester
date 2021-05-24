@@ -1,0 +1,1 @@
+This folder contains the source code for 32-bit OS/2.

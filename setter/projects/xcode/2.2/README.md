@@ -1,0 +1,1 @@
+This is the project file for Xcode 2.2 as included in Mac OS X 10.4 Developer Tools.

@@ -1,0 +1,1 @@
+This directory contains the workspaces to use OpenWatcom 2 in Visual Studio Code.

@@ -1,0 +1,1 @@
+This folder contains toolchains needed to make CMake setup a development environment properly.

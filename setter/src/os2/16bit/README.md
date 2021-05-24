@@ -1,0 +1,1 @@
+This folder contains the source code for 16-bit OS/2.

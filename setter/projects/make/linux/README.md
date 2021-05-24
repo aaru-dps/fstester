@@ -1,0 +1,1 @@
+This directory contains the Makefile for Linux (earlier than 2.6.36).

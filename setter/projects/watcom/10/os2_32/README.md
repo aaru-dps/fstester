@@ -1,0 +1,1 @@
+This directory contains the project files for Watcom C++ 10 targeting 32-bit OS/2.

@@ -1,0 +1,1 @@
+This directory contains the project files for Borland C++ for OS/2 1.0.

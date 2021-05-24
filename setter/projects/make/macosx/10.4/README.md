@@ -1,0 +1,1 @@
+This directory contains the Makefile for Mac OS X 10.4.

@@ -1,0 +1,1 @@
+This directory contains the project files for Borland C++ 5.0 targeting DOS.

@@ -1,0 +1,1 @@
+This folder contains the projects and make files to compile in different development environments.

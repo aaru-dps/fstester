@@ -1,0 +1,1 @@
+This directory contains the Makefile for Darwin or Mac OS X Server 1.x (NOT Mac OS X).

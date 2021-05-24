@@ -1,0 +1,1 @@
+This folder contains the definitions common to all platforms.

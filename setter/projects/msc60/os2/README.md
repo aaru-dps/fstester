@@ -1,0 +1,1 @@
+This directory contains the project files for Microsoft C++ 6.0 for OS/2.

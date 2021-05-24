@@ -1,0 +1,1 @@
+This directory contains the project files for OpenWatcom 1.8 targeting 16-bit OS/2.

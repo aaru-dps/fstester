@@ -1,0 +1,1 @@
+This directory contains the project files for Apple ProjectBuilder (the predecessor to Xcode) for Mac OS X.

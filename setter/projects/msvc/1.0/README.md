@@ -1,0 +1,1 @@
+This directory contains the project files for Microsoft Visual C++ 1.0.

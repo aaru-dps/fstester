@@ -1,0 +1,1 @@
+This directory contains the project files for Metrowerks CodeWarrior 6.0.
