@@ -48,6 +48,7 @@ void DarwinResourceFork(const char* path)
 #ifdef HAVE_CARBON
     ret = CarbonResourceFork(path);
 #endif
+#ifdef _PATH_RSRCFORKSPEC
 
     // Correctly done by Carbon, if not fallback to _PATH_RSRCFORKSPEC
     if(ret > 0) return;
@@ -322,4 +323,5 @@ void DarwinResourceFork(const char* path)
               wRc,
               cRc,
               rRc);
+#endif // _PATH_RSRCFORKSPEC
 }
