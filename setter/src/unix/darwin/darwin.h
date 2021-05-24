@@ -5,10 +5,10 @@
 #ifndef SETTER_SRC_DARWIN_DARWIN_H_
 #define SETTER_SRC_DARWIN_DARWIN_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 void DarwinGetOsInfo();
-void DarwinPrintStatfsFlags(uint32_t flags);
+void DarwinPrintStatfsFlags(u_int32_t flags);
 void DarwinResourceFork(const char* path);
 void DarwinFileAttributes(const char* path);
 void DarwinExtendedAttributes(const char* path);

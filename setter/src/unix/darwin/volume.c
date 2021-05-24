@@ -23,16 +23,16 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
-#include <stdint.h>
 #include <string.h>
 #include <sys/attr.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "volume.h"
 
 #include "../../log.h"
 
-void DarwinPrintStatfsFlags(uint32_t flags)
+void DarwinPrintStatfsFlags(u_int32_t flags)
 {
     if(flags & MNT_RDONLY)
     {
