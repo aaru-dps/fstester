@@ -191,6 +191,7 @@ typedef struct attrlist attrlist_t;
 
 void DarwinVolumeAttributes(const char* path)
 {
+#ifdef ATTR_VOL_CAPABILITIES
     int                     ret;
     attrlist_t              attrList;
     vol_capabilities_attr_t attrBuf;
@@ -368,4 +369,5 @@ void DarwinVolumeAttributes(const char* path)
         log_write("\tVolume is cryptographically sealed\n");
         capabilities_valid -= VOL_CAP_FMT_SEALED;
     }
+#endif // ATTR_VOL_CAPABILITIES
 }
