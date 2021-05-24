@@ -23,19 +23,19 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #ifdef HAVE_CARBON
+#include "carbon.h"
+#endif
+
 #include <errno.h>
 #include <limits.h>
+#include <paths.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/paths.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "rsrcfork.h"
-
 #include "../../log.h"
-#include "carbon.h"
-#endif
+#include "rsrcfork.h"
 
 void DarwinResourceFork(const char* path)
 {
