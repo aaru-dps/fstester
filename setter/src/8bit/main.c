@@ -36,9 +36,18 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define DISK_NAMES_TAIL ","
 #endif
 
+#ifdef __APPLE2__
+#include <apple2_filetype.h>
+#endif
+
 int main(int argc, char** argv)
 {
     int c;
+
+    // Set ProDOS filetype to TEXT
+#ifdef __APPLE2__
+    _filetype = PRODOS_T_TXT;
+#endif
 
     printf("Aaru Filesystem Tester (Setter)\n%s\n", AARU_FSTESTER_VERSION);
     printf("%s\n", AARU_COPYRIGHT);
