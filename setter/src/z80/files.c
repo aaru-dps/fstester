@@ -30,7 +30,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 void MillionFiles(const char* path)
 {
     char  filename[9];
-    long  pos = 0;
+    int   pos;
     FILE* h;
     int   ret;
 
@@ -54,5 +54,5 @@ void MillionFiles(const char* path)
         fclose(h);
     }
 
-    printf("\tCreated %ld files\n", pos);
+    printf("\tCreated %d files\n\n", pos);
 }

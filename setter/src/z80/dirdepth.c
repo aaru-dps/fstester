@@ -36,7 +36,7 @@ void DirectoryDepth(const char* path)
 #ifdef USE_FOLDERS
     int  ret;
     char filename[9];
-    long pos = 0;
+    int  pos = 0;
 
     printf("\nPlease insert the \"DEPTH\" disk.\n");
     printf("Press Y to continue,\n");
@@ -48,7 +48,7 @@ void DirectoryDepth(const char* path)
     while(!ret)
     {
         memset(filename, 0, 9);
-        sprintf(filename, "%08ld", pos);
+        sprintf(filename, "%08d", pos);
         ret = mkdir(filename, 0755);
 
         if(!ret) ret = chdir(filename);
@@ -59,6 +59,6 @@ void DirectoryDepth(const char* path)
         if(pos >= 1000) break;
     }
 
-    printf("\tCreated %ld levels of directory hierarchy\n", pos);
+    printf("\tCreated %d levels of directory hierarchy\n\n", pos);
 #endif
 }
