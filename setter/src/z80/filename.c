@@ -46,7 +46,7 @@ void Filenames(const char* path)
 
     for(pos = 0; filenames[pos]; pos++)
     {
-        h   = fopen(filenames[pos], "w+");
+        h   = fopen(filenames[pos], "w");
         rc  = 0;
         wRc = 0;
         cRc = 0;

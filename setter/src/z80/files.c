@@ -48,8 +48,8 @@ void MillionFiles(const char* path)
         memset(filename, 0, 9);
         sprintf(filename, "%08ld", pos);
 
-        h = fopen(filename, "w+");
-        if(h == NULL) { break; }
+        h = fopen(filename, "w");
+        if(h == NULL) break;
 
         fclose(h);
     }
