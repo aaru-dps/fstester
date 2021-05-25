@@ -34,6 +34,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_ARCH "aarch64"
 #elif defined(__arm__) || defined(_M_ARM)
 #define OS_ARCH "arm"
+#elif defined(__CC65__)
+#define OS_ARCH "6502"
 #elif defined(__I86__) || defined(__i86__) || defined(_M_I86)
 #define OS_ARCH "x86"
 #elif defined(__I386__) || defined(__i386__) || defined(__THW_INTEL) || defined(_M_IX86)
@@ -74,10 +76,22 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "MorphOS"
 #elif defined(AMIGA) || defined(__amigaos__)
 #define OS_NAME "AmigaOS"
+#elif defined(__APPLE2__)
+#define OS_NAME "Apple DOS"
+#elif defined(__ATARI__)
+#define OS_NAME "Atari OS"
 #elif defined(__BEOS__)
 #define OS_NAME "BeOS"
 #elif defined(__bsdi__)
 #define OS_NAME "BSD/OS"
+#elif defined(__C16__)
+#define OS_NAME "Commodore 16"
+#elif defined(__C64__)
+#define OS_NAME "Commodore 64"
+#elif defined(__PET__)
+#define OS_NAME "Commodore PET"
+#elif defined(__PLUS4__)
+#define OS_NAME "Commodore Plus/4"
 #elif defined(__C128__)
 #define OS_NAME "Commodore 128"
 #elif defined(__CYGWIN__)
