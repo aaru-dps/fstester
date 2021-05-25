@@ -7,7 +7,7 @@
 
 #include <sys/types.h>
 
-void DarwinGetOsInfo();
+void DarwinGetOsInfo(void);
 void DarwinPrintStatfsFlags(u_int32_t flags);
 void DarwinResourceFork(const char* path);
 void DarwinFileAttributes(const char* path);
