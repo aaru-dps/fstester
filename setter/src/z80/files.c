@@ -34,8 +34,9 @@ void MillionFiles(const char* path)
     FILE* h;
     int   ret;
 
-    printf("Please insert the \"FILES\" disk.\n");
-    printf("Press Y to continue, any other key exits.\n");
+    printf("\nPlease insert the \"FILES\" disk.\n");
+    printf("Press Y to continue,\n");
+    printf("any other key exits.\n");
     ret = getchar();
 
     if(ret != 'Y' && ret != 'y') return;

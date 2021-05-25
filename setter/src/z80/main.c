@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 {
     int c;
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
+    printf("Aaru Filesystem Tester (Setter)\n%s\n", AARU_FSTESTER_VERSION);
     printf("%s\n", AARU_COPYRIGHT);
     printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
     printf("\n");
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     // Limit output to 40 columns
     printf("This software needs %d disks labeled\n", NO_DISKS);
     printf("\"FILES\", \"FILENAME\"%s\n", DISK_NAMES_TAIL);
-    printf("to be inserted into the drive where");
+    printf("to be inserted into the drive where\n");
     printf("this disk is now.\n");
     printf("Press the Y key to continue\n");
     printf("any other key exists.\n");

@@ -38,8 +38,9 @@ void DirectoryDepth(const char* path)
     char filename[9];
     long pos = 0;
 
-    printf("Please insert the \"DEPTH\" disk.\n");
-    printf("Press Y to continue, any other key exits.\n");
+    printf("\nPlease insert the \"DEPTH\" disk.\n");
+    printf("Press Y to continue,\n");
+    printf("any other key exits.\n");
     ret = getchar();
 
     if(ret != 'Y' && ret != 'y') return;
