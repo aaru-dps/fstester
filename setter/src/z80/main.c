@@ -61,5 +61,9 @@ int main(int argc, char** argv)
     Filenames("");
     DirectoryDepth("");
 
+    printf("Press any key to exit.\n");
+
+    getchar();
+
     return 0;
 }

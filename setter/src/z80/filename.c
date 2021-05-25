@@ -64,5 +64,5 @@ void Filenames(const char* path)
         printf("%d:%d,%d,%d-", pos, rc, wRc, cRc);
     }
 
-    printf("\n");
+    printf("\n\n");
 }
