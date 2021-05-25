@@ -22,44 +22,42 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#ifdef USE_FOLDERS
 #include <stdio.h>
-
-#include "../main.h"
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 #include "../include/defs.h"
 
-#ifdef USE_FOLDERS
-#define NO_DISKS 3
-#define DISK_NAMES_TAIL " and \"DEPTH\","
-#else
-#define NO_DISKS 2
-#define DISK_NAMES_TAIL ","
-#endif
-
-int main(int argc, char** argv)
+void DirectoryDepth(const char* path)
 {
-    int c;
+#ifdef USE_FOLDERS
+    int  ret;
+    char filename[9];
+    long pos = 0;
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
-    printf("%s\n", AARU_COPYRIGHT);
-    printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
-    printf("\n");
+    printf("Please insert the \"DEPTH\" disk.\n");
+    printf("Press Y to continue, any other key exits.\n");
+    ret = getchar();
 
-    // Limit output to 40 columns
-    printf("This software needs %d disks labeled\n", NO_DISKS);
-    printf("\"FILES\", \"FILENAME\"%s\n", DISK_NAMES_TAIL);
-    printf("to be inserted into the drive where");
-    printf("this disk is now.\n");
-    printf("Press the Y key to continue\n");
-    printf("any other key exists.\n");
+    if(ret != 'Y' && ret != 'y') return;
 
-    c = getchar();
+    while(!ret)
+    {
+        memset(filename, 0, 9);
+        sprintf(filename, "%08ld", pos);
+        ret = mkdir(filename, 0755);
 
-    if(c != 'Y' && c != 'y') return 1;
+        if(!ret) ret = chdir(filename);
 
-    MillionFiles("");
-    Filenames("");
-    DirectoryDepth("");
+        pos++;
 
-    return 0;
+        // This can continue until the disk fills, the kernel crashes, or some other nasty success
+        if(pos >= 1000) break;
+    }
+
+    printf("\tCreated %ld levels of directory hierarchy\n", pos);
+#endif
 }

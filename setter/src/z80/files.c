@@ -23,43 +23,35 @@ Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
 #include <stdio.h>
-
-#include "../main.h"
+#include <string.h>
 
 #include "../include/defs.h"
 
-#ifdef USE_FOLDERS
-#define NO_DISKS 3
-#define DISK_NAMES_TAIL " and \"DEPTH\","
-#else
-#define NO_DISKS 2
-#define DISK_NAMES_TAIL ","
-#endif
-
-int main(int argc, char** argv)
+void MillionFiles(const char* path)
 {
-    int c;
+    char  filename[9];
+    long  pos = 0;
+    FILE* h;
+    int   ret;
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
-    printf("%s\n", AARU_COPYRIGHT);
-    printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
-    printf("\n");
+    printf("Please insert the \"FILES\" disk.\n");
+    printf("Press Y to continue, any other key exits.\n");
+    ret = getchar();
 
-    // Limit output to 40 columns
-    printf("This software needs %d disks labeled\n", NO_DISKS);
-    printf("\"FILES\", \"FILENAME\"%s\n", DISK_NAMES_TAIL);
-    printf("to be inserted into the drive where");
-    printf("this disk is now.\n");
-    printf("Press the Y key to continue\n");
-    printf("any other key exists.\n");
+    if(ret != 'Y' && ret != 'y') return;
 
-    c = getchar();
+    printf("Creating lots of files.\n");
 
-    if(c != 'Y' && c != 'y') return 1;
+    for(pos = 0; pos < 1000; pos++)
+    {
+        memset(filename, 0, 9);
+        sprintf(filename, "%08ld", pos);
 
-    MillionFiles("");
-    Filenames("");
-    DirectoryDepth("");
+        h = fopen(filename, "w+");
+        if(h == NULL) { break; }
 
-    return 0;
+        fclose(h);
+    }
+
+    printf("\tCreated %ld files\n", pos);
 }

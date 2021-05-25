@@ -22,44 +22,46 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2021 Natalia Portillo
 *****************************************************************************/
 
+#include <errno.h>
 #include <stdio.h>
 
-#include "../main.h"
-
+#include "../include/consts.h"
 #include "../include/defs.h"
 
-#ifdef USE_FOLDERS
-#define NO_DISKS 3
-#define DISK_NAMES_TAIL " and \"DEPTH\","
-#else
-#define NO_DISKS 2
-#define DISK_NAMES_TAIL ","
-#endif
-
-int main(int argc, char** argv)
+void Filenames(const char* path)
 {
-    int c;
+    int   ret;
+    FILE* h;
+    int   rc, wRc, cRc;
+    int   pos;
 
-    printf("Aaru Filesystem Tester (Setter) %s\n", AARU_FSTESTER_VERSION);
-    printf("%s\n", AARU_COPYRIGHT);
-    printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
+    printf("Please insert the \"FILENAME\" disk.\n");
+    printf("Press Y to continue, any other key exits.\n");
+    ret = getchar();
+
+    if(ret != 'Y' && ret != 'y') return;
+
+    printf("Creating files with different filenames.\n");
+
+    for(pos = 0; filenames[pos]; pos++)
+    {
+        h   = fopen(filenames[pos], "w+");
+        rc  = 0;
+        wRc = 0;
+        cRc = 0;
+
+        if(!h) { rc = errno; }
+        else
+        {
+            ret = fprintf(h, FILENAME_FORMAT, filenames[pos]);
+            if(ret < 0) { wRc = errno; }
+
+            ret = fclose(h);
+            if(ret) { cRc = errno; }
+        }
+
+        printf("%d:%d,%d,%d-", pos, rc, wRc, cRc);
+    }
+
     printf("\n");
-
-    // Limit output to 40 columns
-    printf("This software needs %d disks labeled\n", NO_DISKS);
-    printf("\"FILES\", \"FILENAME\"%s\n", DISK_NAMES_TAIL);
-    printf("to be inserted into the drive where");
-    printf("this disk is now.\n");
-    printf("Press the Y key to continue\n");
-    printf("any other key exists.\n");
-
-    c = getchar();
-
-    if(c != 'Y' && c != 'y') return 1;
-
-    MillionFiles("");
-    Filenames("");
-    DirectoryDepth("");
-
-    return 0;
 }

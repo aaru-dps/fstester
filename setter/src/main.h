@@ -148,8 +148,6 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "Syllable"
 #elif defined(__osf__) || defined(__osf)
 #define OS_NAME "Tru64 UNIX"
-#elif defined(__TRS80__)
-#define OS_NAME "TRS 80"
 #elif defined(ultrix) || defined(__ultrix) || defined(__ultrix__)
 #define OS_NAME "Ultrix"
 #elif defined(VMS) || defined(__VMS)
