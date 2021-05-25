@@ -51,6 +51,8 @@ void MillionFiles(const char* path)
         h = fopen(filename, "w");
         if(h == NULL) break;
 
+        // Needed or some systems do not create empty files at all.
+        fprintf(h, "%s\n", filename);
         fclose(h);
     }
 
