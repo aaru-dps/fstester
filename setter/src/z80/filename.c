@@ -51,7 +51,7 @@ void Filenames(const char* path)
         wRc = 0;
         cRc = 0;
 
-        if(!h) { rc = errno; }
+        if(!h) rc = errno != 0 ? errno : -1;
         else
         {
             ret = fprintf(h, FILENAME_FORMAT, filenames[pos]);
