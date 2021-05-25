@@ -29,7 +29,7 @@ Copyright (C) 2011-2021 Natalia Portillo
 
 void MillionFiles(const char* path)
 {
-    char  filename[9];
+    char  filename[16];
     int   pos;
     FILE* h;
     int   ret;
@@ -45,8 +45,8 @@ void MillionFiles(const char* path)
 
     for(pos = 0; pos < 1000; pos++)
     {
-        memset(filename, 0, 9);
-        sprintf(filename, "%08ld", pos);
+        memset(filename, 0, 16);
+        sprintf(filename, "%08d", pos);
 
         h = fopen(filename, "w");
         if(h == NULL) break;
