@@ -1,0 +1,1 @@
+This directory contains the Makefile for 6502 computers using CC65. Use `build.sh` to build all the targets.
