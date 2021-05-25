@@ -58,6 +58,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_ARCH "vax"
 #elif defined(__x86_64__) || defined(__amd64) || defined(_M_AMD64) || defined(_M_X64)
 #define OS_ARCH "x86_64"
+#elif defined(Z80) || defined(__Z80) || defined(__Z80N)
+#define OS_ARCH "z80"
 #else
 #define OS_ARCH "unknown"
 #endif
@@ -76,8 +78,14 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "BeOS"
 #elif defined(__bsdi__)
 #define OS_NAME "BSD/OS"
+#elif defined(__C128__)
+#define OS_NAME "Commodore 128"
 #elif defined(__CYGWIN__)
 #define OS_NAME "Windows NT with Cygwin"
+#elif defined(__CPC__)
+#define OS_NAME "Amstrad CPC"
+#elif defined(__CPM__)
+#define OS_NAME "CP/M"
 #elif defined(__DOS__) || defined(MSDOS)
 #define OS_NAME "DOS"
 #elif defined(__DragonFly__)
@@ -104,6 +112,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "MINIX"
 #elif defined(__MORPHOS__)
 #define OS_NAME "MorphOS"
+#elif defined(__MSX__)
+#define OS_NAME "MSX-DOS"
 #elif defined(__NetBSD__)
 #define OS_NAME "NetBSD"
 #elif defined(__NETWARE__) || defined(__netware__)
@@ -116,6 +126,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "OS/2"
 #elif defined(__palmos__)
 #define OS_NAME "PalmOS"
+#elif defined(__PC88__)
+#define OS_NAME "N88 BASIC"
 #elif defined(EPLAN9)
 #define OS_NAME "Plan 9"
 #elif defined(__QNX__) || defined(__QNXNTO__)
@@ -124,6 +136,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "UnixWare"
 #elif defined(_SCO_DS)
 #define OS_NAME "SCO OpenServer"
+#elif defined(__SPECTRUM__)
+#define OS_NAME "ZX Spectrum"
 #elif defined(sun) || defined(__sun) || defined(__sun__)
 #if defined(__SVR4) || defined(__svr4__)
 #define OS_NAME "Solaris"
@@ -134,6 +148,8 @@ Copyright (C) 2011-2021 Natalia Portillo
 #define OS_NAME "Syllable"
 #elif defined(__osf__) || defined(__osf)
 #define OS_NAME "Tru64 UNIX"
+#elif defined(__TRS80__)
+#define OS_NAME "TRS 80"
 #elif defined(ultrix) || defined(__ultrix) || defined(__ultrix__)
 #define OS_NAME "Ultrix"
 #elif defined(VMS) || defined(__VMS)
