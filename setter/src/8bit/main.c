@@ -49,6 +49,11 @@ int main(int argc, char** argv)
     _filetype = PRODOS_T_TXT;
 #endif
 
+    // Set error mode to don't kill, don't print
+#ifdef __CPM__
+    bdos(45, 255);
+#endif
+
     printf("Aaru Filesystem Tester (Setter)\n%s\n", AARU_FSTESTER_VERSION);
     printf("%s\n", AARU_COPYRIGHT);
     printf("Running in %s (%s)\n", OS_NAME, OS_ARCH);
