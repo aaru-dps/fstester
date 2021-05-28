@@ -28,8 +28,6 @@ make kaypro83
 make clean
 make kaypro84
 make clean
-make kayproii
-make clean
 make lynx128
 make clean
 make Makefile

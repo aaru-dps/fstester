@@ -233,7 +233,7 @@ zxplus3: $(OBJS)
 	$(CC) $(LFLAGS) -o $@/$(OUT) $^
 
 zxplus3_cpm: CFLAGS = +cpm
-zxplus3_cpm: LFLAGS = +cpm -subtype=zxplus3 -create-app -v
+zxplus3_cpm: LFLAGS = +cpm -subtype=zxplus3 -create-app
 zxplus3_cpm: $(OBJS)
 	mkdir -p $@
 	$(CC) $(LFLAGS) -o $@/$(OUT) $^
