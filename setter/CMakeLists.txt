@@ -30,6 +30,15 @@ project(fssetter-test
 
 set(CMAKE_C_STANDARD 90)
 
+if(DEFINED DJGPP)
+    set(CMAKE_SYSTEM_NAME "DOS")
+    set(CMAKE_SYSTEM_PROCESSOR "i386")
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "MiNT")
+    set(CMAKE_SYSTEM_PROCESSOR "m68k")
+endif()
+
 message("Detected system name: ${CMAKE_SYSTEM_NAME}")
 message("Detected system processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
@@ -82,7 +91,15 @@ macro(add_sub_libraries)
     endif()
 endmacro()
 
-set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+if(${CMAKE_SYSTEM_NAME} MATCHES "DOS|OS2|Windows")
+    set(EXECUTABLE_EXTENSION ".exe")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "MiNT")
+    set(EXECUTABLE_EXTENSION ".tos")
+else()
+    set(EXECUTABLE_EXTENSION "")
+endif()
+
+set(EXECUTABLE_NAME "fssetter-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}${EXECUTABLE_EXTENSION}")
 
 add_subdirectory(src)
 
