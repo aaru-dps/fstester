@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -----------------------------------------------------------------------------
-# Copyright (C) 2011-2021 Natalia Portillo
+# Copyright (C) 2011-2026 Natalia Portillo
 # *****************************************************************************/
 
 cmake_minimum_required(VERSION 2.8)

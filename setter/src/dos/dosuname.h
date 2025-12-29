@@ -40,7 +40,7 @@
     Foundation,Inc.,59 Temple Place - Suite 330,Boston,MA  02111-1307,USA.
 
  ------------------------------------------------------------------------
- Copyright (c) 2001-2021 Natalia Portillo
+ Copyright (c) 2001-2026 Natalia Portillo
 *************************************************************************/
 
 #ifndef DOS_DOSUNAME_H_

@@ -19,14 +19,14 @@ Aaru Data Preservation Suite
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2021 Natalia Portillo
+Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #ifndef AARU_FSTESTER_GETTER_MAIN_H
 #define AARU_FSTESTER_GETTER_MAIN_H
 
 #define AARU_FSTESTER_VERSION "4.5.99.2020"
-#define AARU_COPYRIGHT "Copyright (C) 2011-2021 Natalia Portillo"
+#define AARU_COPYRIGHT "Copyright (C) 2011-2026 Natalia Portillo"
 
 #if defined(__alpha__) || defined(_M_ALPHA)
 #define OS_ARCH "axp"

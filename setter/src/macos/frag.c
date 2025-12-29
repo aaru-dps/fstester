@@ -19,7 +19,7 @@ Aaru Data Preservation Suite
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------------
-Copyright (C) 2011-2021 Natalia Portillo
+Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #if defined(HAVE_FILE_TYPES_AND_CREATORS_H) || !defined(HAVE_MULTIVERSE_H)
