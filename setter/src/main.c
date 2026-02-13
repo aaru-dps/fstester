@@ -22,7 +22,9 @@ Aaru Data Preservation Suite
 Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
+#if defined(__STDC__) /* XENIX again */
 #include <stddef.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -36,7 +38,14 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include <console.h>
 #endif
 
+#if defined(__STDC__)
 int main(int argc, char** argv)
+#else
+int main(argc, argv)
+int argc;
+
+char *argv[];
+#endif
 {
     size_t clusterSize = 0;
     int    i;

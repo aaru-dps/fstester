@@ -23,16 +23,25 @@ Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
+#if defined(__STDC__)
 #include <stddef.h>
+#endif
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void DeleteFiles(const char* path)
+#else
+void DeleteFiles(path)
+
+char *path;
+#endif
 {
     char  filename[9];
     long  pos;

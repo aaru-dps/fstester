@@ -25,13 +25,20 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void DirectoryDepth(const char* path)
+#else
+void DirectoryDepth(path)
+
+char *path;
+#endif
 {
     int  ret;
     char filename[9];
@@ -73,8 +80,8 @@ void DirectoryDepth(const char* path)
 
         pos++;
 
-        // This can continue until the disk fills, the kernel crashes, or some other nasty success
-        if(pos >= 1000) break;
+        /* This can continue until the disk fills, the kernel crashes, or some other nasty success */
+        if (pos >= 100) break;
     }
 
     log_write("\tCreated %ld levels of directory hierarchy\n", pos);

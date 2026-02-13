@@ -31,19 +31,36 @@ Copyright (C) 2011-2026 Natalia Portillo
 #endif
 
 #include <errno.h>
+#if defined(__STDC__)
 #include <stddef.h>
+#endif
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <utime.h>
+#ifdef M_XENIX
+#include <dos/sys/utime.h>
+#else
+#  ifdef COHERENT
+#    include <sys/utime.h>
+#  else
+#    include <utime.h>
+#  endif
+#endif
 
 #include "time.h"
 
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void Timestamps(const char* path)
+#else
+void Timestamps(path)
+
+char *path;
+#endif
 {
     int            ret;
     FILE*          h;

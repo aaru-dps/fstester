@@ -23,10 +23,15 @@ Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
+#if defined(__STDC__)
 #include <stddef.h>
+#endif
 #include <stdio.h>
+#if defined(__STDC__)
 #include <stdlib.h>
+#endif
 #include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -34,7 +39,12 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void Fragmentation(const char* path, size_t clusterSize)
+#else
+void   Fragmentation(path, clusterSize)char* path;
+size_t clusterSize;
+#endif
 {
     size_t         halfCluster             = clusterSize / 2;
     size_t         quarterCluster          = clusterSize / 4;

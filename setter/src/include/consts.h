@@ -25,7 +25,11 @@ Copyright (C) 2011-2026 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_CONSTS_H
 #define AARU_FSTESTER_SETTER_SRC_CONSTS_H
 
+#if defined(__STDC__)
 static const char* filenames[] = {
+#else
+static char *filenames[] = {
+#endif
     "FILNAM",
     "FILNAM.EXT",
     "FILENAME",
@@ -53,6 +57,7 @@ static const char* filenames[] = {
     "This filename has fourty four characterrs",
     "This filename has sixty three characters like a lazy dromedaire",
     "This filename has sixty four characters like a redy lazy fox dog",
+#if defined(__STDC__)
     "This filename has one hundred twenty eight characters and once upon a time in a place which name you must buy the "
     "book yetnotget",
     "This filename has two hundred thirty six characters and once upon a time in a place which name i have no desire "
@@ -73,6 +78,7 @@ static const char* filenames[] = {
     "This filename has two hundred fifty six characters and once upon a time in a place which name i have no desire to "
     "call to mind there lived not long since one of those gentlemen that keep a lance and well you know it so go and "
     "read the book as you must get",
+#endif
     "?NM?E?",
     "N!A!M!",
     "NA/ME",
@@ -98,6 +104,10 @@ static const char* filenames[] = {
     0};
 
 #define CLAUNIA_SIZE 7
+#if defined(__STDC__)
 static const unsigned char clauniaBytes[] = {0x43, 0x4C, 0x41, 0x55, 0x4E, 0x49, 0x41};
+#else
+static unsigned char clauniaBytes[] = {0x43, 0x4C, 0x41, 0x55, 0x4E, 0x49, 0x41};
+#endif
 
 #endif

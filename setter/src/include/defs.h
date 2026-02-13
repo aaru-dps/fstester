@@ -25,6 +25,7 @@ Copyright (C) 2011-2026 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_DEFS_H
 #define AARU_FSTESTER_SETTER_SRC_DEFS_H
 
+#if defined(__STDC__)
 #include <stddef.h>
 
 void GetOsInfo(void);
@@ -54,6 +55,36 @@ void MillionFiles(const char* path);
 void DeleteFiles(const char* path);
 
 void Links(const char* path);
+#else
+
+void GetOsInfo();
+
+void GetVolumeInfo();
+
+void FileAttributes();
+
+void FilePermissions();
+
+void ExtendedAttributes();
+
+void ResourceFork();
+
+void Filenames();
+
+void Timestamps();
+
+void DirectoryDepth();
+
+void Fragmentation();
+
+void Sparse();
+
+void MillionFiles();
+
+void DeleteFiles();
+
+void Links();
+#endif
 
 #define FILENAME_FORMAT "This file should be named \"%s\".\n"
 

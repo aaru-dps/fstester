@@ -349,4 +349,4 @@ Copyright (C) 2011-2026 Natalia Portillo
 #define _XIAFS_SUPER_MAGIC 0x012fd16d
 #endif
 
-#endif // AARU_FSTESTER_SETTER_UNIX_VOLUME_H
+#endif /* AARU_FSTESTER_SETTER_UNIX_VOLUME_H */

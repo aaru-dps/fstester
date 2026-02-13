@@ -48,7 +48,11 @@ typedef struct
 
 #define KNOWN_UNIX_TIMES 10
 
+#if defined(__STDC__)
 static const unix_time_tests_t unix_times[KNOWN_UNIX_TIMES] = {
+#else
+static unix_time_tests_t unix_times[KNOWN_UNIX_TIMES] = {
+#endif
     "MAXATIME", MAXTIMESTAMP, 0, "access", MAXDATETIME,
     "MAXMTIME", 0, MAXTIMESTAMP, "modification", MAXDATETIME,
     "MINATIME", MINTIMESTAMP, 0, "access", MINDATETIME,

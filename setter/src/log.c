@@ -23,19 +23,37 @@ Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
 
-#include "log.h"
+#if defined(__STDC__)
+/* ANSI / ISO C */
+#include <stdarg.h>
+#define USE_ANSI_VARARGS 1
+#else
+/* XENIX / K&R C */
+#include <varargs.h>
+#endif
 
+#include "log.h"
 #include "main.h"
+
+/* Thanks XENIX */
+#if !defined(__STDC__) && !defined(COHERENT)
+typedef long time_t;
+#endif
 
 static int log_opened;
 static int log_quiet;
 FILE*      log_file;
 
+#if defined(__STDC__)
 int log_open(int quiet)
+#else
+int log_open(quiet)
+
+int quiet;
+#endif
 {
     time_t curtime;
 
@@ -64,6 +82,9 @@ int log_open(int quiet)
     return 0;
 }
 
+#if USE_ANSI_VARARGS
+
+/* ANSI version */
 void log_write(const char* fmt, ...)
 {
     va_list args;
@@ -73,7 +94,6 @@ void log_write(const char* fmt, ...)
         va_start(args, fmt);
         vfprintf(log_file, fmt, args);
         va_end(args);
-
         fflush(log_file);
     }
 
@@ -84,6 +104,36 @@ void log_write(const char* fmt, ...)
         va_end(args);
     }
 }
+
+#else
+
+/* XENIX K&R varargs version */
+void log_write(va_alist)
+
+va_dcl {
+    va_list args;
+    char *fmt;
+
+    va_start(args);
+    fmt = va_arg(args, char *);
+
+    if (log_opened) {
+        vfprintf(log_file, fmt, args);
+        fflush(log_file);
+    }
+
+    /* Restart varargs for console output */
+    va_end(args);
+    va_start(args);
+    fmt = va_arg(args, char *);
+
+    if (!log_quiet)
+        vprintf(fmt, args);
+
+    va_end(args);
+}
+
+#endif /* USE_ANSI_VARARGS */
 
 void log_close()
 {
@@ -103,7 +153,13 @@ void log_close()
     log_quiet  = 0;
 }
 
+#if defined(__STDC__)
 void log_set_quiet(int quiet)
+#else
+void log_set_quiet(quiet)
+
+int quiet;
+#endif
 {
     log_file  = NULL;
     log_quiet = quiet;

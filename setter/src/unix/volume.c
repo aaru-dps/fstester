@@ -23,7 +23,9 @@ Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
+#if defined(__STDC__)
 #include <stddef.h>
+#endif
 #include <stdio.h>
 
 #ifdef __NeXT__
@@ -36,15 +38,16 @@ Copyright (C) 2011-2026 Natalia Portillo
 
 #define HAVE_STATFS_TYPE
 
-#if NS_TARGET >= 42 // Rhapsody DR1
+#if NS_TARGET >= 42 /* Rhapsody DR1 */
 #define NEED_SYS_TYPES_H
 #define HAVE_SYS_MOUNT_H
 #define USE_STATFS_FTYPENAME
 #else
 #include <sys/vfs.h>
-#endif // Rhapsody DR1
+#endif /* Rhapsody DR1 */
 
 #endif // __NeXT__
+#endif /* __NeXT__ */
 
 #ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
@@ -63,8 +66,8 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include <sys/types.h>
 #endif
 
-#include <sys/mount.h>
 #include <sys/param.h>
+#include <sys/mount.h>
 #endif
 
 #include "../include/defs.h"
@@ -79,7 +82,14 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "bsd/bsd.h"
 #endif
 
+#if defined(__STDC__)
 void GetVolumeInfo(const char* path, size_t* clusterSize)
+#else
+void GetVolumeInfo(path, clusterSize)
+char *path;
+
+size_t *clusterSize;
+#endif
 {
 #ifdef HAVE_SYS_STATVFS_H
     struct statvfs buf;
@@ -105,7 +115,8 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 
 #ifdef USE_STATFS_FTYPENAME
     log_write("\tFilesystem: %s\n", buf.f_fstypename);
-#elif defined(USE_STATFS_TYPE)
+#else
+#  if defined(USE_STATFS_TYPE)
     log_write("\tFilesystem: ");
     switch(buf.f_type)
     {
@@ -193,16 +204,24 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
         default: log_write("unknown type -> 0x%lX", buf.f_type);
     }
     log_write("\n");
+#  endif
 #endif
 
     log_write("\tBytes per block: %ld\n", buf.f_bsize);
+#if defined(__STDC__)
     log_write("\tVolume size: %llu bytes\n", ((unsigned long long)buf.f_blocks) * buf.f_bsize);
     log_write("\tVolume free: %llu bytes\n", ((unsigned long long)buf.f_bfree) * buf.f_bsize);
+#else
+    log_write("\tVolume size: %lu bytes\n", ((unsigned long) buf.f_blocks) * buf.f_bsize);
+    log_write("\tVolume free: %lu bytes\n", ((unsigned long) buf.f_bfree) * buf.f_bsize);
+#endif
 
 #ifdef USE_STATFS_NAMELEN
     log_write("\tMaximum component length: %ld\n", buf.f_namelen);
-#elif USE_STATFS_NAMEMAX
+#else
+#  if USE_STATFS_NAMEMAX
     log_write("\tMaximum component length: %ld\n", buf.f_namemax);
+#  endif
 #endif
 
 #if HAVE_SYS_STATVFS_H
@@ -236,4 +255,5 @@ void GetVolumeInfo(const char* path, size_t* clusterSize)
 #if defined(__APPLE__) && defined(__MACH__)
     DarwinVolumeAttributes(path);
 #endif
+#endif /* M_XENIX */
 }

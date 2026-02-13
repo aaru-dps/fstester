@@ -32,7 +32,13 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "bsd/bsd.h"
 #endif
 
+#if defined(__STDC__)
 void FileAttributes(const char* path)
+#else
+void FileAttributes(path)
+
+char *path;
+#endif
 {
 #if defined(__linux__) || defined(__LINUX__) || defined(__gnu_linux)
     LinuxFileAttributes(path);

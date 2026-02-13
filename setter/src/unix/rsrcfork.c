@@ -28,10 +28,16 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "darwin/darwin.h"
 #endif
 
+#if defined(__STDC__)
 void ResourceFork(const char* path)
+#else
+void ResourceFork(path)
+
+char *path;
+#endif
 {
 #if defined(__APPLE__) && defined(__MACH__)
     DarwinResourceFork(path);
 #endif
-    // Not supported
+    /* Not supported */
 }

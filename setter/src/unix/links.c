@@ -23,15 +23,24 @@ Copyright (C) 2011-2026 Natalia Portillo
 *****************************************************************************/
 
 #include <errno.h>
+#if defined(__STDC__)
 #include <stddef.h>
+#endif
 #include <stdio.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void Links(const char* path)
+#else
+void Links(path)
+
+char path;
+#endif
 {
     FILE* h;
     int   ret;

@@ -25,9 +25,19 @@ Copyright (C) 2011-2026 Natalia Portillo
 #ifndef AARU_FSTESTER_SETTER_SRC_LOG_H_
 #define AARU_FSTESTER_SETTER_SRC_LOG_H_
 
+#if defined(__STDC__)
 int  log_open(int quiet);
 void log_write(const char* fmt, ...);
 void log_set_quiet(int quiet);
 void log_close(void);
+#else
+int log_open();
+
+void log_write();
+
+void log_set_quiet();
+
+void log_close();
+#endif
 
 #endif // AARU_FSTESTER_SETTER_SRC_LOG_H_

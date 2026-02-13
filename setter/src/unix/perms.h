@@ -38,7 +38,11 @@ typedef struct
 
 #define KNOWN_UNIX_PERMS 13
 
+#if defined (__STDC__)
 static const unix_perms_tests_t unix_perms[KNOWN_UNIX_PERMS] = {
+#else
+static unix_perms_tests_t unix_perms[KNOWN_UNIX_PERMS] = {
+#endif
     {"NONE", "File with no permissions", 0},
     {"04000", "File with set-user-ID", 04000},
     {"02000", "File with set-group-ID", 02000},

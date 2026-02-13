@@ -34,6 +34,7 @@ Copyright (C) 2011-2026 Natalia Portillo
 
 #include <errno.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -41,7 +42,13 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 
+#if defined(__STDC__)
 void Sparse(const char* path)
+#else
+void Sparse(path)
+
+char *path;
+#endif
 {
     int   ret;
     int   rc, wRc, cRc;
