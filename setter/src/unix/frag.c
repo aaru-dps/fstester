@@ -39,6 +39,10 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include "../include/defs.h"
 #include "../log.h"
 
+#if M_XENIX
+typedef long size_t;
+#endif
+
 #if defined(__STDC__)
 void Fragmentation(const char* path, size_t clusterSize)
 #else

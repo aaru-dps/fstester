@@ -87,9 +87,11 @@ char path;
 
     if(ret) { log_write("Error %d creating hard link.\n", errno); }
 
+#if !defined(M_XENIX) && !defined(COHERENT) /* Predates symlinks */
     ret = symlink("TARGET", "SYMBOLIC");
 
     if(ret) { log_write("Error %d creating symbolic link.\n", errno); }
+#endif
 
 #if defined(__APPLE__) && defined(__MACH__)
     ret = mkdir("TARGETDIR", 0755);

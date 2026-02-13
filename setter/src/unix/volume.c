@@ -46,8 +46,13 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include <sys/vfs.h>
 #endif /* Rhapsody DR1 */
 
-#endif // __NeXT__
 #endif /* __NeXT__ */
+
+#ifdef M_XENIX
+#undef HAVE_SYS_STATFS_H
+#undef HAVE_SYS_MOUNT_H
+typedef long size_t;
+#endif
 
 #ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
@@ -91,6 +96,14 @@ char *path;
 size_t *clusterSize;
 #endif
 {
+#ifdef M_XENIX
+    log_write("Volume information:\n");
+    log_write("\tPath: %s\n", path);
+    *clusterSize = 1024;
+
+    return;
+#else
+
 #ifdef HAVE_SYS_STATVFS_H
     struct statvfs buf;
 #else

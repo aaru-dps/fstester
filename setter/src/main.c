@@ -25,6 +25,9 @@ Copyright (C) 2011-2026 Natalia Portillo
 #if defined(__STDC__) /* XENIX again */
 #include <stddef.h>
 #endif
+#if defined(M_XENIX) && !defined(M_SYSV3)
+typedef long size_t;
+#endif
 #include <stdio.h>
 #include <string.h>
 

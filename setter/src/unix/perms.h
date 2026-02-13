@@ -29,6 +29,10 @@ Copyright (C) 2011-2026 Natalia Portillo
 typedef int mode_t;
 #endif
 
+#if defined(M_XENIX)
+typedef int mode_t;
+#endif
+
 typedef struct
 {
     char   filename[256];

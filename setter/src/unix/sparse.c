@@ -38,6 +38,12 @@ Copyright (C) 2011-2026 Natalia Portillo
 #include <sys/stat.h>
 #include <unistd.h>
 
+#ifdef M_XENIX
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
+#endif
+
 #include "../include/consts.h"
 #include "../include/defs.h"
 #include "../log.h"
