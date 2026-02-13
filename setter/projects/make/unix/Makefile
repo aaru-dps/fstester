@@ -19,7 +19,7 @@
 #      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -----------------------------------------------------------------------------
-# Copyright (C) 2011-2021 Natalia Portillo
+# Copyright (C) 2011-2026 Natalia Portillo
 # *****************************************************************************/
 
 # Directory with main and log source files
